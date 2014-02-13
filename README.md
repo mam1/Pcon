@@ -3,9 +3,21 @@ Pcon
 
 This code is under constructions it is not stable
 
-This project uses a Parallax Propeller C3 to drive a Parallax Digitial IO Board
+This project uses a Parallax Propeller C3 to drive a Parallax Digitial IO Board.  There are 8 channels.  Each channel can controll a 120v 8 amp load.  It aslo uses a DS3231 real time clock.
 
-There are 8 channels.  Each channel can controll a 120v 8 amp load.  A channel 
+Hardware:
+	Parallax - C3 microcontroller 
+	Parallax - Digital IO Board
+	adafruit - ChronoDot real time clock module, based on the DS3231 temperature compensated RTC (TCXO).
+
+Language:
+	C Propgcc
+
+Architecture:
+
+
+
+	There are 8 channels.  Each channel can controll a 120v 8 amp load.  A channel 
 can be controlled manually from the command line or it can  be set to change state
 at a given time.  There can be different schedules for different days of the week.
 
