@@ -46,8 +46,8 @@ extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 void clean_sch_buf(volatile uint32_t b[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1])
 {
     int i,ii;                                               
-    for (int i = 0; i < _NUMBER_OF_CHANNELS; ++i)
-        for (int ii = 0; ii < _MAX_SCHEDULE_RECS+1; ++ii)
+    for (i = 0; i < _NUMBER_OF_CHANNELS; ++i)
+        for (ii = 0; ii < _MAX_SCHEDULE_RECS+1; ++ii)
                 b[i][ii] = 0;
     return;
 }
@@ -55,7 +55,7 @@ void clean_sch_buf(volatile uint32_t b[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1
 char *sch_file_name(char *target,int channel,int day)
 {
     char        *t;
-    int         sch_num;
+    // int         sch_num;
 
     t = target;
     // sch_num = (channel*7)+day;
@@ -114,6 +114,11 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
     rsize = sch[c][0];
     r = &(sch[c][1]);
     printf("  channel %i schedule for %s:\n",c,day_names_short[d-1]);
+    if(rsize==0)
+    {
+        printf("    No schedule records\n");
+        return;
+    }
     for(i=0;i<rsize;i++)
     {
         printf("    channel %i, key <%4i>, time %02i:%02i - %s\n",
@@ -216,14 +221,14 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
     return 0;
 }
 /* search a schedule for a record with the key, return pointer to record or NULL */
-uint32_t *find_schedule_record(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1],int c,int k)
+volatile uint32_t *find_schedule_record(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1],int c,int k)
 {
     int                              i, rsize;
     volatile uint32_t               *r;
     
     rsize = (int)sch[c][0];
     r = &sch[c][1];
-    printf("r1 <%x>\n",r);
+    printf("r1 <%x>\n",(unsigned int)r);
     for(i=0;i<rsize;i++)
     {
         printf("get_key returns <%i>\n",get_key(*r));
@@ -267,7 +272,7 @@ int add_sch_rec(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]
     volatile uint32_t       rsize, *r;
     int                     i,ii;
 
-    if (r = find_schedule_record(sch,c,k))
+    if ((r=find_schedule_record(sch,c,k)))
     {
         put_state(r,s);
         return 0;
