@@ -27,7 +27,7 @@ void disp_channel_data(int cn)
     if(cn<0)
     {
         for(i=0;i<_NUMBER_OF_CHANNELS;i++)
-            printf("channel %i: state <%s>, c_mode <%s>, s_mode <%s>, name <%s>\n",
+            printf("channel %i:  state <%s>\n           c_mode <%s>\n           s_mode <%s>\n             name <%s>\n",
                 i, 
                 onoff[dio_cb.dio.cca[i].state], 
                 con_mode[dio_cb.dio.cca[i].c_mode],
@@ -35,13 +35,15 @@ void disp_channel_data(int cn)
                 dio_cb.dio.cca[i].name);
         printf("\n");
         return;
-    }
-     printf("channel %i: state <%s>, c_mode <%s>, s_mode <%s>, name <%s>\n",
-        cn, 
-        onoff[dio_cb.dio.cca[cn].state], 
-        con_mode[dio_cb.dio.cca[cn].c_mode],
-        sch_mode[dio_cb.dio.cca[cn].s_mode],
-        dio_cb.dio.cca[cn].name);
+    }       
+    printf("channel %i:  state <%s>\n           c_mode <%s>\n           s_mode <%s>\n             name <%s>\n",        
+    cn, 
+    onoff[dio_cb.dio.cca[cn].state], 
+    con_mode[dio_cb.dio.cca[cn].c_mode],
+    sch_mode[dio_cb.dio.cca[cn].s_mode],
+    dio_cb.dio.cca[cn].name);
+    printf("\n");
+    return;
 }
 int load_channel_data(void)
 {
