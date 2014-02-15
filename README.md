@@ -6,15 +6,14 @@ This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (
 
 Command processor:
 ------------------
+*    name channels
+*    manually control channel state
+*   set channel control mode (manual, time, time & sensor)
+*    create and maintain schedules for each cahnnel
+*    load/save schedules to SD card
+*   load/save channel control information to SD card
 
-    name channels
-    manually control channel state
-    set channel control mode (manual, time, time & sensor)
-    create and maintain schedules for each cahnnel
-    load/save schedules to SD card
-    load/save channel control information to SD card
-
-    Because the command processor is implemented by a state machine there is a lot of flexibility in they way commands can be entered.  It should be noted that the same command could have different results based on the context in which it is used.
+ >Because the command processor is implemented by a state machine there is a lot of flexibility in they way commands can be entered.  It should be noted that the same command could have different results based on the context in which it is used.
 
 Language:
 ---------
@@ -23,7 +22,6 @@ Language:
 
 Architecture:
 -------------
-
     The control part of the application uses 2 cogs, "rtc.cogc" and 
     "dio.cogc".  The rtc cog talks to the DS3231 and updates a time/date buffer in hub memory.  It also sets a trigger (once a minute) in hub memory to to let the dio cog know that it should update the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command.
 
