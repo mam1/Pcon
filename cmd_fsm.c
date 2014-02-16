@@ -29,7 +29,7 @@ volatile uint32_t   active_schedule[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 volatile uint32_t   edit_schedule[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 uint8_t             editing;
    
-/*********************** fuctions **************************/
+/*********************** functions **************************/
 
 /***************************************/
 /*****  command  parser fsm start ******/
@@ -37,8 +37,8 @@ uint8_t             editing;
 /* state prompts */
 char    *s_prompt[] ={
 /*  0 */    "enter command",
-/*  1 */    "channel maintaiance: <save><load><display> or chanel number to edit",
-/*  2 */    "editng channel:",
+/*  1 */    "channel maintenance: <save><load><display> or chanel number to edit",
+/*  2 */    "editing channel:",
 /*  3 */    "EMPTY",
 /*  4 */    "save",
 /*  5 */    "load",
@@ -93,7 +93,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  3    EMPTY */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  4     save */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}, 
 /*  5     load */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  6     done */   {0, 0, 1, 2, 2, 2, 2, 2, 7,  7,  7,  7, 12, 13},
+/*  6     done */   {0, 0, 1, 2, 2, 2, 2, 6, 7,  7,  7,  7, 12, 13},
 /*  7    state */   {0, 1, 5, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  8 schedule */   {0, 1, 6, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  9  channel */   {1, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -112,8 +112,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 
 /*cmd processor fuctions */
 int c_0(int,int *,char *); /* do nothing */
-int c_1(int,int *,char *); /* display all valid commands for the currnet state */  
-int c_2(int,int *,char *); /* propmt */
+int c_1(int,int *,char *); /* display all valid commands for the current state */  
+int c_2(int,int *,char *); /* prompt */
 int c_3(int,int *,char *); /* prompt for channel number */
 int c_4(int,int *,char *); /* set active channel */
 int c_5(int,int *,char *); /* display info for all channels */
@@ -139,18 +139,21 @@ int c_24(int,int *,char *); /* set schedule record state to on */
 int c_25(int,int *,char *); /* set schedule record state to off */
 int c_26(int,int *,char *); /* delete schedule record */
 int c_27(int,int *,char *); /* load schedule record into edit buffer */
+int c_28(int,int *,char *); /* do not save edit schedule buffer  before load*/
+int c_29(int,int *,char *); /* save edit schedule buffer before load */
 
-/* cmd processor action table - initialized with fsm fuctions */
+
+/* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*            STATE    0     1     2     3    4     5      6    7     8     9     10     11    12   13*/ 
-/*  0      INT */   {c_13,  c_4,  c_0,  c_0, c_10, c_13,  c_0, c_20, c_21, c_22,  c_0, c_21, c_22,  c_0}, 
+/*  0      INT */   {c_13,  c_4,  c_0,  c_0, c_10, c_13, c_20, c_20, c_21, c_22,  c_0, c_21, c_22,  c_0}, 
 /*  1      STR */   {c_13,  c_0,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2    OTHER */   {c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12},
 /*  3    EMPTY */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4     save */   {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5     load */   {c_13,  c_0, c_27,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_2,  c_2,  c_2,  c_9,  c_0,  c_0,  c_0},
+/*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_2,  c_2,  c_9,  c_0,  c_0,  c_0},
 /*  7    state */   {c_13,  c_0, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  8 schedule */   {c_13,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  channel */   { c_3,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -164,16 +167,16 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0},
 /* 19     time */   {c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 20      yes */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
+/* 20      yes */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_29,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_28,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
 
-/***************start fsm support fuctions ********************/
+/***************start fsm support functions ********************/
 //char *valid_cmds(void);
 char *build_prompt(char *, int);
 
 
 /**************** command fsm action routines ******************/
-/* do nothing except propmt if needed */
+/* do nothing except prompt if needed */
 int c_0(int tt, int *n, char *s)
 {
     if(test_cmd_q()== 0)
@@ -183,7 +186,7 @@ int c_0(int tt, int *n, char *s)
     }
     return 0;
 }
-/* display all valid commands for the currnet state */
+/* display all valid commands for the current state */
 int c_1(int tt, int *n, char *s)
 {
     int     i;
@@ -212,7 +215,7 @@ int c_1(int tt, int *n, char *s)
     c_0(tt,n,s);
     return 0;
 }
-/* propmt */
+/* prompt */
 int c_2(int tt, int *n, char *s)
 {    
     printf("%s >>",s_prompt[cmd_state]);    
@@ -310,7 +313,7 @@ int c_11(int tt, int *n, char *s) //save - s1
     return 0;
 }
 
-/* unreconnized input */
+/* unrecognized input */
 int c_12(int tt, int *n, char *s) //save - s1
 {
     printf("unrecognized command\n>>");  
@@ -389,17 +392,24 @@ int c_19(int tt, int *n, char *s) //save - s1
 /* set active day and load schedule buffer*/
 int c_20(int tt, int *n, char *s) 
 {
-    if(*n == active_day)
+    if(*n == active_day)    //working of the currently active day
     {
-        dump_sch_recs(edit_schedule,active_channel,active_day);
+        // dump_sch_recs(edit_schedule,active_channel,active_day);
+        c_0(tt,n,s);  
+        return 0;
+    }
+    /* is the edit buffer active */
+    if(editing)
+    {
+        printf("save schedule buffer <yes> <no>");
         c_0(tt,n,s);  
         return 0;
     }
 
-    printf("saving %s schedule \n",day_names[active_day]);
     active_day = *n;
-    printf("  active day set to %s\n",day_names[active_day]);
+    printf("active day set to %s\n",day_names[active_day]);
     printf("load_schedule_data returned <%i>\n",load_schedule_data(edit_schedule,active_day));
+    editing = 1;
     c_0(tt,n,s);  
     return 0;
 }
@@ -471,6 +481,22 @@ int c_27(int tt, int *n, char *s)
     return 0;
 }
 
+/* do not save edit schedule buffer before load*/
+int c_28(int tt, int *n, char *s) 
+{
+    load_schedule_data(edit_schedule, active_day);
+    c_0(tt,n,s); 
+    return 0;
+}
+
+/* save edit schedule buffer before load*/
+int c_29(int tt, int *n, char *s) 
+{
+    save_schedule_data(edit_schedule, active_day);
+    load_schedule_data(edit_schedule, active_day);
+    c_0(tt,n,s); 
+    return 0;
+}
 
 
 /*****************************************************/
@@ -575,11 +601,11 @@ char *build_prompt(char *b,int tt)
     char    temp[_PROMPT_BUFFER];
     int     ns;
 
-    ns = cmd_new_state[tt][cmd_state];  //set prompr for new state
+    ns = cmd_new_state[tt][cmd_state];  //set prompt for new state
     switch(ns)
     {
         case 0:
-            strcat(b,"enter a comand");
+            strcat(b,"enter a command");
             break;
         case 1:
             strcat(b,"editing channels\n  enter <#> to edit channel or <display> <load> <save> channel information");
@@ -609,19 +635,23 @@ char *build_prompt(char *b,int tt)
             strcat(b," state - enter: <on>|<off>");
             break;
         case 6:
+            strcat(b,"editing schedule for channel ");
             sprintf(temp,"%i",active_channel);
-            strcat(b,"editing schedule channel for ");
             strcat(b,temp);
-            // strcat(b,"\n");
+            strcat(b,"\nenter day #, Sun=1 ...  Sat=7");
             break;
         case 7:
+            strcat(b,"editing schedule for channel ");
             sprintf(temp,"%i",active_channel);
-            strcat(b,"editing channel ");
             strcat(b,temp);
-            strcat(b," scheduling by day - enter day #, Sun=1 ...  Sat=7");
+            strcat(b,", day ");
+            sprintf(temp,"%i",active_day);
+            strcat(b,temp);
+            strcat(b,"\ncurrent schedule:\n");
+            dump_sch_recs(edit_schedule,active_channel,active_day);
             break;
        case 8:
-            strcat(b,"save schdule buffer?\n>>");
+            strcat(b,"save schedule buffer?\n>>");
             // sprintf(temp,"%i",active_channel);
             // strcat(b,"editing schedule for channel ");
             // strcat(b,temp);

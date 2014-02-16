@@ -16,7 +16,7 @@ This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (
 ####Language:
 ---------
 
-	C Propgcc
+C Propgcc
 
 ####Architecture:
 -------------
@@ -31,7 +31,9 @@ The more complex part of the application is the command processor.  XMMC is requ
 ####Files:
 ------
 
-    Schedules are stored on a SD card. There is one file for each (day,channel) tuple.
+Schedules and the channel control information are stored on a SD card. There are 57 schedule files, one file for each (day,channel) tuple. The file names are generated in the following format: (s<tag>d<day #>c<chanel #>.SCH).  The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable.
+
+Channel information (name, control mode, state) for all channels is stored in a single file.  The file name is generated in the following format: (s<tag<>.CH).
 
 Hardware:
 ---------
