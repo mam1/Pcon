@@ -1,4 +1,5 @@
 ###Pcon
+- - - - - - - - - 
 ######Code is under construction it is not stable
 This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (DIOB).  The DIOB has 8 channels.  Each channel can control a 120v 8 amp load.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. 
 ####Command processor:
@@ -9,7 +10,8 @@ This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (
 *create and maintain schedules for each cahnnel
 *load/save schedules to SD card
 *load/save channel control information to SD card
- Because the command processor is implemented by a state machine there is a lot of flexibility in they way commands can be entered.  It should be noted that the same command could have different results based on the context in which it is used.
+
+ >Because the command processor is implemented by a state machine there is a lot of flexibility in they way commands can be entered.  It should be noted that the same command could have different results based on the context in which it is used.
 
 ####Language:
 ---------
