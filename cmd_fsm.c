@@ -389,6 +389,14 @@ int c_19(int tt, int *n, char *s) //save - s1
 /* set active day and load schedule buffer*/
 int c_20(int tt, int *n, char *s) 
 {
+    if((*n <0) || (*n >7))
+    {
+        printf("invalid day number, ");
+        printf("%i is not a valid day number it must be 1-7\n\n",*n);
+        cmd_state = 1; // back out the state transition
+        c_3(tt,n,s);
+        return;
+    }
     if((*n == active_day) && (editing == 1))   //working of the currently active day
     {
         // dump_sch_recs(edit_schedule,active_channel,active_day);
@@ -404,8 +412,8 @@ int c_20(int tt, int *n, char *s)
     }
 
     active_day = *n;
-    printf("active day set to %s\n",day_names_long[active_day]);
-    printf("loading edit schedule buffer for %s\n",day_names_long[active_day]);
+    printf("active day set to %s\n",day_names_long[active_day-1]);
+    printf("loading edit schedule buffer for %s\n",day_names_long[active_day-1]);
     load_schedule_data(edit_schedule,active_day);
     // printf("\n");
     editing = 1;
