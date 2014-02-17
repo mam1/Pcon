@@ -31,10 +31,8 @@ extern char *day_names_long[7];
 extern char *day_names_short[7];
 extern char *onoff[2];
 extern char *con_mode[3];
-extern char *sch_mode[2]; 
-
-
-
+extern char *sch_mode[2];
+/************************** edit state variable *************************/ 
 extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 /***************************** globals **********************************/
  uint32_t    state_mask = B32(10000000,00000000,00000000,00000000);
@@ -111,16 +109,22 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
     int                         i,rsize;
     volatile uint32_t           *r;
 
+    if(sch[c][0]==0)
+    {
+        printf("no schedule records to display\n\n");
+        return;   
+    }
+
     rsize = sch[c][0];
     r = &(sch[c][1]);
-    printf("  channel %i schedule for %s:\n",c,day_names_short[d-1]);
+    // printf("channel %i schedule for %s:\n",c,day_names_long[d-1]);
     for(i=0;i<rsize;i++)
     {
-        printf("    channel %i, key <%4i>, time %02i:%02i - %s\n",
+        printf("                                    channel %i, key <%4i>, time %02i:%02i - %s\n",
             c,get_key(*r),get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
         r++;
     }
-    printf("\n");
+        printf("\n\n");    
     return;
 }
 /* write a schedule buffer to the sd card */
@@ -175,7 +179,7 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
     char            name_buffer[_SCHEDULE_FILE_NAME_SIZE];
     FILE            *sfp;
 
-    printf("load_schedule_data: day <%i>, buffer address<%x> \n",day,(uint32_t)sch);
+
     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
     {                              
         sfp = fopen(sch_file_name(name_buffer,i,day),"r");
@@ -185,7 +189,7 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
             fclose(sfp);
             return 1;    
         }
-        printf(" <%s> opened  ",sch_file_name(name_buffer,i,day));
+        // printf(" <%s> opened  ",sch_file_name(name_buffer,i,day));
         rcnt = fread(&sch[i][0],4,1,sfp);
         if(rcnt!=1)
             {   
@@ -198,7 +202,7 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
         if(sfp)
             {
                  rcnt = fread(&sch[i][0],(rsize*4)+4,1,sfp);
-                 printf("rcnt %i, rsize %i, v1 %i, v2 %i\n",rcnt,rsize,(int)sch[i][1],(int)sch[i][2]);
+                 // printf("rcnt %i, rsize %i, v1 %i, v2 %i\n",rcnt,rsize,(int)sch[i][1],(int)sch[i][2]);
                 if(rcnt!=1)
                 {   
                     printf(" error reading schedule record\n");

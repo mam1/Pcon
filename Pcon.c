@@ -133,7 +133,7 @@ int sd_setup(void)
         printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",cog);
         return 1;
     }     
-    printf(" rtc cog active\n DS3231 monitored by code running on cog %i\n\n",cog);
+    printf(" rtc cog active\n DS3231 monitored by code running on cog %i\n",cog);
 /* set curent day and load schedule data */
    
 /* set up unbuffered nonblocking io */
@@ -148,7 +148,7 @@ int sd_setup(void)
     hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
-    printf("\ninitialization complete\nentering main processing loop\n\n");
+    printf("initialization complete\nentering main processing loop\n");
 /********************** main processing loop ****************/
     while(1)
     {
@@ -159,12 +159,12 @@ int sd_setup(void)
         if(rtc_cb.rtc.td_buffer.dow != hold_day)
         {
             hold_day = rtc_cb.rtc.td_buffer.dow;
-            if(load_schedule_data(dio_cb.dio.sch,rtc_cb.rtc.td_buffer.dow-1))
+            if(load_schedule_data(dio_cb.dio.sch,hold_day-1))
             {
                 printf("**** load_schedule_data abborted application ****\n");
                 return 1;
             }
-//            printf("schedule for %s loaded\n",day_names[rtc_cb.rtc.td_buffer.dow-1]);
+           printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
         }
 
         /* check the token stack */
