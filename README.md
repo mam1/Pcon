@@ -5,17 +5,14 @@
 Eight channel programmable controller. Channels can be controlled by time, time and a sensor value or manually. This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (DIOB).  The DIOB has 8 channels.  Each channel can control a 120v 8 amp load.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. 
 - - - - - - - - - 
 ####Language:
----------
 C Propgcc
 ---------
 ####Architecture:
--------------
 The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231 and updates a time/date buffer in hub memory.  It also sets a trigger (once a minute) in hub memory to let the dio cog know that it should update the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command.
 
 The complex part of the application is the command processor.  XMMC is required because of the code size.  It uses a fsm to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want.
 -------------
 ####Command processor:
-------------------
 * name channels  
 * manually control channel state  
 * set channel control mode (manual, time, time & sensor)
