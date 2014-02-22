@@ -30,7 +30,6 @@ The complex part of the application is the command processor.  XMMC is required 
 
 ####Data Structures:
 ----------------
-
 ####Files:
 ------
 
