@@ -2,7 +2,7 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 8
+#define _minor_version 10
 
 /* propeller io pin assignments */
 #define _DataIO          4              // DIO -DIN & DATA_RLY
