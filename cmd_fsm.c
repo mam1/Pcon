@@ -102,7 +102,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 15  display */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 16      day */   {0, 1, 2, 3, 4, 5, 7, 7, 8,  9, 10, 11, 12, 13},
 /* 17     week */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 7,  9, 12, 13},
+/* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  7,  9, 12, 13},
 /* 19     time */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 10, 11, 12, 13},
 /* 21       no */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 10, 11, 12, 13},
@@ -469,7 +469,8 @@ int c_23(int tt, int *n, char *s)
 /* set schedule record state to on */
 int c_24(int tt, int *n, char *s) 
 {
-    printf("set to on\n");
+    // printf("set to on\n");
+    // printf("add_sch_rec parameters before call: edit_schedule address <%x>, active channel <%i>, active_key <%i>, state <1>\n",edit_schedule,active_channel,active_key);
     add_sch_rec(edit_schedule,active_channel,active_key,1);
     c_0(tt,n,s); 
     return 0;
@@ -672,6 +673,15 @@ char *build_prompt(char *b,int tt)
             strcat(b," schedule for channel ");
             sprintf(temp,"%i",active_channel);
             strcat(b,temp);
+            printf("%s\n",b);
+            b = hold_b;
+            *b = '\0';
+            dump_sch_recs(edit_schedule,active_channel,active_day);
+            // strcat(b,"editing ");
+            // strcat(b,day_names_long[active_day-1]);
+            // strcat(b," schedule for channel ");
+            // sprintf(temp,"%i",active_channel);
+            // strcat(b,temp);
             // strcat(b,", day ");
             // sprintf(temp,"%i",active_day);
             // strcat(b,temp);
@@ -707,7 +717,7 @@ char *build_prompt(char *b,int tt)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dump_sch_recs(dio_cb.dio.sch,active_channel,active_day);
+            dump_sch_recs(edit_schedule,active_channel,active_day);
             strcat(b,"enter action for ");
             sprintf(temp,"%i",active_hour);
             strcat(b,temp);

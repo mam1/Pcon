@@ -120,8 +120,7 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
     // printf("channel %i schedule for %s:\n",c,day_names_long[d-1]);
     for(i=0;i<rsize;i++)
     {
-        printf("                                    channel %i, key <%4i>, time %02i:%02i - %s\n",
-            c,get_key(*r),get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
+        printf("  %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
         r++;
     }
         printf("\n\n");    
@@ -230,15 +229,15 @@ volatile uint32_t *find_schedule_record(volatile uint32_t sch[_NUMBER_OF_CHANNEL
     printf("r1 <%x>\n",(unsigned int)r);
     for(i=0;i<rsize;i++)
     {
-        printf("get_key returns <%i>\n",get_key(*r));
+        // printf("get_key returns <%i>\n",get_key(*r));
         if(k==get_key(*r))
         {
-            printf("hit, k=%i\n",k);
+            // printf("hit, k=%i\n",k);
             return r;
         }
         r++;
     }
-    printf("no hit, key=%i\n",k);
+    // printf("no hit, key=%i\n",k);
     return NULL;
 }
 /* delete a schedule record with matching key */
@@ -271,6 +270,8 @@ int add_sch_rec(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]
     volatile uint32_t       rsize, *r;
     int                     i,ii;
 
+    // printf("add_sch_rec called with <%x> <%i> <%i> <%i>\n",sch,c,k,s);
+
     if (r=find_schedule_record(sch,c,k))
     {
         put_state(r,s);
@@ -280,6 +281,13 @@ int add_sch_rec(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]
     {
         printf("*** too many schedule records\n");
         return 1;
+    }
+    if((int)sch[c][0]==0)
+    {
+        sch[c][0] = 1;
+        put_state(&sch[c][1],s);
+        put_key(&sch[c][1],k);
+        return 0;
     }
     i = 1;
     rsize = (int)sch[c][0];
