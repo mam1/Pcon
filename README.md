@@ -19,9 +19,9 @@ The complex part of the application is the command processor.  XMMC is required 
 
 The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
 
-    If a character is present, unless it is an ESC, the it passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
+**If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
 
-    If a character is not found the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
+**If a character is not found** the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 ####Command processor functions:
