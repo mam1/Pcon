@@ -1,4 +1,7 @@
-/* rtc.h header file for rtc.c*/
+/**************************************/
+/*  rtc.h -                           */
+/*  header file for rtc.cogc          */ 
+/**************************************/
 
 #ifndef _RTC_H_
 #define _RTC_H_

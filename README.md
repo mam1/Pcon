@@ -9,18 +9,22 @@ This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (
 C - Propgcc
 ####Hardware:
 * Parallax - C3 micro controller 
-* Parallax - Digital IO Board (DIOB)
+* Parallax - Digital IO Board (DIOB), Sharp solid state relays part# S202S02F
 * adafruit - ChronoDot real time clock module, based on a DS3231.
 
 ####Architecture:
-The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231 and updates a time/date buffer in hub memory.  It also sets a trigger (once a minute) in hub memory to let the dio cog know that it should update the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command.
+The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231 and updates a time/date buffer in hub memory.  It also sets a trigger (once a minute) in hub memory to let the dio cog know that it should update the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog.
 
 The complex part of the application is the command processor.  XMMC is required because of the code size.  It uses a finite state machine (fsm) to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want. 
 
-The command processor loops checking to see if a character has been typed. If it finds one, unless it is an ESC, the character passed to the first fsm (char_fsm). An ESC will clear all buffers and reset both state machines.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm).
+The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
 
-If a character is not found the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
-####Command processor:
+    If a character is present, unless it is an ESC, the it passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
+
+    If a character is not found the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
+
+Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
+####Command processor functions:
 * name channels  
 * manually control channel state  
 * set channel control mode (manual, time, time & sensor)
@@ -28,7 +32,6 @@ If a character is not found the code checks to see if the the cogs have sent any
 * create and maintain schedules for each channel
 * load/save schedules to SD card
 
-Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) valid in that state. Commands can be entered individually or strung together. If the fsm requires addition information to take an action a prompt will be displayed.
 ####Schedules:
 Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
 

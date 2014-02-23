@@ -111,7 +111,7 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
 
     if(sch[c][0]==0)
     {
-        printf("no schedule records to display\n\n");
+        printf("no schedule records\n");
         return;   
     }
 

@@ -25,7 +25,7 @@
 #define _CHAR_STATES     4
 
 /* command parser fsm */
-#define _CMD_TOKENS     22
+#define _CMD_TOKENS     24
 #define _CMD_STATES     14 
 
 /* channel parameters */

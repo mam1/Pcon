@@ -1,7 +1,7 @@
 /****************************************************************/
 /*  rtc.cogc -  version 0.1                                     */
 /*  This code reads a DS3231 and updates the time/date control  */
-/*  block in hub memory.                                        */  
+/*  block in hub memory.                                        */
 /****************************************************************/
 
 #include <propeller.h>
@@ -9,7 +9,7 @@
 #include "rtc.h"
 
 /***************************** globals ******************************/
- static _COGMEM uint32_t scl,sda, scl_mask,sda_mask,both_mask;
+ static _COGMEM uint32_t     scl, sda, scl_mask, sda_mask, both_mask;
 
 /* convert a byte of BCD to unit8_t */                                                                                              
 _NATIVE                                                          
@@ -17,7 +17,7 @@ uint8_t bcd_to_decimal(uint8_t d)
 {
     return ((d & 0x0F) + (((d & 0xF0) >> 4) * 10)); 
 }
-/* support clock streching  */
+/* support clock stretching  */
 _NATIVE
 void set_scl_high(void){
     i2c_float_scl_high;         //let the scl line float high
@@ -28,7 +28,7 @@ void set_scl_high(void){
 _NATIVE
 int i2cOpen(int d, int c)
 {
-/* setup masks and ititialize i2c bus */
+/* setup masks and initialize i2c bus */
     scl = c;
     sda = d;
     scl_mask = 1 << scl;
@@ -109,12 +109,12 @@ void comm_init(void)
 {
     do      
     {        
-        i2c_float_sda_high;          //make sure master has released SDA 
-        set_scl_high();             //let scl float high, but wait for DS3231 to let go
-        if(INA & sda_mask)           //if sda is high, generate a start
+        i2c_float_sda_high;     //make sure master has released SDA 
+        set_scl_high();         //let scl float high, but wait for DS3231 to let go
+        if(INA & sda_mask)      //if sda is high, generate a start
         {
-            i2c_set_sda_low;        //The DS3231 will recognize a valid start
-            i2c_float_sda_high;     //condition anywhere in a I2C data transfer 
+            i2c_set_sda_low;    //The DS3231 will recognize a valid start
+            i2c_float_sda_high; //condition anywhere in a I2C data transfer 
         }
         i2c_set_scl_low;
     }       
@@ -122,14 +122,15 @@ void comm_init(void)
 }
 
 /******************************************************************/
-/********************** start main rountine ***********************/
+/********************** start main routine ************************/
 /******************************************************************/
+
 /* loop forever updating the time and date in the control block */
 _NAKED
 void main (volatile RTC_CB *m)
 { 
     i2cOpen(_rtcDataPin,_rtcClockPin);  //set up the i2c bus
-    comm_init();                        //initialize DS3231 comunicaion interface
+    comm_init();                        //initialize DS3231 communication interface
     while(1){                           //loop forever
         while(lockset(m->tdb_lock));    //wait until we can set the lock
         i2cStart();                     //generate an i2c start condition
@@ -137,7 +138,7 @@ void main (volatile RTC_CB *m)
             m->abort = 1;
         if(i2cwrite(0))                 //point at start of data registers
             m->abort = 2;
-        i2cStop();                      //generat an i2c stop condition
+        i2cStop();                      //generate an i2c stop condition
         i2cStart();                     //generate an i2c start condition
         if(i2cwrite(DS3231_Read_addr))  //read the DS33231 data registers
             m->abort = 3;
@@ -148,7 +149,7 @@ void main (volatile RTC_CB *m)
         m->td_buffer.day =   bcd_to_decimal(i2cread(ACK));
         m->td_buffer.month = bcd_to_decimal(i2cread(ACK));
         m->td_buffer.year =  bcd_to_decimal(i2cread(NACK));
-        i2cStop();                      //generat an i2c stop condition
+        i2cStop();                      //generate an i2c stop condition
         lockclr(m->tdb_lock);           //clear the lock
         waitcnt(*(int*)0 + CNT);
 
