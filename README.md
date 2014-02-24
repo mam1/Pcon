@@ -1,8 +1,8 @@
-###Pcon
+###Pcon - 8 channel programmable controller
 - - - - - - - - - 
 #####Code is under construction it is not stable
 - - - - - - - - -
-Eight channel programmable controller. Channels can be controlled by time, time and a sensor value or manually. There can be different schedules for different days of the week. 
+Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
 
 This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (DIOB). The DIOB has 8 channels. Each channel can control a 120v 8 amp load.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. 
 ####Language:
@@ -46,12 +46,12 @@ A channel that is controlled by time will be a list of times and states.  For ex
 * 1:00  on
 * 13:00 off
 
-will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be off.
+will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.
 
 ####SD Files:
-Schedules are stored on a SD card. The file names are generated in the following format: (s<tag>d<day #>c<chanel #>.SCH).  The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable.
+Schedules are stored on a SD card. The file names are generated in the following format: "s<tag>d<day #>c<chanel #>.SCH".  The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable.
 
-Channel information (name, control mode, state) for all channels is stored in a single file.  The file name is generated in the following format: (s<tag<>.CH).
+Channel information (name, control mode, state) for all channels is stored in a single file.  The file name is generated in the following format: "s<tag<>.CH".
 ####Propeller Pins:
 
     0 

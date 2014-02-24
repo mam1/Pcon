@@ -1,7 +1,16 @@
 /****************************************************************/
-/*  rtc.cogc -  version 0.1                                     */
-/*  This code reads a DS3231 and updates the time/date control  */
-/*  block in hub memory.                                        */
+/*                                                              */
+/*  rtc.cogc -  version 0.10                                    */
+/*                                                              */
+/*  This code reads a DS3231, converts the BDC to integer and   */
+/*  updates the time/date control block in hub memory.  It also */
+/*  triggers the dio cog to update the DIO Board once every     */
+/*  minute.                                                     */
+/*                                                              */
+/*  The cog contains i2c bit banging code because the library   */
+/*  code is too large to fit in a cog and because the DS3231    */
+/*  requires clock stretching if the code is running in a cog.  */
+/*                                                              */
 /****************************************************************/
 
 #include <propeller.h>
@@ -155,7 +164,9 @@ void main (volatile RTC_CB *m)
 
     };
 }
-
+/******************************************************************/
+/************************ end main routine ************************/
+/******************************************************************/
 
 
 

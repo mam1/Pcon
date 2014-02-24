@@ -50,15 +50,15 @@ int start_rtc(volatile void *parptr)
 }
 //**************** digital IO board cog stuff ************************/
 /* begining and ending address of the code for the dio cog */
-//  extern unsigned int _load_start_dio_cog[];
-//  extern unsigned int _load_stop_dio_cog[];
+ extern unsigned int _load_start_dio_cog[];
+ extern unsigned int _load_stop_dio_cog[];
 /* allocate control block & stack for dio cog */
 struct {
     unsigned stack[_STACK_SIZE_DIO];
     volatile DIO_CB dio;
 } dio_cb;
 /* start dio cog */
-/*
+
 int start_dio(volatile void *parptr)
 { 
     int size = (_load_stop_dio_cog - _load_start_dio_cog)*4;
@@ -67,7 +67,7 @@ int start_dio(volatile void *parptr)
     memcpy(code, _load_start_dio_cog, size); //assume xmmc
     return cognew(code, parptr);
 }
-*/
+
 /******************************* support fuctions *********************/
 int ckeck_abort(void)
 {
@@ -134,8 +134,24 @@ int sd_setup(void)
         return 1;
     }     
     printf(" rtc cog active\n DS3231 monitored by code running on cog %i\n",cog);
-/* set curent day and load schedule data */
-   
+/* setup  the dio controll block */
+    dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
+    dio_cb.dio.cca_lock = locknew();
+    lockclr(dio_cb.dio.cca_lock);
+    dio_cb.dio.sch_lock = locknew();
+    lockclr(dio_cb.dio.sch_lock);
+
+    dio_cb.dio.keep_waiting = &(rtc_cb.rtc.keep_waiting);
+    dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
+/* start the dio cog  */
+    cog = start_dio(&dio_cb.dio);
+    if(cog == -1)
+    {
+        printf("** error attempting to start dio cog\n  cognew returned %i\n\n",cog);
+        return 1;
+    }     
+    printf(" dio cog active\n dio board controlled by code running on cog %i\n",cog);
+ 
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);
     setvbuf(stdout, NULL, _IONBF, 0);

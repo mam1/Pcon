@@ -1,0 +1,162 @@
+/***********************************************************************/
+/*                                                                     */
+/*  dio.cogc -  version 0.1                                            */
+/*                                                                     */                                           
+/*  This code updates the Parallax Digital IO Board via the serial     */
+/*  interface. It builds a control byte in which each bit represents   */
+/*  the state of the corresponding relay on the DIO Board. Then the    */
+/*  byte (channel control byte - ccb) is loaded into the serial         */
+/*  interface.                                                         */
+/*                                                                     */
+/*  It is in a loop waiting for a trigger from the rtc cog.  When      */
+/*  triggered  It looks at the channel control array(cca) to see how   */
+/*  the state of the channel is controlled:                            */
+/*                                                                     */                                       
+/*           0 = manual, 1 = time, 2 = time & sensor                   */
+/*                                                                     */ 
+/*  If manual control is specified; the state in the channel control   */
+/*  array (cca) is used to set the ccb bit.                            */
+/*                                                                     */
+/*  If time control is specified; the channel state is determined by   */
+/*  searching the channel schedule with the current time/day.          */
+/*                                                                     */                                                                       
+/***********************************************************************/
+
+#include <propeller.h>
+#include "Pcon.h"
+#include "dio.h"
+
+/* globals */
+uint32_t     state_mask,key_mask;
+_NATIVE
+int get_key(uint32_t b)
+{
+    uint32_t     k;
+    k = (int)(b & key_mask);
+    return (int)k;
+}
+_NATIVE
+int get_state(uint32_t b)
+{
+    if (b & state_mask)
+        return 1;
+    return 0;
+}
+/* send a control byte to the dio board */
+_NATIVE
+void send_ccb(byte)
+{
+    int         i;
+    dir_out(_DataIO);   //setup to write 
+    pin_low(_DataIO);  
+    for(i=7;i>=0;i--)   //serialize and reverse bits 
+    {
+        if((1 << i) & byte)
+            pin_high(_DataIO);  //send bit high
+        else
+            pin_low(_DataIO);   //send bit low
+        /* send clock pluse */                 
+        pin_high(_Clock);   
+        pin_low(_Clock);
+    }   
+    pin_high(_HC595);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
+    pin_low(_HC595);        //done - ready for next write */ 
+    return;
+}
+
+_NATIVE
+int test_sch(int cnt, volatile uint32_t *r, int k)
+{
+    static int                     i;
+    volatile uint32_t              *first_record;
+
+    first_record = r;
+    i=0;
+    while(i++ < cnt)
+    {
+        if(get_key(*r)==k)
+            return get_state(*r);   
+        if((get_key(*r) > k))     
+            return get_state(*(--r));
+        r++;
+    }    
+    return get_state(*first_record);
+}     
+/******************************************************************/
+/********************** start main routine ************************/
+/******************************************************************/
+_NAKED
+void main (volatile DIO_CB *m)
+{ 
+    static  int i,key;
+    static  uint8_t    ccb,hccb;
+     
+//    i =   *(int*) 0;      // _CNT
+    /* setup bit masks used to extract key and state */
+    state_mask = (1<<31);
+    key_mask = ~state_mask;
+
+    /* Setup IO Pins */
+    dir_out(_Clock);
+    dir_out(_HC165);
+    dir_out(_HC595);
+    pin_low(_Clock);
+    pin_low(_HC165);
+    pin_low(_HC595);
+
+    send_ccb(0);    //turn off all relays on the dio board */
+
+/*  loop forever */
+    for(;;)  
+    {
+        while(m->keep_waiting);    //wait for the trigger to be set
+    /* build a channel control byte */
+        while(lockset(m->cca_lock));
+        ccb = 0;
+        for(i=0;i<_NUMBER_OF_CHANNELS;i++)
+            switch(m->cca[i].c_mode)
+            {   
+                case 0:     //manual control
+                    if(m->cca[i].state == 1)
+                        ccb |=(uint8_t)(1<<i);
+                    else
+                        ccb &= ~(uint8_t)(1<<i); 
+                    break;
+                case 1:     //time control
+                    while(lockset(m->tdb_lock));    //wait for a lock
+                    key = ((m->td_ptr)->hour * 60) + (m->td_ptr)->min;
+                    if(test_sch(m->sch[i][0], &(m->sch[i][1]), key))
+                    {
+                        ccb |= (1<<i);
+                        m->cca[i].state = 1;
+                    }
+                    else
+                    {
+                        ccb &= ~(1<<i);
+                        m->cca[i].state = 0;
+                    }
+                    lockclr(m->tdb_lock);
+                    break;
+                case 2:     //time and sensor control, not implemented
+                    send_ccb(0);    //try to turn off all relays on the dio board 
+                    m->abort = 2;   //abort application
+                    break;
+                default:    //should not happen
+                    send_ccb(0);    //try to turn off all relays on the dio board 
+                    m->abort = 1;   //abort application
+            }
+        lockclr(m->cca_lock);
+
+    /* test for a change in channel control byte */
+        if(hccb == ccb);
+        else 
+        {
+            hccb = ccb;
+            send_ccb(ccb);
+        }
+    }       
+}
+/******************************************************************/
+/************************ end main routine ************************/
+/******************************************************************/
+

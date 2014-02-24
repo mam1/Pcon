@@ -123,7 +123,7 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
         printf("  %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
         r++;
     }
-        printf("\n\n");    
+        // printf("\n\n");    
     return;
 }
 /* write a schedule buffer to the sd card */
@@ -145,13 +145,13 @@ int save_schedule_data(volatile uint32_t sbuf[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE
             fclose(sfp);
             return 1;    
         }
-        printf(" <%s> opened\n",sch_file_name(name_buffer,i,day));
+        // printf(" <%s> opened\n",sch_file_name(name_buffer,i,day));
         rsize = (int)sbuf[i][0];
-        printf("rsize = %i\n",rsize);
+        // printf("rsize = %i\n",rsize);
         if(sfp)
             {
                 rcnt = fwrite(&sbuf[i][0],(rsize+1)*4,1,sfp);
-                printf(" rcnt %i, rsize %i\n",rcnt,rsize);
+                // printf(" rcnt %i, rsize %i\n",rcnt,rsize);
                 if(rcnt!=1)
                 {   
                     printf("**** error writing schedule record\n");
@@ -167,6 +167,7 @@ int save_schedule_data(volatile uint32_t sbuf[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE
             }
         // usleep(1000000);
     }
+    printf("schedule saved\n");
     return 0;
 }
 
@@ -226,7 +227,7 @@ volatile uint32_t *find_schedule_record(volatile uint32_t sch[_NUMBER_OF_CHANNEL
     
     rsize = (int)sch[c][0];
     r = &sch[c][1];
-    printf("r1 <%x>\n",(unsigned int)r);
+    // printf("r1 <%x>\n",(unsigned int)r);
     for(i=0;i<rsize;i++)
     {
         // printf("get_key returns <%i>\n",get_key(*r));

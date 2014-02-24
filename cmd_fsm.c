@@ -88,7 +88,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  1      STR */   {0, 1, 2, 2, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  2    OTHER */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  3    EMPTY */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  4     save */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}, 
+/*  4     save */   {0, 1, 2, 3, 4, 5, 6, 6, 8,  9, 10, 11, 12, 13}, 
 /*  5     load */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  6     done */   {0, 0, 1, 2, 2, 2, 2, 6, 8,  7,  7,  7, 12, 13},
 /*  7    state */   {0, 1, 5, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -152,7 +152,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  1      STR */   {c_13,  c_0,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2    OTHER */   {c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12},
 /*  3    EMPTY */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  4     save */   {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  4     save */   {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0, c_29,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5     load */   {c_13, c_27, c_27,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_6,  c_0,  c_7,  c_7,  c_7,  c_0,  c_0},
 /*  7    state */   {c_13,  c_0, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -404,7 +404,7 @@ int c_20(int tt, int *n, char *s)
         printf("%i is not a valid day number it must be 1-7\n\n",*n);
         cmd_state = 1; // back out the state transition
         c_3(tt,n,s);
-        return;
+        return 0;
     }
     if((*n == active_day) && (editing == 1))   //working of the currently active day
     {
@@ -433,6 +433,14 @@ int c_20(int tt, int *n, char *s)
 /* set active hour */
 int c_21(int tt, int *n, char *s) 
 {
+    if((*n <0) || (*n >23))
+    {
+        printf("invalid hour, ");
+        printf("%i is not a valid hour it must be 0-23\n\n",*n);
+        cmd_state -= 1; // back out the state transition
+        c_3(tt,n,s);
+        return 0;
+    }
     active_hour = *n;
     // printf("active hour set:  \n  ");
     c_0(tt,n,s);  
@@ -442,6 +450,14 @@ int c_21(int tt, int *n, char *s)
 /* set active minute */
 int c_22(int tt, int *n, char *s) 
 {
+    if((*n <0) || (*n >59))
+    {
+        printf("invalid minute, ");
+        printf("%i is not a valid minute it must be 0-59\n\n",*n);
+        cmd_state -= 2; // back out the state transition
+        c_3(tt,n,s);
+        return 0;
+    }
     active_minute = *n;
     // printf("active minute set:  \n  ");
     active_key = (active_hour*60)+active_minute;
@@ -479,7 +495,7 @@ int c_24(int tt, int *n, char *s)
 /* set schedule record state to off */
 int c_25(int tt, int *n, char *s) 
 {
-    printf("set to off\n");
+    // printf("set to off\n");
     add_sch_rec(edit_schedule,active_channel,active_key,0);
     c_0(tt,n,s); 
     return 0;}
@@ -488,6 +504,7 @@ int c_25(int tt, int *n, char *s)
 int c_26(int tt, int *n, char *s) 
 {
     del_sch_rec(edit_schedule,active_channel,active_key);
+    c_0(tt,n,s); 
     return 0;
 }
 
