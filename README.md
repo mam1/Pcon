@@ -13,7 +13,9 @@ C - Propgcc
 * adafruit - ChronoDot real time clock module, based on a DS3231.
 
 ####Architecture:
-The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231 and updates a time/date buffer in hub memory.  It also sets a trigger (once a minute) in hub memory to let the dio cog know that it should update the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog.
+The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decmial and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog. 
+
+The dio cog read the time from the buffer in hub memory.  Once a minute the dio cog updates the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command. The dio cog also can be forced to update the DIOB by use of a flag in hub memory. 
 
 The complex part of the application is the command processor.  XMMC is required because of the code size.  It uses a finite state machine (fsm) to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want. 
 
@@ -23,7 +25,7 @@ The command processor loops checking to see if a character has been typed. Input
 
 **If a character is not found** the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
 
-Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
+Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 ####Command processor functions:
 * name channels  
 * manually control channel state  
@@ -49,9 +51,11 @@ A channel that is controlled by time will be a list of times and states.  For ex
 will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.
 
 ####SD Files:
-Schedules are stored on a SD card. The file names are generated in the following format: "s<tag>d<day #>c<chanel #>.SCH".  The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable.
+Schedules are stored on a SD card. The file names are generated in the following format: 
+>   s<tag>d<day #>c<chanel #>.SCH  
 
-Channel information (name, control mode, state) for all channels is stored in a single file.  The file name is generated in the following format: "s<tag<>.CH".
+The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable.  Channel information (name, control mode, state) for all channels is stored in a single file.  The file name is generated in the following format: 
+>   s<tag<>.CH
 ####Propeller Pins:
 
     0 

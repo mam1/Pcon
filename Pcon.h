@@ -38,7 +38,7 @@
 
 /* sd card file parameters */
 //#define _FILE_NAME_SIZE         20
-#define _F_PREFIX               "d007"
+#define _F_PREFIX               "s001"
 #define _F_SYSTEM_SUFIX         ".sys"
 #define _F_SCHEDULE_SUFIX       ".sch"
 #define _F_CHANNEL_SUFIX        ".ch"
@@ -104,10 +104,10 @@ typedef volatile struct
 {
     int                 tdb_lock;   //lock ID for time date buffer
     int                 abort;      //!= 0 cog requests a system abort,value = error code
-    int                 keep_waiting;//triger update flag, 1=wait, 0=update 
+    int                 update;     //triger update flag, 1=wait, 0=update 
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
-
+ 
 /*  data structure for each node in the schedule array */
 typedef struct{
     int    cnt;
@@ -121,7 +121,7 @@ typedef volatile struct
     int        cca_lock;    //lock ID for the channel control array
     int        sch_lock;    //lock ID for schedule records
     int        abort;       //!= 0 cog requests a system abort,value = error code
-    int        *keep_waiting;//pointer to triger update flag, 1=wait, 0=update 
+    int        *update_ptr;//pointer to triger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;    //pointer to the time date buffer
     CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
 //    SCH        sch[_NUMBER_OF_CHANNELS][_DAYS_PER_WEEK]; //schedule for each channel for current day

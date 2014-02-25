@@ -312,6 +312,7 @@ int c_11(int tt, int *n, char *s) //save - s1
 {
     set_channel_state(1);
     set_channel_control_mode(0);
+    rtc_cb.rtc.update = 1;
     printf("channel state set to on, control mode forced to manual\n");
     disp_channel_data(active_channel);
     c_0(tt,n,s);  
@@ -389,6 +390,7 @@ int c_19(int tt, int *n, char *s) //save - s1
 {
     set_channel_state(0);
     set_channel_control_mode(0);
+    rtc_cb.rtc.update = 1;
     printf("channel state set to off, control mode forced to manual\n");
     disp_channel_data(active_channel);
     c_0(tt,n,s);  
@@ -398,7 +400,7 @@ int c_19(int tt, int *n, char *s) //save - s1
 /* set active day and load schedule buffer*/
 int c_20(int tt, int *n, char *s) 
 {
-    if((*n <0) || (*n >7))
+    if((*n < 1) || (*n > 7))
     {
         printf("invalid day number, ");
         printf("%i is not a valid day number it must be 1-7\n\n",*n);
@@ -423,7 +425,7 @@ int c_20(int tt, int *n, char *s)
     active_day = *n;
     // printf("active day set to %s\n",day_names_long[active_day-1]);
     // printf("loading edit schedule buffer for %s\n",day_names_long[active_day-1]);
-    load_schedule_data(edit_schedule,active_day);
+    load_schedule_data(edit_schedule,active_day-1);
     // printf("\n");
     editing = 1;
     c_0(tt,n,s);  
@@ -433,7 +435,7 @@ int c_20(int tt, int *n, char *s)
 /* set active hour */
 int c_21(int tt, int *n, char *s) 
 {
-    if((*n <0) || (*n >23))
+    if((*n < 0) || (*n > 23))
     {
         printf("invalid hour, ");
         printf("%i is not a valid hour it must be 0-23\n\n",*n);
@@ -450,7 +452,7 @@ int c_21(int tt, int *n, char *s)
 /* set active minute */
 int c_22(int tt, int *n, char *s) 
 {
-    if((*n <0) || (*n >59))
+    if((*n < 0) || (*n > 59))
     {
         printf("invalid minute, ");
         printf("%i is not a valid minute it must be 0-59\n\n",*n);
@@ -511,7 +513,7 @@ int c_26(int tt, int *n, char *s)
 /* load schedule record */
 int c_27(int tt, int *n, char *s) 
 {
-    load_schedule_data(edit_schedule, active_day);
+    load_schedule_data(edit_schedule, active_day-1);
     printf("edit buffer reloaded from the sd card\n");
     c_0(tt,n,s);
     return 0;
@@ -520,7 +522,7 @@ int c_27(int tt, int *n, char *s)
 /* do not save edit schedule buffer before load*/
 int c_28(int tt, int *n, char *s) 
 {
-    load_schedule_data(edit_schedule, active_day);
+    load_schedule_data(edit_schedule, active_day-1);
     c_0(tt,n,s); 
     return 0;
 }
@@ -528,15 +530,15 @@ int c_28(int tt, int *n, char *s)
 /* save edit schedule buffer before load*/
 int c_29(int tt, int *n, char *s) 
 {
-    save_schedule_data(edit_schedule, active_day);
-    load_schedule_data(edit_schedule, active_day);
+    save_schedule_data(edit_schedule, active_day-1);
+    load_schedule_data(edit_schedule, active_day-1);
     c_0(tt,n,s); 
     return 0;
 }
 /* display the schedule for active day and channel */
 int c_30(int tt, int *n, char *s) 
 {
-    dump_sch_recs(edit_schedule,active_channel,active_day);
+    dump_sch_recs(edit_schedule,active_channel,active_day-1);
     c_0(tt,n,s); 
     return 0;
 }
@@ -693,7 +695,7 @@ char *build_prompt(char *b,int tt)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dump_sch_recs(edit_schedule,active_channel,active_day);
+            dump_sch_recs(edit_schedule,active_channel,active_day-1);
             // strcat(b,"editing ");
             // strcat(b,day_names_long[active_day-1]);
             // strcat(b," schedule for channel ");
@@ -734,7 +736,7 @@ char *build_prompt(char *b,int tt)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dump_sch_recs(edit_schedule,active_channel,active_day);
+            dump_sch_recs(edit_schedule,active_channel,active_day-1);
             strcat(b,"enter action for ");
             sprintf(temp,"%i",active_hour);
             strcat(b,temp);

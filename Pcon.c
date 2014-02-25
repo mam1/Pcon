@@ -76,13 +76,13 @@ int ckeck_abort(void)
             printf("\n\n*** rtc cog issued an abort\n ACK missing - message number %i\n",rtc_cb.rtc.abort);
             return 1;
         }
-/*
+
         if(dio_cb.dio.abort != 0)
         {
             printf("\n\n*** dio cog issued an abort\n message number %i\n",dio_cb.dio.abort);
             return 1;
         }
-*/
+
     return 0;
 }
 int sd_setup(void)
@@ -140,9 +140,20 @@ int sd_setup(void)
     lockclr(dio_cb.dio.cca_lock);
     dio_cb.dio.sch_lock = locknew();
     lockclr(dio_cb.dio.sch_lock);
-
-    dio_cb.dio.keep_waiting = &(rtc_cb.rtc.keep_waiting);
+    dio_cb.dio.update_ptr = &(rtc_cb.rtc.update);
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
+    *dio_cb.dio.update_ptr = 0;
+/* load the schedule buffer */
+/*
+    if(load_schedule_data(dio_cb.dio.sch,rtc_cb.rtc.td_buffer.dow-1))
+    {
+        printf("**** load_schedule_data abborted application ****\n");
+        return 1;
+    }
+    printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+    dump_sch_recs(dio_cb.dio.sch,3,2);
+    rtc_cb.rtc.update = 1;
+*/
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);
     if(cog == -1)
@@ -180,7 +191,9 @@ int sd_setup(void)
                 printf("**** load_schedule_data abborted application ****\n");
                 return 1;
             }
-           printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+            printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+            // dump_sch_recs(dio_cb.dio.sch,0,2);
+            rtc_cb.rtc.update = 1;  //force update
         }
 
         /* check the token stack */

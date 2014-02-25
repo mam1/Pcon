@@ -19,7 +19,7 @@
 
 /***************************** globals ******************************/
  static _COGMEM uint32_t     scl, sda, scl_mask, sda_mask, both_mask;
-
+/************************ support routines **************************/
 /* convert a byte of BCD to unit8_t */                                                                                              
 _NATIVE                                                          
 uint8_t bcd_to_decimal(uint8_t d)
@@ -92,7 +92,8 @@ uint8_t i2cwrite(uint8_t d)
 _NATIVE
 uint8_t i2cread(char b)   
 {
-    static uint8_t          i, d;
+    static uint8_t              i, d;
+
 
     d = 0;
     i2c_float_sda_high;        //release the sda line
