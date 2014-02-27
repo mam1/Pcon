@@ -116,8 +116,13 @@ int sd_setup(void)
     sleep(1);   //wait for the serial terminial to start
 /* display system info on serial terminal */
     printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
-    printf("File Prefix <%s>\n",_F_PREFIX);
-    printf("CCR size %i, dio_cb.dio.caa size %i\n",sizeof(CCR),sizeof(dio_cb.dio.cca));
+    #if _DRIVEN == _DIOB
+        printf("system is configed to drive a Parallax Digital IO Board\n");
+    #else
+        printf("system is configed to drive 5 IO pins\n");
+    #endif
+    printf("System File Prefix <%s>\n",_F_PREFIX);
+    // printf("CCR size %i, dio_cb.dio.caa size %i\n",sizeof(CCR),sizeof(dio_cb.dio.cca));
 /* check out the sd card */
     if(sd_setup())
     {
@@ -160,9 +165,13 @@ int sd_setup(void)
     {
         printf("** error attempting to start dio cog\n  cognew returned %i\n\n",cog);
         return 1;
-    }     
-    printf(" dio cog active\n dio board controlled by code running on cog %i\n",cog);
- 
+    }
+    #if _DRIVEN == _DIOB
+            printf(" dio cog active\n DIO Board controlled by code running on cog %i\n",cog);
+    #else
+         printf(" dio cog active\n relays controlled by code running on cog %i\n",cog);
+
+    #endif      
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);
     setvbuf(stdout, NULL, _IONBF, 0);

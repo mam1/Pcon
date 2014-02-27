@@ -245,7 +245,7 @@ int c_4(int tt, int *n, char *s)
         c_0(tt,n,s);
         return 0;
     }
-    printf("%i is not a valid channel number it must be 0-7\n\n",*n);
+    printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_DRIVEN);
     cmd_state = 1; // back out the state transition
     c_3(tt,n,s);
     return 1;

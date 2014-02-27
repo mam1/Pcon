@@ -319,7 +319,7 @@ int init_schedule_data(void)
     sfp = fopen(sch_file_name(name_buffer,1,1),"r");
     if(sfp)
     {
-        printf("schedule files found\n");
+        // printf("schedule files found\n");
         fclose(sfp);
         return 0;    
     }
@@ -329,7 +329,7 @@ int init_schedule_data(void)
     for(c=0;c<_NUMBER_OF_CHANNELS;c++)
         for(d=0;d<_DAYS_PER_WEEK;d++)
         {
-            printf("channel %i, day %i, generated schedule name: %s\n",c,d,sch_file_name(name_buffer,c,d));
+            // printf("channel %i, day %i, generated schedule name: %s\n",c,d,sch_file_name(name_buffer,c,d));
             sfp = fopen(sch_file_name(name_buffer,c,d),"w");
             if(sfp)
             {

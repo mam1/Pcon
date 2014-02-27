@@ -47,6 +47,7 @@ int get_statev(uint32_t b)
         return 1;
     return 0;
 }
+#if _DRIVEN == _DIOB
 /* send a control byte to the dio board */
 _NATIVE
 void send_ccb(byte)
@@ -68,7 +69,29 @@ void send_ccb(byte)
     pin_low(_HC595);        //done - ready for next write */ 
     return;
 }
-
+#else
+/* send a control byte to the AQY212GH relays */
+_NATIVE
+void send_ccb(byte)
+{
+    int         i;
+    dir_out(_DataIO);   //setup to write 
+    pin_low(_DataIO);  
+    for(i=7;i>=0;i--)   //serialize and reverse bits 
+    {
+        if((1 << i) & byte)
+            pin_high(_DataIO);  //send bit high
+        else
+            pin_low(_DataIO);   //send bit low
+        /* send clock pluse */                 
+        pin_high(_Clock);   
+        pin_low(_Clock);
+    }   
+    pin_high(_HC595);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
+    pin_low(_HC595);        //done - ready for next write */ 
+    return;
+}
+#endif
 _NATIVE
 int test_sch(uint32_t cnt, volatile uint32_t *r, int k, volatile DIO_CB *m)
 {
