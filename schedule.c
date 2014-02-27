@@ -111,7 +111,7 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
 
     if(sch[c][0]==0)
     {
-        printf("no schedule records\n");
+        printf("    no schedule records\n");
         return;   
     }
 
@@ -120,7 +120,7 @@ void dump_sch_recs(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS
     // printf("channel %i schedule for %s:\n",c,day_names_long[d-1]);
     for(i=0;i<rsize;i++)
     {
-        printf("  %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
+        printf("    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_statex(*r)]);
         r++;
     }
         // printf("\n\n");    

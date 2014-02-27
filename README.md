@@ -1,10 +1,21 @@
-###Pcon - 8 channel programmable controller
+###Pcon - multi channel programmable controller
 - - - - - - - - - 
 #####Code is under construction it is not stable
 - - - - - - - - -
 Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
 
-This project uses a Parallax Propeller C3 to drive a Parallax Digital IO Board (DIOB). The DIOB has 8 channels. Each channel can control a 120v 8 amp load.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. 
+The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. This project contains 2 versions of this control cog.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5 AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The AQY212GH cog, aqy212.cogc is implemented in the PhotoMOS code branch. 
+
+The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relay is rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
+
+A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
+
+
+Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
+
+This project uses a Parallax Propeller C3 to drive 5 AQY212GH PhotoMOS relays mounted on the same board as the DS3231 module (see below).  The relays come in a 4-pin DIP package. They are rated at 60 V AC/DC 1.1 A.  They work great to control 24 V zone valves. 
+
+A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
 C - Propgcc
 ####Hardware:
@@ -13,9 +24,9 @@ C - Propgcc
 * adafruit - ChronoDot real time clock module, based on a DS3231.
 
 ####Architecture:
-The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decmial and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog. 
+The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decimal and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog. 
 
-The dio cog read the time from the buffer in hub memory.  Once a minute the dio cog updates the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command. The dio cog also can be forced to update the DIOB by use of a flag in hub memory. 
+The dio cog reads the time from the buffer in hub memory.  Once a minute the dio cog updates the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command. The dio cog also can be forced to update the DIOB by use of a flag in hub memory. 
 
 The complex part of the application is the command processor.  XMMC is required because of the code size.  It uses a finite state machine (fsm) to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want. 
 

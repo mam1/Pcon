@@ -141,7 +141,7 @@ int c_27(int,int *,char *); /* load schedule record into edit buffer */
 int c_28(int,int *,char *); /* do not save edit schedule buffer  before load*/
 int c_29(int,int *,char *); /* save edit schedule buffer before load */
 int c_30(int,int *,char *); /* display schedule for active day and channel*/
-   
+int c_31(int,int *,char *); /* display schedules for active day and all channel*/
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -155,15 +155,15 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  4     save */   {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0, c_29,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5     load */   {c_13, c_27, c_27,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_6,  c_0,  c_7,  c_7,  c_7,  c_0,  c_0},
-/*  7    state */   {c_13,  c_0, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8 schedule */   {c_13,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  channel */   { c_3,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 10     name */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 11     mode */   {c_13,  c_0, c_15, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  channel */   { c_3, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 10     name */   {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 11     mode */   {c_13, c_13, c_15, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12       on */   {c_13,  c_0,  c_0,  c_0,  c_0, c_11,  c_0,  c_0,  c_0,  c_0, c_24, c_24,  c_0,  c_0},
 /* 13      off */   {c_13,  c_0,  c_0,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0, c_25, c_25,  c_0,  c_0},
 /* 14        ? */   { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
-/* 15  display */   {c_13,  c_5, c_17, c_17, c_17, c_17, c_17, c_30,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  display */   {c_13,  c_5, c_17, c_17, c_17, c_17, c_31, c_30,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16      day */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0,  c_0,  c_0},
@@ -330,7 +330,7 @@ int c_12(int tt, int *n, char *s) //save - s1
 /* invalid input */
 int c_13(int tt, int *n, char *s) //save - s1
 {
-    printf("command is not valid in state %i\n>>",cmd_state);  
+    printf("command is not valid in state %i, enter <?> for a list of valid commands\n>>",cmd_state);  
     return 0;
 }
 
@@ -541,6 +541,26 @@ int c_30(int tt, int *n, char *s)
     dump_sch_recs(edit_schedule,active_channel,active_day-1);
     c_0(tt,n,s); 
     return 0;
+}
+/* display the schedules for all days and all channels */
+int c_31(int tt, int *n, char *s) 
+{
+    int             c,d;
+    printf("Schedules for all days and channels\n");
+    for(d=0;d<7;d++)
+    {
+        printf("\n%s\n",day_names_long[d]);
+        for(c=0;c<_NUMBER_OF_CHANNELS;c++)
+        {
+            printf("  channel %i:  \n",c);
+            dump_sch_recs(dio_cb.dio.sch,c,d);
+            // printf("\n");
+        }
+        // printf("\n");
+    }
+    c_0(tt,n,s); 
+    return 0;
+
 }
 
 
