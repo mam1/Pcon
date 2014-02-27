@@ -106,7 +106,8 @@ int init_channel_data(void)
 {
     fptr_channel = fopen(channel_file_name(fn_channel),"r");
     if(fptr_channel)
-        printf("channel file found\n");
+        // printf("channel file found\n")
+        ;
     else
     {
         printf("*** channel file <%s> does not exsit,it will be created\n",fn_channel);

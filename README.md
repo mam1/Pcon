@@ -60,14 +60,24 @@ The tag is a user supplied 3 digit number, it is currently implemented as a prep
 
     0 
     1
-    2 
-    3 - 
-    4 - dio, DIN
-    4 - dio, DATA_RLY
-    5 - dio, SCLK_IN
-    5 - dio, SCLK_RLY
-    6 - dio, LOAD_IN
-    7 - dio, LAT_RLY
+    2
+
+        3 - 
+        4 - dio, DIN
+        4 - dio, DATA_RLY
+        5 - dio, SCLK_IN
+        5 - dio, SCLK_RLY
+        6 - dio, LOAD_IN
+        7 - dio, LAT_RLY
+
+        3 - 
+        4 - dio, DIN
+        4 - dio, DATA_RLY
+        5 - dio, SCLK_IN
+        5 - dio, SCLK_RLY
+        6 - dio, LOAD_IN
+        7 - dio, LAT_RLY
+
     8 - SPI
     9 - SPI, SPI_MOSI
     10 - SPI, SPI_MISO

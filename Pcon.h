@@ -2,13 +2,29 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 11
+#define _minor_version 13
+
+/* configuration options */
+#define _DIOB       1       //configure to drive Parallax Digital IO Board
+#define _212GH      2       //configure to drive 5 AYQ212GH relays
+
+#define _DRIVEN     _DIOB
 
 /* propeller io pin assignments */
-#define _DataIO          4              // DIO -DIN & DATA_RLY
-#define _Clock           5              // DIO SCLK_IN & SCLK_RLY
-#define _HC165           6              // DIO LOAD_IN Pin
-#define _HC595           7              // DIO LAT_RLY Pin
+#if _DRIVEN == _DIOB
+    /* if configured to drive the Parallax Digital IO board */
+    #define _DataIO          4              // DIO -DIN & DATA_RLY
+    #define _Clock           5              // DIO SCLK_IN & SCLK_RLY
+    #define _HC165           6              // DIO LOAD_IN Pin
+    #define _HC595           7              // DIO LAT_RLY Pin
+#else
+    /* if configure to drie AYQ212GH relays */
+    #define _RLY1           3              // relay 1
+    #define _RLY2           4              // relay 2
+    #define _RLY3           5              // relay 3
+    #define _RLY4           6              // relay 4
+    #define _RLY5           7              // relay 5
+#endif
 #define _toggle_VGA     15              // toggle the port B header to VGA
 #define _VGA_start      16              // VGA uses pins 16-
 #define _data_pin       26              // keyboard */
@@ -29,7 +45,11 @@
 #define _CMD_STATES     14 
 
 /* channel parameters */
-#define _NUMBER_OF_CHANNELS 8
+#if _DRIVEN == _DIOB
+    #define _NUMBER_OF_CHANNELS 8
+#else
+    #define _NUMBER_OF_CHANNELS 5
+#endif
 #define _CHANNEL_NAME_SIZE  15
 #define _CHANNEL_NAME_BUFFER_SIZE  30
 #define _CHANNEL_FILE_NAME_SIZE 30
