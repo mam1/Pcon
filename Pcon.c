@@ -28,7 +28,7 @@ char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 char *day_names_short[7] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
 char *onoff[2] = {"off"," on"};
-char *con_mode[3] = {"manual","time","time & sensor"};
+char *con_mode[3] = {"manual","  time","time & sensor"};
 char *sch_mode[2] = {"day","week"};
 /**************** real time clock cog stuff **************************/
 /* begining and ending adresses of the code for the rtc cog */

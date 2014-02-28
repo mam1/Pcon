@@ -27,21 +27,19 @@ void disp_channel_data(int cn)
     if(cn<0)
     {
         for(i=0;i<_NUMBER_OF_CHANNELS;i++)
-            printf("channel %i:  state <%s>\n           c_mode <%s>\n           s_mode <%s>\n             name <%s>\n",
+            printf("channel %i:  state <%s>, mode <%s>, name <%s>\n",
                 i, 
                 onoff[dio_cb.dio.cca[i].state], 
                 con_mode[dio_cb.dio.cca[i].c_mode],
-                sch_mode[dio_cb.dio.cca[i].s_mode],
                 dio_cb.dio.cca[i].name);
         printf("\n");
         return;
     }       
-    printf("channel %i:  state <%s>\n           c_mode <%s>\n           s_mode <%s>\n             name <%s>\n",        
-    cn, 
-    onoff[dio_cb.dio.cca[cn].state], 
-    con_mode[dio_cb.dio.cca[cn].c_mode],
-    sch_mode[dio_cb.dio.cca[cn].s_mode],
-    dio_cb.dio.cca[cn].name);
+    printf("channel %i:  state <%s>, mode <%s>, name <%s>\n",
+        i, 
+        onoff[dio_cb.dio.cca[i].state], 
+        con_mode[dio_cb.dio.cca[i].c_mode],
+        dio_cb.dio.cca[i].name);
     printf("\n");
     return;
 }
@@ -156,6 +154,7 @@ int set_channel_control_mode(int m)
     printf("** invalid channel mode, mode must be 0, 1, or 2\n");
     return 1;
 }
+/*
 int set_channel_schedule_mode(int m)
 {
     if(m==0 || m==1)
@@ -166,6 +165,7 @@ int set_channel_schedule_mode(int m)
     printf("** invalid schedule mode, mode must be 0 or 1\n");
     return 1;
 }
+*/
 int set_channel_name(char *n)
 {
     int             sl;

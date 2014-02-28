@@ -8,7 +8,7 @@
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _DIOB
+#define _DRIVEN     _212GH
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -102,7 +102,6 @@ typedef int(*CMD_ACTION_PTR)(int, int *,char *);
 typedef struct  
 {
     int                 c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
-    int                 s_mode; //Schedule mode: 0-by dow, 1-by week
     int                 state;  //Channel State: 0-off, 1-on
     char                name[_CHANNEL_NAME_SIZE];
 }CCR;
