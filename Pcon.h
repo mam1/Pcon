@@ -58,7 +58,11 @@
 
 /* sd card file parameters */
 //#define _FILE_NAME_SIZE         20
-#define _F_PREFIX               "s001"
+#if _DRIVEN == _DION
+    #define _F_PREFIX               "dio01"
+#else
+    #define _F_PREFIX               "rly01"
+#endif
 #define _F_SYSTEM_SUFIX         ".sys"
 #define _F_SCHEDULE_SUFIX       ".sch"
 #define _F_CHANNEL_SUFIX        ".ch"

@@ -104,7 +104,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 17     week */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  7,  9, 12, 13},
 /* 19     time */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 10, 11, 12, 13},
+/* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 6, 8,  9, 10, 11, 12, 13},
 /* 21       no */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 10, 11, 12, 13},
 /* 22      add */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 11, 11, 12, 13},
 /* 23   change */   {0, 1, 2, 3, 4, 5, 6, 9, 8,  9, 11, 11, 12, 13}};
@@ -152,9 +152,9 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  1      STR */   {c_13,  c_0,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2    OTHER */   {c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12},
 /*  3    EMPTY */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  4     save */   {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  4     save */   {c_13,  c_6,  c_6,  c_0,  c_0,  c_0,  c_0, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5     load */   {c_13, c_27, c_27,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_6,  c_0,  c_7,  c_7,  c_7,  c_0,  c_0},
+/*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7,  c_7,  c_7,  c_0,  c_0},
 /*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  channel */   { c_3, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -418,19 +418,19 @@ int c_20(int tt, int *n, char *s)
         c_3(tt,n,s);
         return 0;
     }
-    if((*n == active_day) && (editing == 1))   //working of the currently active day
+    if((*n == active_day) && (editing == 1))   //working on the currently active day
     {
         // dump_sch_recs(edit_schedule,active_channel,active_day);
         c_0(tt,n,s);  
         return 0;
     }
     /* is the edit buffer active */
-    if(editing)
-    {
-        printf("save schedule buffer? <yes> <no>\n>> ");
+    // if(editing)
+    // {
+        // printf("save schedule buffer? <yes> <no>\n>> ");
         // c_0(tt,n,s);  
-        return 0;
-    }
+        // return 0;
+    // }
 
     active_day = *n;
     // printf("active day set to %s\n",day_names_long[active_day-1]);

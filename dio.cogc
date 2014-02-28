@@ -75,20 +75,16 @@ _NATIVE
 void send_ccb(byte)
 {
     int         i;
-    dir_out(_DataIO);   //setup to write 
-    pin_low(_DataIO);  
-    for(i=7;i>=0;i--)   //serialize and reverse bits 
+ 
+    for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
     {
         if((1 << i) & byte)
-            pin_high(_DataIO);  //send bit high
+            pin_high(_RLY1 + i);  //send bit high
         else
-            pin_low(_DataIO);   //send bit low
-        /* send clock pluse */                 
-        pin_high(_Clock);   
-        pin_low(_Clock);
+            pin_low(_RLY1 + i);   //send bit low
+
     }   
-    pin_high(_HC595);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
-    pin_low(_HC595);        //done - ready for next write */ 
+
     return;
 }
 #endif
@@ -124,15 +120,24 @@ void main (volatile DIO_CB *m)
     static  int i,key;
     static  uint8_t    ccb,hccb;
 
-    /* Setup IO Pins */
+#if _DRIVEN == _DIOB
+    /* Setup IO Pins for Parallax Digital IO Board */
     dir_out(_Clock);
     dir_out(_HC165);
     dir_out(_HC595);
     pin_low(_Clock);
     pin_low(_HC165);
     pin_low(_HC595);
+#else
+    /* setup pins for driving AQY212GH relays */
+    dir_out(_RLY1);
+    dir_out(_RLY2);
+    dir_out(_RLY3);
+    dir_out(_RLY4);
+    dir_out(_RLY5);
+#endif
 
-    send_ccb(0);    //turn off all relays on the dio board */
+    send_ccb(0);    //turn off all relays  
 
 /*  loop forever */
     for(;;)  
