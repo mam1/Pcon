@@ -1,0 +1,23 @@
+Pcon.c
+Pcon.h
+schedule.c
+schedule.h
+channel.c
+channel.h
+char_fsm.c
+char_fsm.h
+cmd_fsm.c
+cmd_fsm.h
+rtc.cogc
+rtc.h
+bitlit.h
+dio.cogc
+dio.h
+>compiler=C
+>memtype=xmmc external flash code main ram data
+>optimize=-Os
+>-m32bit-doubles
+>-Wall
+>-fno-exceptions
+>defs::-std=c99
+>BOARD::C3F
