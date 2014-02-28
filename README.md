@@ -4,12 +4,11 @@
 - - - - - - - - -
 Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
 
-The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. This project contains 2 versions of this control cog.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5 AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The AQY212GH cog, aqy212.cogc is implemented in the PhotoMOS code branch. 
+The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. The code can be configured by the use of a precompile variable <_DRIVEN> in Pcon.h . This results in 2 versions of the aplication.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5 IO pins (3-7).  I am using AQY212GH PhotoMOS relays connected to the 5 propeller IO pins.  
 
-The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relay is rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
+The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relays are rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
 
 A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
-
 
 Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
 

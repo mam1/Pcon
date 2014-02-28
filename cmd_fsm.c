@@ -701,7 +701,7 @@ char *build_prompt(char *b,int tt)
             strcat(b," state - enter: <on>|<off>");
             break;
         case 6:
-            strcat(b,"editing schedule for channel ");
+            strcat(b,"editing schedules for channel ");
             sprintf(temp,"%i",active_channel);
             strcat(b,temp);
             strcat(b,"\nenter day #, Sun=1 ...  Sat=7");
@@ -709,7 +709,7 @@ char *build_prompt(char *b,int tt)
         case 7:
             strcat(b,"editing ");
             strcat(b,day_names_long[active_day-1]);
-            strcat(b," schedule for channel ");
+            strcat(b," schedules for channel ");
             sprintf(temp,"%i",active_channel);
             strcat(b,temp);
             printf("%s\n",b);
@@ -739,7 +739,7 @@ char *build_prompt(char *b,int tt)
         case 9:
             strcat(b,"editing ");
             strcat(b,day_names_long[active_day-1]);
-            strcat(b," schedule for channel ");
+            strcat(b," schedules for channel ");
             sprintf(temp,"%i",active_channel);
             strcat(b,temp);
             strcat(b," hour ");
@@ -750,7 +750,7 @@ char *build_prompt(char *b,int tt)
         case 10:
             strcat(b,"editing ");
             strcat(b,day_names_long[active_day-1]);
-            strcat(b," schedule for channel ");
+            strcat(b," schedules for channel ");
             sprintf(temp,"%i",active_channel);
             strcat(b,temp);
             printf("%s\n",b);

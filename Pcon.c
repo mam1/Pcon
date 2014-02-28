@@ -138,7 +138,7 @@ int sd_setup(void)
         printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",cog);
         return 1;
     }     
-    printf(" rtc cog active\n DS3231 monitored by code running on cog %i\n",cog);
+    printf(" DS3231 monitored by code running on cog %i\n",cog);
 /* setup  the dio controll block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
@@ -167,9 +167,9 @@ int sd_setup(void)
         return 1;
     }
     #if _DRIVEN == _DIOB
-            printf(" dio cog active\n DIO Board controlled by code running on cog %i\n",cog);
+            printf(" DIO Board controlled by code running on cog %i\n",cog);
     #else
-         printf(" dio cog active\n relays controlled by code running on cog %i\n",cog);
+         printf(" relays controlled by code running on cog %i\n",cog);
 
     #endif      
 /* set up unbuffered nonblocking io */
@@ -184,7 +184,7 @@ int sd_setup(void)
     hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
-    printf("initialization complete\nentering main processing loop\n");
+    printf("initialization complete\n");
 /********************** main processing loop ****************/
     while(1)
     {
@@ -200,7 +200,7 @@ int sd_setup(void)
                 printf("**** load_schedule_data abborted application ****\n");
                 return 1;
             }
-            printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+            printf("schedules for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
             // dump_sch_recs(dio_cb.dio.sch,0,2);
             rtc_cb.rtc.update = 1;  //force update
         }
