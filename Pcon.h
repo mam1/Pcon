@@ -8,7 +8,7 @@
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _212GH
+#define _DRIVEN     _DIOB
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -58,10 +58,11 @@
 
 /* sd card file parameters */
 //#define _FILE_NAME_SIZE         20
-#if _DRIVEN == _DION
-    #define _F_PREFIX               "dio01"
+#define _FILE_SET_ID            "002"
+#if _DRIVEN == _DIOB
+    #define _F_PREFIX           "dio"
 #else
-    #define _F_PREFIX               "rly01"
+    #define _F_PREFIX           "rly"
 #endif
 #define _F_SYSTEM_SUFIX         ".sys"
 #define _F_SCHEDULE_SUFIX       ".sch"
@@ -71,7 +72,7 @@
 #define _DAYS_PER_WEEK          7
 #define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 #define _MAX_SCHEDULE_RECS  10
-#define _SCHEDULE_FILE_NAME_SIZE    30
+#define _SCHEDULE_FILE_NAME_SIZE    40
 #define _STATE_MASK         B32(10000000,00000000,00000000,00000000)                 
 #define _KEY_MASK           B32(01111111,11111111,11111111,11111111) 
 #define _SB volatile uint32_t[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1] //schedule buffer

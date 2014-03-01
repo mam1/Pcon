@@ -59,6 +59,7 @@ char *sch_file_name(char *target,int channel,int day)
     // sch_num = (channel*7)+day;
     strcpy(t,_F_PREFIX);
     t = t + sizeof(_F_PREFIX)-1;
+    strcat(t,_FILE_SET_ID);
     *t++ = 'd';
     sprintf(t,"%d",day);
     t = t + 1;
@@ -325,12 +326,13 @@ int init_schedule_data(void)
     }
     drec[0] = 0;
     printf("creating schedule files\n");
-    printf("r0<%i>, 1<%i>, 2<%i>", drec[0], drec[1], drec[2]);
+    // printf("r0<%i>, 1<%i>, 2<%i>", drec[0], drec[1], drec[2]);
     for(c=0;c<_NUMBER_OF_CHANNELS;c++)
         for(d=0;d<_DAYS_PER_WEEK;d++)
         {
             // printf("channel %i, day %i, generated schedule name: %s\n",c,d,sch_file_name(name_buffer,c,d));
             sfp = fopen(sch_file_name(name_buffer,c,d),"w");
+            printf(".");
             if(sfp)
             {
                 if(fwrite(&drec,4,1,sfp)!=1)
@@ -344,6 +346,7 @@ int init_schedule_data(void)
             else
                 return 1;
         }
+        printf("\n");
     return 0;
 }
 
