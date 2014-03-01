@@ -2,13 +2,13 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 13
+#define _minor_version 14
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _DIOB
+#define _DRIVEN     _212GH
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
