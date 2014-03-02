@@ -310,10 +310,12 @@ int c_10(int tt, int *n, char *s) //save - s1
 /* set channel state on */
 int c_11(int tt, int *n, char *s) //save - s1
 {
+    printf("setting state for channel %i\n",active_channel);
     set_channel_state(1);
     set_channel_control_mode(0);
     rtc_cb.rtc.update = 1;
     printf("channel state set to on, control mode forced to manual\n");
+    printf("displaying data for channel %i\n",active_channel);
     disp_channel_data(active_channel);
     c_0(tt,n,s);  
     return 0;
