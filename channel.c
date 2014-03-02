@@ -139,11 +139,11 @@ int init_channel_data(void)
 }
 int set_channel_state(int s)
 {
-    printf("setting channel state to <%i>, active_channel <%i>\n",s,active_channel);
+    // printf("setting channel state to <%i>, active_channel <%i>\n",s,active_channel);
     if(s==0 || s==1)
     {
         dio_cb.dio.cca[active_channel].state = s;
-        printf("dio_cb.dio.cca[active_channel].state = %i\n",dio_cb.dio.cca[active_channel].state );
+        // printf("dio_cb.dio.cca[active_channel].state = %i\n",dio_cb.dio.cca[active_channel].state );
         return 0;
     }
     printf("** invalid channel state, state must be 0 or 1\n");
