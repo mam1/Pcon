@@ -372,6 +372,7 @@ int c_16(int tt, int *n, char *s)
 /* display info for single channel */
 int c_17(int tt, int *n, char *s) 
 {
+    printf("request to display data for channel %i\n",active_channel);
     disp_channel_data(active_channel);
     printf(">>"); 
     return 0;

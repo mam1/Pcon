@@ -38,10 +38,10 @@ void disp_channel_data(int cn)
         return;
     }       
     printf("channel %i:  state <%s>, mode <%s>, name <%s>\n",
-        i, 
-        onoff[dio_cb.dio.cca[i].state], 
-        con_mode[dio_cb.dio.cca[i].c_mode],
-        dio_cb.dio.cca[i].name);
+        cn, 
+        onoff[dio_cb.dio.cca[cn].state], 
+        con_mode[dio_cb.dio.cca[cn].c_mode],
+        dio_cb.dio.cca[cn].name);
     printf("\n");
     return;
 }
