@@ -26,6 +26,8 @@
     unsigned stack[_STACK_SIZE_DIO];
     volatile DIO_CB dio;
  } dio_cb;
+ extern char        *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+
 /***************** global code to text conversion ********************/
 extern char *day_names_long[7];     
 extern char *day_names_short[7];
@@ -49,25 +51,25 @@ void clean_sch_buf(volatile uint32_t b[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1
                 b[i][ii] = 0;
     return;
 }
-/* generat a file name and load it into target */
-char *sch_file_name(char *target,int channel,int day)
+/* generate a file name and load it into target */
+char *sch_file_name(char *t,int channel,int day)
 {
-    char        *t;
+    char        temp[128];
     // int         sch_num;
 
-    t = target;
+    // t = target;
     // sch_num = (channel*7)+day;
     strcpy(t,_F_PREFIX);
-    t = t + sizeof(_F_PREFIX)-1;
     strcat(t,_FILE_SET_ID);
-    *t++ = 'd';
-    sprintf(t,"%d",day);
-    t = t + 1;
-    *t++ = 'c';
-    sprintf(t,"%d",channel);
-    t = t + 1;
-    strcpy(t,_F_SCHEDULE_SUFIX);
-    return target;
+    strcat(t,"d");
+    sprintf(temp,"%d",day);
+    strcat(t,temp);
+    strcat(t,"c");
+    sprintf(temp,"%d",channel);
+    strcat(t,temp);
+    strcat(t,_F_SCHEDULE_SUFIX);
+    // printf("schedule file name <%s>\n",t);
+    return t;
 }
 /* extract key from a schedule record */
 int get_key(uint32_t b)
@@ -76,7 +78,7 @@ int get_key(uint32_t b)
     k = (int)(b & key_mask);
     return (int)k;
 }
-/* extract state from a schedle record */
+/* extract state from a schedule record */
 int get_statex(uint32_t b)
 {
     if (b & state_mask)
@@ -136,7 +138,7 @@ int save_schedule_data(volatile uint32_t sbuf[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE
 
     // printf("sbuf[2][0] = <%u>\n",sbuf[2][0]);
     // return 0;
-
+        printf("### saving schedule data from <%x>\n",(int)sbuf);
     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
     {                              
         sfp = fopen(sch_file_name(name_buffer,i,day),"w");
@@ -146,13 +148,13 @@ int save_schedule_data(volatile uint32_t sbuf[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE
             fclose(sfp);
             return 1;    
         }
-        // printf(" <%s> opened\n",sch_file_name(name_buffer,i,day));
+        printf(" <%s> opened for writing\n",sch_file_name(name_buffer,i,day));
         rsize = (int)sbuf[i][0];
-        // printf("rsize = %i\n",rsize);
+        printf("    rsize = %i\n",rsize);
         if(sfp)
             {
                 rcnt = fwrite(&sbuf[i][0],(rsize+1)*4,1,sfp);
-                // printf(" rcnt %i, rsize %i\n",rcnt,rsize);
+                printf("    rcnt %i, rsize %i\n",rcnt,rsize);
                 if(rcnt!=1)
                 {   
                     printf("**** error writing schedule record\n");
@@ -180,9 +182,10 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
     char            name_buffer[_SCHEDULE_FILE_NAME_SIZE];
     FILE            *sfp;
 
-
+    printf("### loading schedule data to <%x>\n",(int)sch);
     for(i=0;i<_NUMBER_OF_CHANNELS;i++)
-    {                              
+    {
+        printf("attempting to open <%s)\n",sch_file_name(name_buffer,i,day));                              
         sfp = fopen(sch_file_name(name_buffer,i,day),"r");
         if(sfp==NULL)
         {
@@ -190,7 +193,7 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
             fclose(sfp);
             return 1;    
         }
-        // printf(" <%s> opened  ",sch_file_name(name_buffer,i,day));
+        printf("  <%s> opened  ",sch_file_name(name_buffer,i,day));
         rcnt = fread(&sch[i][0],4,1,sfp);
         if(rcnt!=1)
             {   
@@ -198,12 +201,13 @@ int load_schedule_data(volatile uint32_t sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_
                 return 1;
             }
         rsize = (int)sch[i][0];
+        printf("    loading rsize = %i\n",rsize);
         fclose(sfp);
         sfp = fopen(sch_file_name(name_buffer,i,day),"r");
         if(sfp)
             {
                  rcnt = fread(&sch[i][0],(rsize*4)+4,1,sfp);
-                 // printf("rcnt %i, rsize %i, v1 %i, v2 %i\n",rcnt,rsize,(int)sch[i][1],(int)sch[i][2]);
+                 printf("    rcnt %i, rsize %i, v1 %i, v2 %i\n",rcnt,rsize,(int)sch[i][0],(int)sch[i][1]);
                 if(rcnt!=1)
                 {   
                     printf(" error reading schedule record\n");

@@ -19,10 +19,11 @@ _Driver *_driverlist[] = {
   NULL
 };
 /***************************** external ******************************/
-extern char    *day_names[];
+// extern char    *day_names[];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
+    char                *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -31,7 +32,7 @@ char *onoff[2] = {"off"," on"};
 char *con_mode[3] = {"manual","  time","time & sensor"};
 char *sch_mode[2] = {"day","week"};
 /**************** real time clock cog stuff **************************/
-/* begining and ending adresses of the code for the rtc cog */
+/* beginning and ending addresses of the code for the rtc cog */
   extern unsigned int _load_start_rtc_cog[];
   extern unsigned int _load_stop_rtc_cog[]; 
 /* allocate control block & stack for rtc cog */
@@ -44,7 +45,7 @@ int start_rtc(volatile void *parptr)
 { 
     int size = (_load_stop_rtc_cog - _load_start_rtc_cog)*4;//code size in bytes
     printf("rtc cog code size %i bytes\n",size);
-    unsigned int code[size];  //alloacate enough HUB to hold the COG code
+    unsigned int code[size];  //allocate enough HUB to hold the COG code
     memcpy(code, _load_start_rtc_cog, size); //assume xmmc
     return cognew(code, parptr);
 }
@@ -68,7 +69,7 @@ int start_dio(volatile void *parptr)
     return cognew(code, parptr);
 }
 
-/******************************* support fuctions *********************/
+/******************************* support functions *********************/
 int ckeck_abort(void)
 {
         if(rtc_cb.rtc.abort != 0)
@@ -113,20 +114,22 @@ int sd_setup(void)
     static char         tbuf[_TOKEN_BUFFER];
     char                c;   
 /************************ initializations ****************************/
-    sleep(1);   //wait for the serial terminial to start
+    sleep(1);   //wait for the serial terminal to start
 /* display system info on serial terminal */
     printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
     #if _DRIVEN == _DIOB
-        printf("system is configed to drive a Parallax Digital IO Board\n");
+        printf("system is configured to drive a Parallax Digital IO Board\n");
     #else
-        printf("system is configed to drive 5 IO pins\n");
+        printf("system is configured to drive 5 IO pins\n");
     #endif
-    printf("System File Prefix <%s>\n",_F_PREFIX);
-    // printf("CCR size %i, dio_cb.dio.caa size %i\n",sizeof(CCR),sizeof(dio_cb.dio.cca));
+/* build file set prefix */
+    strcat(file_set_prefix,_F_PREFIX);
+    strcat(file_set_prefix,_FILE_SET_ID);
+    printf("file set prefix <%s>\n",file_set_prefix);
 /* check out the sd card */
     if(sd_setup())
     {
-        printf("**** sd_setup abborted application ****\n");
+        printf("**** sd_setup aborted application ****\n");
         return 1;
     }    
 /* start monitoring the real time clock DS3231 */
@@ -139,7 +142,7 @@ int sd_setup(void)
         return 1;
     }     
     printf(" DS3231 monitored by code running on cog %i\n",cog);
-/* setup  the dio controll block */
+/* setup  the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
     lockclr(dio_cb.dio.cca_lock);
@@ -152,7 +155,7 @@ int sd_setup(void)
 /*
     if(load_schedule_data(dio_cb.dio.sch,rtc_cb.rtc.td_buffer.dow-1))
     {
-        printf("**** load_schedule_data abborted application ****\n");
+        printf("**** load_schedule_data aborted application ****\n");
         return 1;
     }
     printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
@@ -185,7 +188,10 @@ int sd_setup(void)
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
     printf("initialization complete\n");
+
+/************************************************************/
 /********************** main processing loop ****************/
+/************************************************************/
     while(1)
     {
         /* check for problems */

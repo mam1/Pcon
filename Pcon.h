@@ -3,12 +3,14 @@
 
 #define _major_version 0
 #define _minor_version 14
+#define _FILE_SET_ID            "005"
+
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _212GH
+#define _DRIVEN     _DIOB
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -58,11 +60,12 @@
 
 /* sd card file parameters */
 //#define _FILE_NAME_SIZE         20
-#define _FILE_SET_ID            "002"
+
 #if _DRIVEN == _DIOB
     #define _F_PREFIX           "dio"
 #else
     #define _F_PREFIX           "rly"
+    // #define _F_FILE_SET_PREFIX 
 #endif
 #define _F_SYSTEM_SUFIX         ".sys"
 #define _F_SCHEDULE_SUFIX       ".sch"
