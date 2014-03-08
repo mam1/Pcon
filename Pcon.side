@@ -13,6 +13,8 @@ rtc.h
 bitlit.h
 dio.cogc
 dio.h
+simpletools.h
+simpletext.h
 >compiler=C
 >memtype=xmmc external flash code main ram data
 >optimize=-Os

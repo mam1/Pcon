@@ -23,7 +23,7 @@ _Driver *_driverlist[] = {
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
-    char                *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+    char                file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -35,6 +35,9 @@ char *sch_mode[2] = {"day","week"};
 /* beginning and ending addresses of the code for the rtc cog */
   extern unsigned int _load_start_rtc_cog[];
   extern unsigned int _load_stop_rtc_cog[]; 
+
+  extern unsigned int *rtc_code_start;
+  extern unsigned int *rtc_code_end;
 /* allocate control block & stack for rtc cog */
 struct {
     unsigned stack[_STACK_SIZE_RTC];
@@ -43,6 +46,7 @@ struct {
 /* start rtc cog */
 int start_rtc(volatile void *parptr)
 { 
+    // printf("st1 <%x>  st2 <%x>\n",_load_stop_rtc_cog,*rtc_code_start);
     int size = (_load_stop_rtc_cog - _load_start_rtc_cog)*4;//code size in bytes
     printf("rtc cog code size %i bytes\n",size);
     unsigned int code[size];  //allocate enough HUB to hold the COG code

@@ -3,51 +3,37 @@
 # #########################################################
 
 # Propeller Demo include
-PROPLIB = .
+PROPLIB = ./common
 
-IDIR =     ../include
-CC=propeller-elf-gcc
-MODEL=xmmc
-BOARD = C3F
-CFLAGS=-Os -m$(MODEL) -I$(IDIR)
-LDFLAGS=-m$(MODEL)
-OBJDIR=./
-SRCDIR=./
-OBJS = vgademo.o vga.o draw.o text.o text2.o
-HDRS =
-
+CFLAGS = -Os -mxmmc -Wall -m32bit-doubles -fno-exceptions -std=c99
 NM = propeller-elf-nm
 
 #
 # objects for this program
 #
-
+MODEL = xmmc
+BOARD = C3F
 NAME = Pcon
-OBJS = \
-Pcon.o \
-channel.o \
-char_fsm.o \
-cmd_fsm.o \
-schedule.o \
-rtc.cogc
+OBJS = Pcon.o channel.o schedule.o char_fsm.o cmd_fsm.o rtc_1.cog dio_2.cog
+
 
 all: $(NAME).elf
+	@echo "Please execute next commands:"
+	@echo 'setenv PATH /usr/local/greenhills/mips5/linux86:$$PATH'
 
-include $(PROPLIB)/xmmc.mk
+
+include $(PROPLIB)/xmmcdemo.mk
 
 #
 # do a partial link of all driver code
 #
 
-# # Note that calling our output file *_1.cog ensures that it
-# is placed in the .coguser1 section by the main program's
-# linker script; similarly *_2.cog would be placed in .coguser2,
-# and so on
 
-Pcon_1.o: Pcon_cog.c
-	$(CC) -r -Os -mcog -o $@ $<
+xmmc/rtc.cog: rtc.cogc
+	$(CC) -r -Os -mcog -o $@ -xc $<
 
-
+xmmc/dio.cog: dio.ccogc
+	$(CC) -r -Os -mcog -o $@  -xc $<
 #
 # We have to avoid conflicts between symbols in the main C program and
 # symbols in the local cog C programs. We do this by using objcopy to
@@ -57,3 +43,4 @@ Pcon_1.o: Pcon_cog.c
 
 %.cog: %.o
 	$(OBJCOPY) --localize-text $^ $@
+

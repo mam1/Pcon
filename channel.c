@@ -4,7 +4,7 @@
 #include "Pcon.h"
 /********************* externals ********************/
 //    extern CCR  cca[_NUMBER_OF_CHANNELS];
-extern char        *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+extern char        file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
 
 extern int         active_channel;
 

@@ -24,8 +24,6 @@ extern struct {
 /*********************** globals **************************/
 char                prompt_buffer[_PROMPT_BUFFER];
 int                 active_channel, active_day, active_hour, active_minute, active_key;
-volatile uint32_t   active_schedule[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]; 
-// volatile uint32_t   hold_schedule[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 volatile uint32_t   edit_schedule[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1];
 uint8_t             editing;
 /***************** global code to text conversion ********************/
@@ -341,6 +339,7 @@ int c_13(int tt, int *n, char *s) //save - s1
 /* save edit schedule buffer */
 int c_14(int tt, int *n, char *s) 
 {
+    printf("saving buffer at <%x>\n",(uint32_t)edit_schedule);
     save_schedule_data(edit_schedule, active_day-1);
     printf("schedule data daved to sd card\n");
     load_schedule_data(dio_cb.dio.sch, active_day-1);
@@ -556,8 +555,8 @@ int c_30(int tt, int *n, char *s)
 /* display the schedules for all days and all channels */
 int c_31(int tt, int *n, char *s) 
 {
-    int             c,d;
-    printf("Schedules for %s\n",day_names_long[d]);
+    int             c;
+    printf("Schedules for %s\n",day_names_long[active_day]);
     for(c=0;c<_NUMBER_OF_CHANNELS;c++)
     {
         printf("  channel %i:  \n",c);
