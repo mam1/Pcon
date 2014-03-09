@@ -41,7 +41,7 @@ extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
  uint32_t    key_mask   = B32(01111111,11111111,11111111,11111111);
  char        fn_schedule[_SCHEDULE_FILE_NAME_SIZE] = _F_PREFIX;
  FILE        *fptr_schedule;
- uint32_t   bb[616];
+ uint32_t   bb[616],edit_bb[616];
 /*******************************  fuctions *****************************/
  /* set all elements in a schedule buffer to 0 */
 void clean_sch_buf(volatile uint32_t b[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1])
