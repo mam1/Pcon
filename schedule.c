@@ -21,12 +21,7 @@
 #include "schedule.h"
 #include "bitlit.h" 
 /****************************** externals *******************************/
- extern struct                      //control block & stack for dio cog
- {                     
-    unsigned stack[_STACK_SIZE_DIO];
-    volatile DIO_CB dio;
- } dio_cb;
- extern char        *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+
 
 /***************** global code to text conversion ********************/
 extern char *day_names_long[7];     
@@ -34,7 +29,8 @@ extern char *day_names_short[7];
 extern char *onoff[2];
 extern char *con_mode[3];
 extern char *sch_mode[2];
-/************************** edit state variable *************************/ 
+/************************** edit state variable *************************/
+
 extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 /***************************** globals **********************************/
  uint32_t    state_mask = B32(10000000,00000000,00000000,00000000);
@@ -43,9 +39,9 @@ extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
  FILE        *fptr_schedule;
 /*******************************  fuctions *****************************/
  /* set all elements in a schedule buffer to 0 */
-void clean_sch_buf(volatile uint32_t b[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1])
+void clean_sch_buf(volatile uint32_t *buf)
 {
-    int i,ii;                                               
+    int i;                                               
     for (i = 0; i < _NUMBER_OF_CHANNELS; ++i)
         for (ii = 0; ii < _MAX_SCHEDULE_RECS+1; ++ii)
                 b[i][ii] = 0;

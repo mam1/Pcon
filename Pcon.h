@@ -75,10 +75,12 @@
 #define _DAYS_PER_WEEK          7
 #define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 #define _MAX_SCHEDULE_RECS  10
+#define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
+#define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
 #define _SCHEDULE_FILE_NAME_SIZE    40
 #define _STATE_MASK         B32(10000000,00000000,00000000,00000000)                 
 #define _KEY_MASK           B32(01111111,11111111,11111111,11111111) 
-#define _SB volatile uint32_t[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1] //schedule buffer
+// #define _SB volatile uint32_t[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1] //schedule buffer
 
 
 /* buffers */
@@ -87,6 +89,7 @@
 #define _TOKEN_BUFFER       128
 #define _VCMD_BUFFER        128
 #define _PROMPT_BUFFER      128
+#define _SCHEDULE_BUFFER    _BYTES_PER_DAY * _DAYS_PER_WEEK
 
 /* key codes */
 #define _ESC        27

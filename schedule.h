@@ -1,6 +1,5 @@
 #ifndef SCHEDULE_H_
 #define SCHEDULE_H_
-#include "Pcon.h"
 
 /* routines to work with schedules */
 int      save_schedule_data(_SB,int); 			//write to sd (schedule buffer, day)    
