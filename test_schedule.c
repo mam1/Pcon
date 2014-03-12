@@ -57,6 +57,12 @@ int main(void)
 
 	dump_schs(bbb);
 
+	del_sch_rec(get_schedule(bbb,0,0),6);
+	del_sch_rec(get_schedule(bbb,0,0),0);
+
+
+	dump_schs(bbb);
+
 	// get_schedule(bbb,0,1);
 	// get_schedule(bbb,0,2);
 	// get_schedule(bbb,1,0);

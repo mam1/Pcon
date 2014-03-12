@@ -207,14 +207,45 @@ int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record
         sch++;      
     } 
     while(end >= sch)
-    {
         *(end+1) = *end--;
-    }
     put_state(sch,s);
     put_key(sch,k);
     return 0;      
-
  }
+
+int del_sch_rec(uint32_t *sch, int k)    // delete a schedule record with matching key 
+{
+    uint32_t            *rsize;
+    int              i,hit;
+
+    if(*sch==0)
+        return 0;
+    if(*sch==1)
+    {
+        *sch = 0;
+        return 0;
+    }
+
+    hit = 0;
+    rsize = sch++;
+
+    for(i=0;i<*rsize;i++)
+    {
+        if((k==get_key(*sch)) || (hit==1))
+        {
+            hit = 1;
+            *sch = *(sch+1);   
+        }    
+        sch++;
+    }
+
+    if(hit)
+    {
+        *rsize -= 1;
+        return 0;
+    }     
+    return 1;
+}
 
 uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for record with key match, return pointer to record or NULL 
  {

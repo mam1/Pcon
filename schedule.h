@@ -14,7 +14,8 @@
 // int      load_schedule_data(uint32_t *,int); 			//read from sd (schedule buffer, day)
 // void     dump_sch_recs(uint32_t *, int, int);    		//display schedule (schedule buffer, channel,day)
 uint32_t *find_schedule_record(uint32_t *,int); 	//search a schedule for a key (schedule buffer,channel,key), return pointer to record or NULL
-int      add_sch_rec(uint32_t *,int,int);			//add a record to a schedule (schedule buffer,channel,key,state)
+int		add_sch_rec(uint32_t *,int,int);			//add a record to a schedule (schedule buffer,channel,key,state)
+int 	del_sch_rec(uint32_t *,int);			//delet a record
 // int 	 del_sch_rec(uint32_t *,int,int);				//delete record from schedule (schedule buffer,channel,key)
 // int 	 init_schedule_data(void);				//create a set of empty schedule files if they are not present
 // void	 clean_sch_buf(uint32_t *);					//set a schedule buffer to all '\0's	 
