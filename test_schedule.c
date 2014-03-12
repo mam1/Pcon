@@ -42,12 +42,19 @@ int main(void)
 	// dump_schs(bbb);
 	printf("clear buffer and add \n");
 	add_sch_rec(get_schedule(bbb,0,0),4,1);
-	dump_schs(bbb);
+
 	add_sch_rec(get_schedule(bbb,0,0),10,1);
-	dump_schs(bbb);
+
 	add_sch_rec(get_schedule(bbb,0,0),3,1);
-	dump_schs(bbb);
+
+	add_sch_rec(get_schedule(bbb,0,0),11,0);
+
 	add_sch_rec(get_schedule(bbb,0,0),0,0);
+
+	add_sch_rec(get_schedule(bbb,0,0),6,1);
+
+	add_sch_rec(get_schedule(bbb,0,0),4,0);
+
 	dump_schs(bbb);
 
 	// get_schedule(bbb,0,1);

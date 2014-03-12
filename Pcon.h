@@ -48,7 +48,7 @@
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
-    #define _NUMBER_OF_CHANNELS 3
+    #define _NUMBER_OF_CHANNELS 2
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif

@@ -199,35 +199,17 @@ int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record
     *sch += 1;                  //increase record count
     end = (sch + *sch) - 1;   //set pointer to end of the list
     sch++;
-    printf("*end <%x> ",*(end));
-    printf("*sch <%x>\n",*sch);
-    printf("user key <%i>  rec key <%i>\n",k, get_key(*sch));
-
+    printf("\n\n");
     while(sch <= end)
     {
-        printf("key test end <%x> ",*(end));
-        printf("sch <%x> ",*sch);
-        printf("user key <%i>  rec key <%i>\n",k, get_key(*sch));
-        sch++;
-        printf("end <%x> ",*(end));
-        printf("sch <%x>\n",*sch); 
         if(k < get_key(*sch))
-            break;       
+            break; 
+        sch++;      
     } 
-
-    printf("**end <%x> ",*(end));
-    printf("**sch <%x>\n",*sch);
     while(end >= sch)
     {
-        printf("***end <%x> ",*(end));
-        printf("***sch <%x>\n",*sch);
         *(end+1) = *end--;
-        // end--;
-        printf("****end <%x> ",*(end));
-        printf("****sch <%x>\n",*sch);
     }
-
-
     put_state(sch,s);
     put_key(sch,k);
     return 0;      
