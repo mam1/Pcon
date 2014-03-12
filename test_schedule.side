@@ -1,4 +1,6 @@
 test_schedule.c
+schedule.c -> schedule.c
+schedule.h -> schedule.h
 >compiler=C
 >memtype=xmmc external flash code main ram data
 >optimize=-Os
