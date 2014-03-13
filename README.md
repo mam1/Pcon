@@ -2,17 +2,9 @@
 - - - - - - - - - 
 #####Code is under construction it is not stable
 - - - - - - - - -
-Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
+Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. The code can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* .
 
-The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. The code can be configured by the use of a precompile variable <_DRIVEN> in Pcon.h . This results in 2 versions of the aplication.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5 IO pins (3-7).  I am using AQY212GH PhotoMOS relays connected to the 5 propeller IO pins.  
-
-The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relays are rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
-
-A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
-
-Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. 
-
-This project uses a Parallax Propeller C3 to drive 5 AQY212GH PhotoMOS relays mounted on the same board as the DS3231 module (see below).  The relays come in a 4-pin DIP package. They are rated at 60 V AC/DC 1.1 A.  They work great to control 24 V zone valves. 
+The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. The code can be configured by the use of a preprocessor variable *_DRIVEN* in Pcon.h. This results in 2 versions of the application.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5, IO pins(3-7).  I am using AQY212GH PhotoMOS relays connected to the 5 propeller IO pins.  The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relays are rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
 
 A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
@@ -21,8 +13,17 @@ C - Propgcc
 * Parallax - C3 micro controller 
 * Parallax - Digital IO Board (DIOB), Sharp solid state relays part# S202S02F
 * adafruit - ChronoDot real time clock module, based on a DS3231.
+*          - AQY212GH PhotoMOS relays
 
 ####Architecture:
+A schedule is a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. The first 32 bits contain the number of active records in the schedule. The following 32 bit "records" are interpreted as:
+
+* bit 31 (high bit) .... state (0=off, 1=on)
+* bit 30-16 ............ key (number of minutes past midnight, 0-1440)
+* bit 15-0 ............. sensor value (0-65536)
+
+The schedule for each (day,channel) tuple are combined into a vector of unsigned integers. The schedule for a particular tuple is accessed via pointer offsets. 
+
 The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decimal and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog. 
 
 The dio cog reads the time from the buffer in hub memory.  Once a minute the dio cog updates the DIOB based on the current time, the schedule for the channel and the control information for the channel.  The schedule and control information are stored on a SD card and loaded into hub memory at initialization or on command. The dio cog also can be forced to update the DIOB by use of a flag in hub memory. 
