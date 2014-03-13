@@ -143,7 +143,7 @@ int get_key(uint32_t b)    // extract key from a schedule record
     return (int)k;
  }
 
-int get_state(uint32_t b) // extract state from a schedule record 
+int get_s(uint32_t b) // extract state from a schedule record 
  {
     if (b & state_mask)
         return 1;
@@ -155,7 +155,7 @@ void put_key(volatile uint32_t *value,int key)   // load key into a schedule rec
     int         hold_state;
     uint32_t    t;
 
-    hold_state = get_state(*value);
+    hold_state = get_s(*value);
     t=(uint32_t)key;
     if(*value & state_mask) t |= state_mask;
     *value = key;

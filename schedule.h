@@ -22,7 +22,7 @@ int 	del_sch_rec(uint32_t *,int);			//delet a record
 
 /* routines to work with individual schedule records */
  int  get_key(uint32_t);          			//extract key (lower 31 bits) from a uint32_t
- int  get_state(uint32_t);        			//extract state (high bit) from a uint32_t
+ int  get_s(uint32_t);        			//extract state (high bit) from a uint32_t
  void put_key(volatile uint32_t *,int);    	//load key into lower 31 bits of the  uint31_t at the address specified
  void put_state(volatile uint32_t *,int);  	//load state into high bit of the uint31_t at the address specified
 

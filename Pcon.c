@@ -23,7 +23,7 @@ _Driver *_driverlist[] = {
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
-    char                *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+    char                *file_set_prefix[_SCHEDULE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -98,11 +98,13 @@ int sd_setup(void)
         printf("**** load_channel_data aborted application ****\n");
         return 1;
     }
+    /*
     if(init_schedule_data())   //create a set of empty schedule files if they are not present
     {
         printf("**** init_schedule_data aborted application ****\n");
         return 1;
     }
+    */
     return 0;
 }
 /********************************************************************/
@@ -200,6 +202,7 @@ int sd_setup(void)
         /* reload schedule buffer if the day has changed */    
         if(rtc_cb.rtc.td_buffer.dow != hold_day)
         {
+            /*
             hold_day = rtc_cb.rtc.td_buffer.dow;
             if(load_schedule_data(dio_cb.dio.sch,hold_day-1))
             {
@@ -209,6 +212,7 @@ int sd_setup(void)
             printf("schedules for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
             // dump_sch_recs(dio_cb.dio.sch,0,2);
             rtc_cb.rtc.update = 1;  //force update
+            */
         }
 
         /* check the token stack */
