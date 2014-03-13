@@ -13,7 +13,8 @@
 /*      indicated the state (on or off) the lower bits contain the      */
 /*                                                                      */
 /*      record key (minutes from 00:00)                                 */
-/************************************************************************/     
+/************************************************************************/ 
+    
 #include <stdio.h>
 #include <propeller.h>
 #include <unistd.h>

@@ -23,10 +23,6 @@
  #include "schedule.h"
  #include "bitlit.h" 
 
-/****************************** drivers  ********************************/
- extern _Driver _FullDuplexSerialDriver;
- extern _Driver _FileDriver;
- _Driver *_driverlist[] = {&_FullDuplexSerialDriver,&_FileDriver,NULL};
 /****************************** externals *******************************/
 
 /******************** global code to text conversion ********************/
