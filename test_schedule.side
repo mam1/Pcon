@@ -1,0 +1,11 @@
+test_schedule.c
+schedule.c -> schedule.c
+schedule.h -> schedule.h
+>compiler=C
+>memtype=xmmc external flash code main ram data
+>optimize=-Os
+>-m32bit-doubles
+>-Wall
+>-fno-exceptions
+>defs::-std=c99
+>BOARD::C3F

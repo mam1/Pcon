@@ -4,9 +4,15 @@
 #include "Pcon.h"
 /********************* externals ********************/
 //    extern CCR  cca[_NUMBER_OF_CHANNELS];
-extern char        *file_set_prefix[_SCHEDULE_FILE_NAME_SIZE];
+extern char        *file_set_prefix[_SCHEDULE_NAME_SIZE];
 
-extern int         active_channel;
+extern  struct {
+    int                 channel; 
+    int                 day; 
+    int                 hour; 
+    int                 minute; 
+    int                 key;
+    } edit;
 
 extern struct {     // control block & stack for dio cog 
     unsigned stack[_STACK_SIZE_DIO];
@@ -139,11 +145,11 @@ int init_channel_data(void)
 }
 int set_channel_state(int s)
 {
-    printf("setting channel state to <%i>, active_channel <%i>\n",s,active_channel);
+    printf("setting channel state to <%i>, edit.channel <%i>\n",s,edit.channel);
     if(s==0 || s==1)
     {
-        dio_cb.dio.cca[active_channel].state = s;
-        printf("dio_cb.dio.cca[active_channel].state = %i\n",dio_cb.dio.cca[active_channel].state );
+        dio_cb.dio.cca[edit.channel].state = s;
+        printf("dio_cb.dio.cca[edit.channel].state = %i\n",dio_cb.dio.cca[edit.channel].state );
         return 0;
     }
     printf("** invalid channel state, state must be 0 or 1\n");
@@ -153,7 +159,7 @@ int set_channel_control_mode(int m)
 {
     if(m==0 || m==1 || m==2)
     {
-        dio_cb.dio.cca[active_channel].c_mode = m;
+        dio_cb.dio.cca[edit.channel].c_mode = m;
         return 0;
     }
     printf("** invalid channel mode, mode must be 0, 1, or 2\n");
@@ -164,7 +170,7 @@ int set_channel_schedule_mode(int m)
 {
     if(m==0 || m==1)
     {
-        dio_cb.dio.cca[active_channel].s_mode = m;
+        dio_cb.dio.cca[edit.channel].s_mode = m;
         return 0;
     }
     printf("** invalid schedule mode, mode must be 0 or 1\n");
@@ -182,7 +188,7 @@ int set_channel_name(char *n)
         sl = _CHANNEL_NAME_SIZE;
     }
     n[sl-1]='\0';
-    strcpy(dio_cb.dio.cca[active_channel].name,++n);
+    strcpy(dio_cb.dio.cca[edit.channel].name,++n);
     return 0;
 }
 

@@ -2,7 +2,7 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 14
+#define _minor_version 15
 #define _FILE_SET_ID            "005"
 
 
@@ -48,7 +48,7 @@
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
-    #define _NUMBER_OF_CHANNELS 8
+    #define _NUMBER_OF_CHANNELS 2
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif
@@ -67,26 +67,27 @@
     #define _F_PREFIX           "rly"
     // #define _F_FILE_SET_PREFIX 
 #endif
-#define _F_SYSTEM_SUFIX         ".sys"
+// #define _F_SYSTEM_SUFIX         ".sys"
 #define _F_SCHEDULE_SUFIX       ".sch"
 #define _F_CHANNEL_SUFIX        ".ch"
 
 /* schedule parameters */
 #define _DAYS_PER_WEEK          7
 #define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
-#define _MAX_SCHEDULE_RECS  10
-#define _SCHEDULE_FILE_NAME_SIZE    40
-#define _STATE_MASK         B32(10000000,00000000,00000000,00000000)                 
-#define _KEY_MASK           B32(01111111,11111111,11111111,11111111) 
-#define _SB volatile uint32_t[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1] //schedule buffer
-
+#define _MAX_SCHEDULE_RECS      10
+#define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
+#define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
+#define _SCHEDULE_NAME_SIZE    40
+#define _STATE_MASK             B32(10000000,00000000,00000000,00000000)                 
+#define _KEY_MASK               B32(01111111,11111111,11111111,11111111) 
 
 /* buffers */
-#define _INPUT_BUFFER       128
-#define _TIME_STRING_BUFFER 40
-#define _TOKEN_BUFFER       128
-#define _VCMD_BUFFER        128
-#define _PROMPT_BUFFER      128
+#define _INPUT_BUFFER           128
+#define _TIME_STRING_BUFFER     40
+#define _TOKEN_BUFFER           128
+#define _VCMD_BUFFER            128
+#define _PROMPT_BUFFER          128
+#define _SCHEDULE_BUFFER        (_BYTES_PER_DAY * _DAYS_PER_WEEK)/4
 
 /* key codes */
 #define _ESC        27
