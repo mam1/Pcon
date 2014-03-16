@@ -3,7 +3,7 @@
 
 #define _major_version 0
 #define _minor_version 16
-#define _FILE_SET_ID            "005"
+#define _FILE_SET_ID            "001"
 
 
 /* configuration options */
@@ -43,12 +43,12 @@
 #define _CHAR_STATES     4
 
 /* command parser fsm */
-#define _CMD_TOKENS     24
+#define _CMD_TOKENS     25
 #define _CMD_STATES     14 
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
-    #define _NUMBER_OF_CHANNELS 2
+    #define _NUMBER_OF_CHANNELS 8 
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif

@@ -115,22 +115,21 @@ int init_channel_data(void)
     printf("channel file name <%s>\n",fn_channel);
     fptr_channel = fopen(fn_channel,"r");
     if(fptr_channel)
-        printf("channel file found\n")
-        ;
+        printf("  channel file <%s> found\n",fn_channel);
     else
     {
         printf("*** channel file <%s> does not exsit,it will be created\n",fn_channel);
         fptr_channel = fopen(fn_channel,"w");
         if(fptr_channel)
         {
-            printf("channel file <%s> created\n",fn_channel);
+            printf("  channel file <%s> created\n",fn_channel);
             if(fwrite(dio_cb.dio.cca,sizeof(dio_cb.dio.cca),1,fptr_channel)!=1)
             {   
                 printf("\n\n**** can't write channel file\n");
                 printf("**** aborting ***** \n");
                 return 1;
             }
-            printf("channel file <%s> intialized\n",fn_channel);
+            printf("  channel file <%s> intialized\n",fn_channel);
             fseek(fptr_channel,0,SEEK_SET);
         }
         else

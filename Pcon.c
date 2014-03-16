@@ -20,6 +20,7 @@ _Driver *_driverlist[] = {
 };
 /***************************** external ******************************/
 // extern char    *day_names[];
+ extern uint32_t       bbb[_SCHEDULE_BUFFER];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
@@ -98,13 +99,19 @@ int sd_setup(void)
         printf("**** load_channel_data aborted application ****\n");
         return 1;
     }
-    /*
-    if(init_schedule_data())   //create a set of empty schedule files if they are not present
+    
+    if(init_sch(bbb))   //create a schedule file if it is not present
     {
-        printf("**** init_schedule_data aborted application ****\n");
+        printf("**** init_sch aborted application ****\n");
         return 1;
     }
-    */
+    
+    if(read_sch(bbb))    
+    {
+        printf("**** read_sch aborted application ****\n");
+        return 1;
+    }
+    
     return 0;
 }
 /********************************************************************/
@@ -128,7 +135,7 @@ int sd_setup(void)
     strcat(file_set_prefix,_F_PREFIX);
     strcat(file_set_prefix,_FILE_SET_ID);
     printf("file set prefix <%s>\n",file_set_prefix);
-/* check out the sd card */
+/* check out the SD card */
     if(sd_setup())
     {
         printf("**** sd_setup aborted application ****\n");
@@ -153,17 +160,7 @@ int sd_setup(void)
     dio_cb.dio.update_ptr = &(rtc_cb.rtc.update);
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
-/* load the schedule buffer */
-/*
-    if(load_schedule_data(dio_cb.dio.sch,rtc_cb.rtc.td_buffer.dow-1))
-    {
-        printf("**** load_schedule_data aborted application ****\n");
-        return 1;
-    }
-    printf("schedule for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
-    dump_sch_recs(dio_cb.dio.sch,3,2);
-    rtc_cb.rtc.update = 1;
-*/
+
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);
     if(cog == -1)

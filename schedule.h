@@ -6,7 +6,9 @@
  int write_sch(uint32_t *);
  void clear_sch(uint32_t *);
  void ld_sch(uint32_t *);
+ int init_sch(uint32_t *);
  void dump_sch(uint32_t *);
+ void dspl_sch(uint32_t *, int, int);
  uint32_t *get_schedule(uint32_t *,int,int);
 
 /* routines to work with schedules */

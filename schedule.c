@@ -45,12 +45,12 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
     int     rtn;
 
     sfp = fopen(fn_schedule,"r");
-    printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
+    // printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
 
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER,1,sfp);
-        printf("fread returned <%i> reading %i bytes into buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
+        printf("schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
     }
     return 0;
@@ -73,25 +73,53 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     return 0;
  }
 
-void clear_sch(uint32_t *sbuf)
+void clear_sch(uint32_t *sbuf)  // fill schedule buffer with 0
  {
     int         i;
     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = '\0';
     return;
  }
 
-void ld_sch(uint32_t *sbuf)
+void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFER
  {
     int         i;
     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = (uint32_t)i;
     return;
  }
 
+ int init_sch(uint32_t *sbuf)
+ {
+    FILE    *sfp;
+    int     rtn;
+
+    printf("schedule file name <%s>\n",fn_schedule);
+    sfp = fopen(fn_schedule,"r");
+    if(sfp==0)
+    {
+        printf("  schedule file <%s> not found, it will be created\n",fn_schedule);
+        sfp = fopen(fn_schedule,"w");
+        if(sfp)
+        {
+            printf("  schedule file <%s> created\n",fn_schedule);
+            return 0;
+        }
+        else
+        {
+            printf("*** error can't create shedule file <%s>\n",fn_schedule);
+            return 1;
+        }
+    }
+    printf("  schedle file <%s> found\n",fn_schedule);
+    fclose(sfp);
+    return 0;
+ }
+
 void dump_schs(uint32_t *sbuf)
  {
-    int         i,ii;
+    int         i,ii,iii;
     ii = 0;
-    printf("\n");
+    // printf("day %i\n",iii++);
+    // printf("\nchannel %i: ",ii);
     for(i=0;i<_SCHEDULE_BUFFER;i++)
     {
         printf("%08x ",*sbuf++);
@@ -102,7 +130,7 @@ void dump_schs(uint32_t *sbuf)
         }
         if(ii == _NUMBER_OF_CHANNELS)
         {
-            printf("\n");
+                printf("\n",iii++);
             ii = 0;   
         } 
         // if(  ((i%_BYTES_PER_DAY)==0)&&(i>0) ) printf("\n");
@@ -125,9 +153,33 @@ void dump_sch(uint32_t *sbuf)
     return;
  }
 
+/* display all schedule records (schedule) for a (channel,day) */
+void dspl_sch(uint32_t *sbuf, int d, int c)
+{
+    int                         i,rsize;
+    volatile uint32_t           *r;
+
+    r = get_schedule(sbuf,d,c); 
+    if(*r==0)
+    {
+        printf("    no schedule records\n");
+        return;   
+    }
+
+    rsize = *r++;
+  
+    for(i=0;i<rsize;i++)
+    {
+        printf("    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_s(*r)]);
+        r++;
+    }
+        // printf("\n\n");    
+    return;
+}
+
 uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
  {
-    sbuf += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*d) + ((_MAX_SCHEDULE_RECS+1)*c);
+    sbuf += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*(d-1)) + ((_MAX_SCHEDULE_RECS+1)*c);
     printf(" schedule for day %i channel %i: \n",d,c);
     return sbuf;
  }
