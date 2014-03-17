@@ -152,8 +152,7 @@ typedef volatile struct
     int        *update_ptr;//pointer to triger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;    //pointer to the time date buffer
     CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
-//    SCH        sch[_NUMBER_OF_CHANNELS][_DAYS_PER_WEEK]; //schedule for each channel for current day
-    uint32_t   sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]; //schedule buffer
+    uint32_t   *sch_ptr;    //schedule buffer pointer
 }DIO_CB;
 #endif
 

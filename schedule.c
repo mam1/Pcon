@@ -24,6 +24,12 @@
  #include "bitlit.h" 
 
 /****************************** externals *******************************/
+ /* control block & stack for dio cog */
+extern struct {
+    unsigned stack[_STACK_SIZE_DIO];
+    volatile DIO_CB dio;
+} dio_cb;
+
 
 /******************** global code to text conversion ********************/
  extern char *day_names_long[7];     
@@ -36,10 +42,10 @@
 /***************************** globals **********************************/
  uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);
- uint32_t       bbb[_SCHEDULE_BUFFER];
+ volatile uint32_t       bbb[_SCHEDULE_BUFFER];
  char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
-int read_sch(uint32_t *sbuf)    // read data from SD card load buffer 
+int read_sch(volatile uint32_t *sbuf)    // read data from SD card load buffer 
  {
     FILE    *sfp;
     int     rtn;
@@ -50,13 +56,18 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER,1,sfp);
+        if(rtn!=1)
+        {
+            printf("*** problem reading schedule buffer from sd card\n");
+            return 1;
+        }
         printf("schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
     }
     return 0;
  }
 
-int write_sch(uint32_t *sbuf)   // write data from buffer to SD card 
+int write_sch(volatile uint32_t *sbuf)   // write data from buffer to SD card 
  {
     FILE    *sfp;
     int     rtn;
@@ -73,25 +84,26 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     return 0;
  }
 
-void clear_sch(uint32_t *sbuf)  // fill schedule buffer with 0
+void clear_sch(volatile uint32_t *sbuf)  // fill schedule buffer with 0
  {
     int         i;
     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = '\0';
     return;
  }
 
-void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFER
+void ld_sch(volatile uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFER
  {
     int         i;
     for(i=0;i<_SCHEDULE_BUFFER;i++) *sbuf++ = (uint32_t)i;
     return;
  }
 
- int init_sch(uint32_t *sbuf)
+int init_sch(volatile uint32_t *sbuf)   // create schedule if necessary
  {
     FILE    *sfp;
-    int     rtn;
+    // int     rtn;
 
+    dio_cb.dio.sch_ptr = bbb;
     printf("schedule file name <%s>\n",fn_schedule);
     sfp = fopen(fn_schedule,"r");
     if(sfp==0)
@@ -114,9 +126,9 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
     return 0;
  }
 
-void dump_schs(uint32_t *sbuf)
+void dump_schs(volatile uint32_t *sbuf)
  {
-    int         i,ii,iii;
+    int         i,ii;
     ii = 0;
     // printf("day %i\n",iii++);
     // printf("\nchannel %i: ",ii);
@@ -130,7 +142,7 @@ void dump_schs(uint32_t *sbuf)
         }
         if(ii == _NUMBER_OF_CHANNELS)
         {
-                printf("\n",iii++);
+                printf("\n");
             ii = 0;   
         } 
         // if(  ((i%_BYTES_PER_DAY)==0)&&(i>0) ) printf("\n");
@@ -139,10 +151,10 @@ void dump_schs(uint32_t *sbuf)
     return;
  }
 
-void dump_sch(uint32_t *sbuf)
+void dump_sch(volatile uint32_t *sbuf)
  {
-    int         i,ii;
-    ii = 0;
+    int         i;
+
     printf("\n");
     for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
     {
@@ -153,9 +165,8 @@ void dump_sch(uint32_t *sbuf)
     return;
  }
 
-/* display all schedule records (schedule) for a (channel,day) */
-void dspl_sch(uint32_t *sbuf, int d, int c)
-{
+void dspl_sch(volatile uint32_t *sbuf, int d, int c) //display all schedule records (schedule) for a (channel,day) 
+ {
     int                         i,rsize;
     volatile uint32_t           *r;
 
@@ -175,9 +186,9 @@ void dspl_sch(uint32_t *sbuf, int d, int c)
     }
         // printf("\n\n");    
     return;
-}
+ }
 
-uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
+volatile uint32_t *get_schedule(volatile uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
  {
     sbuf += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*(d-1)) + ((_MAX_SCHEDULE_RECS+1)*c);
     printf(" schedule for day %i channel %i: \n",d,c);
@@ -219,10 +230,10 @@ void put_state(volatile uint32_t *b,int s)  // load state into a schedule record
     return;
  } 
 
-int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record */
+int add_sch_rec(volatile uint32_t *sch, int k, int s)  // add or change a schedule record 
  {
-    uint32_t       *rcnt, *end, *r;
-    int            i;
+    volatile uint32_t       *end, *r;
+    // int            i;
     /* schedule has no records - insert one */
     if((int)*sch==0)
     {
@@ -238,14 +249,15 @@ int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record
         return 1;
     }
     /* if record exists change it */
-    if (r=find_schedule_record(sch,k))
+    r=find_schedule_record(sch,k);
+    if (r)
     {
         put_state(r,s);
         return 0;
     }
     /* insert new record in ordered list */
     *sch += 1;                  //increase record count
-    end = (sch + *sch) - 1;   //set pointer to end of the list
+    end = (sch + *sch) - 1;     //set pointer to end of the list
     sch++;
     printf("\n\n");
     while(sch <= end)
@@ -261,8 +273,8 @@ int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record
     return 0;      
  }
 
-int del_sch_rec(uint32_t *sch, int k)    // delete a schedule record with matching key 
-{
+int del_sch_rec(volatile uint32_t *sch, int k)    // delete a schedule record with matching key 
+ {
     uint32_t            *rsize;
     int              i,hit;
 
@@ -293,9 +305,9 @@ int del_sch_rec(uint32_t *sch, int k)    // delete a schedule record with matchi
         return 0;
     }     
     return 1;
-}
+ }
 
-uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for record with key match, return pointer to record or NULL 
+volatile uint32_t *find_schedule_record(volatile uint32_t *sch,int k)  // search schedule for record with key match, return pointer to record or NULL 
  {
     int                              i, rsize;
     

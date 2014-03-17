@@ -4,7 +4,7 @@
 #include "Pcon.h"
 /********************* externals ********************/
 //    extern CCR  cca[_NUMBER_OF_CHANNELS];
-extern char        *file_set_prefix[_SCHEDULE_NAME_SIZE];
+// extern char        *file_set_prefix[_SCHEDULE_NAME_SIZE];
 
 extern  struct {
     int                 channel; 
@@ -20,7 +20,7 @@ extern struct {     // control block & stack for dio cog
 } dio_cb;
 
 /********************** globals *********************/
-    char        fn_channel[_CHANNEL_FILE_NAME_SIZE];
+    char        fn_channel[_CHANNEL_FILE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_CHANNEL_SUFIX;;
     FILE        *fptr_channel;
 /***************** global code to text conversion ********************/
 extern char *day_names_long[7];     
@@ -110,8 +110,8 @@ char *channel_file_name(char *cfn)
 
 int init_channel_data(void)
 {
-    strcat(fn_channel,file_set_prefix);
-    strcat(fn_channel,_F_CHANNEL_SUFIX);
+    // strcat(fn_channel,file_set_prefix);
+    // strcat(fn_channel,_F_CHANNEL_SUFIX);
     printf("channel file name <%s>\n",fn_channel);
     fptr_channel = fopen(fn_channel,"r");
     if(fptr_channel)

@@ -2,22 +2,27 @@
 #define SCHEDULE_H_
 
 /* routines that work with the schedule buffer */
- int read_sch(uint32_t *);
- int write_sch(uint32_t *);
- void clear_sch(uint32_t *);
- void ld_sch(uint32_t *);
- int init_sch(uint32_t *);
- void dump_sch(uint32_t *);
- void dspl_sch(uint32_t *, int, int);
- uint32_t *get_schedule(uint32_t *,int,int);
+ int read_sch(volatile uint32_t *);
+ int write_sch(volatile uint32_t *);
+ void clear_sch(volatile uint32_t *);
+ void ld_sch(volatile uint32_t *);
+ int init_sch(volatile uint32_t *);
+ void dump_sch(volatile uint32_t *);
+ void dspl_sch(volatile uint32_t *, int, int);
+ volatile uint32_t *get_schedule(volatile uint32_t *,int,int);
 
 /* routines to work with schedules */
 // int      save_schedule_data(uint32_t *,int); 			//write to sd (schedule buffer, day)    
 // int      load_schedule_data(uint32_t *,int); 			//read from sd (schedule buffer, day)
 // void     dump_sch_recs(uint32_t *, int, int);    		//display schedule (schedule buffer, channel,day)
-uint32_t *find_schedule_record(uint32_t *,int); 	//search a schedule for a key (schedule buffer,channel,key), return pointer to record or NULL
-int		add_sch_rec(uint32_t *,int,int);			//add a record to a schedule (schedule buffer,channel,key,state)
-int 	del_sch_rec(uint32_t *,int);			//delet a record
+volatile uint32_t *find_schedule_record(volatile uint32_t *,int); 	//search a schedule for a key (schedule buffer,channel,key), return pointer to record or NULL
+int		add_sch_rec(volatile uint32_t *,int,int);			//add a record to a schedule (schedule buffer,channel,key,state)
+int 	del_sch_rec(volatile uint32_t *,int);			//delet a record
+
+int init_sch(volatile uint32_t *s);
+void dump_schs(volatile uint32_t *s);
+void dump_sch(volatile uint32_t *s);
+
 // int 	 del_sch_rec(uint32_t *,int,int);				//delete record from schedule (schedule buffer,channel,key)
 // int 	 init_schedule_data(void);				//create a set of empty schedule files if they are not present
 // void	 clean_sch_buf(uint32_t *);					//set a schedule buffer to all '\0's	 

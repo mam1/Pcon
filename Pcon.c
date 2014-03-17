@@ -24,7 +24,7 @@ _Driver *_driverlist[] = {
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
-    char                *file_set_prefix[_SCHEDULE_NAME_SIZE];
+    // char                *file_set_prefix[_SCHEDULE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -132,9 +132,9 @@ int sd_setup(void)
         printf("system is configured to drive 5 IO pins\n");
     #endif
 /* build file set prefix */
-    strcat(file_set_prefix,_F_PREFIX);
-    strcat(file_set_prefix,_FILE_SET_ID);
-    printf("file set prefix <%s>\n",file_set_prefix);
+    // strcat(file_set_prefix,_F_PREFIX);
+    // strcat(file_set_prefix,_FILE_SET_ID);
+    // printf("file set prefix <%s>\n",file_set_prefix);
 /* check out the SD card */
     if(sd_setup())
     {
