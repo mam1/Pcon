@@ -51,20 +51,21 @@ int read_sch(volatile uint32_t *sbuf)    // read data from SD card load buffer
     int     rtn;
 
     sfp = fopen(fn_schedule,"r");
-    // printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
-
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER,1,sfp);
         if(rtn!=1)
         {
             printf("*** problem reading schedule buffer from sd card\n");
+            fclose(sfp);
             return 1;
         }
         printf("schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
+        return 0;
     }
-    return 0;
+    printf("*** can not open <%s>\n",fn_schedule);
+    return 1;
  }
 
 int write_sch(volatile uint32_t *sbuf)   // write data from buffer to SD card 
@@ -73,15 +74,21 @@ int write_sch(volatile uint32_t *sbuf)   // write data from buffer to SD card
     int     rtn;
 
     sfp = fopen(fn_schedule,"w");
-    printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
     if(sfp)
     {
         rtn = fwrite(bbb,_SCHEDULE_BUFFER,1,sfp);
-        printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
-        fclose(sfp);   
+        if(rtn!=1)
+        {
+            printf("*** error writing schedule file\n");
+            fclose(sfp);
+            return 1;
+        }
+        printf("schedule data written to sd card\n");
+        fclose(sfp); 
+        return 0;  
     }
-
-    return 0;
+    printf("*** can not open <%s>\n",fn_schedule);
+    return 1;
  }
 
 void clear_sch(volatile uint32_t *sbuf)  // fill schedule buffer with 0
@@ -113,6 +120,17 @@ int init_sch(volatile uint32_t *sbuf)   // create schedule if necessary
         if(sfp)
         {
             printf("  schedule file <%s> created\n",fn_schedule);
+            fclose(sfp);
+/*
+            clear_sch(bbb);
+            if(write_sch(bbb)!=1)
+            {
+                printf("*** error reading schedule record\n");
+                return 1;
+            }
+*/
+            printf("  schedule file initialized");       
+            fclose(fn_schedule);
             return 0;
         }
         else

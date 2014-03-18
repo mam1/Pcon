@@ -181,7 +181,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 23   change */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
-/* 24    dump  */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_29, c_29,  c_0,  c_0, c_29,  c_0, c_0,  c_0}};
+/* 24    dump  */   {c_29,  c_0,  c_0,  c_0,  c_0,  c_0, c_29, c_29,  c_0,  c_0, c_29,  c_0, c_0,  c_0}};
 
 
 /***************start fsm support functions ********************/
@@ -352,10 +352,15 @@ int c_13(int tt, int *n, char *s) //save - s1
 /* save edit schedule buffer */
 int c_14(int tt, int *n, char *s) 
 {
-    write_sch(bbb);
-    printf("schedule buffer save to SD card\n");
-    c_0(tt,n,s); 
-    return 0;
+   if( write_sch(bbb)==0)
+   {
+        printf("schedule buffer saved to SD card\n");
+        c_0(tt,n,s);
+        return 0;
+   }
+   printf("*** error saving schedule buffer\n");
+   c_0(tt,n,s); 
+   return 1;
 }
 
 /* prompt for channel mode */
