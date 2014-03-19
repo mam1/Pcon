@@ -5,7 +5,6 @@
 #define _minor_version 16
 #define _FILE_SET_ID            "001"
 
-
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
@@ -52,34 +51,28 @@
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif
-#define _CHANNEL_NAME_SIZE  15
-#define _CHANNEL_NAME_BUFFER_SIZE  30
-#define _CHANNEL_FILE_NAME_SIZE 30
-
-#define _DAYS_PER_WEEK      7
+#define _CHANNEL_NAME_SIZE          15
+#define _CHANNEL_NAME_BUFFER_SIZE   30
+#define _CHANNEL_FILE_NAME_SIZE     30
 
 /* sd card file parameters */
-//#define _FILE_NAME_SIZE         20
-
 #if _DRIVEN == _DIOB
     #define _F_PREFIX           "dio"
 #else
     #define _F_PREFIX           "rly"
-    // #define _F_FILE_SET_PREFIX 
 #endif
-// #define _F_SYSTEM_SUFIX         ".sys"
+
 #define _F_SCHEDULE_SUFIX       ".sch"
 #define _F_CHANNEL_SUFIX        ".ch"
 
 /* schedule parameters */
 #define _DAYS_PER_WEEK          7
-#define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 #define _MAX_SCHEDULE_RECS      10
-#define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
-#define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
-#define _SCHEDULE_NAME_SIZE    40
+#define _SCHEDULE_NAME_SIZE     40
 #define _STATE_MASK             B32(10000000,00000000,00000000,00000000)                 
 #define _KEY_MASK               B32(01111111,11111111,11111111,11111111) 
+#define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
+#define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
 
 /* buffers */
 #define _INPUT_BUFFER           128
@@ -98,7 +91,6 @@
 #define _QUOTE      34
 #define _CR         13
 #define _NO_CHAR    255
-
 
 /*******************/
 /* data structures */
@@ -126,13 +118,12 @@ typedef struct{
     uint8_t     dow;
 }TD_BUF;
 
-
 /* rtc cog control block */
 typedef volatile struct 
 {
     int                 tdb_lock;   //lock ID for time date buffer
-    int                 abort;      //!= 0 cog requests a system abort,value = error code
-    int                 update;     //triger update flag, 1=wait, 0=update 
+    int                 abt;      //!= 0 cog requests a system abort,value = error code
+    int                 update;     //trigger update flag, 1=wait, 0=update 
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
  
@@ -148,8 +139,8 @@ typedef volatile struct
     int        tdb_lock;    //lock ID for time date buffer
     int        cca_lock;    //lock ID for the channel control array
     int        sch_lock;    //lock ID for schedule records
-    int        abort;       //!= 0 cog requests a system abort,value = error code
-    int        *update_ptr;//pointer to triger update flag, 1=wait, 0=update 
+    int        abt;       //!= 0 cog requests a system abort,value = error code
+    int        *update_ptr;//pointer to trigger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;    //pointer to the time date buffer
     CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
     uint32_t   *sch_ptr;    //schedule buffer pointer

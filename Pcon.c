@@ -73,15 +73,15 @@ int start_dio(volatile void *parptr)
 /******************************* support functions *********************/
 int ckeck_abort(void)
 {
-        if(rtc_cb.rtc.abort != 0)
+        if(rtc_cb.rtc.abt != 0)
         {
-            printf("\n\n*** rtc cog issued an abort\n ACK missing - message number %i\n",rtc_cb.rtc.abort);
+            printf("\n\n*** rtc cog issued an abort\n ACK missing - message number %i\n",rtc_cb.rtc.abt);
             return 1;
         }
 
-        if(dio_cb.dio.abort != 0)
+        if(dio_cb.dio.abt != 0)
         {
-            printf("\n\n*** dio cog issued an abort\n message number %i\n",dio_cb.dio.abort);
+            printf("\n\n*** dio cog issued an abort\n message number %i\n",dio_cb.dio.abt);
             return 1;
         }
 
