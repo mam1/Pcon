@@ -2,11 +2,11 @@
 #define SCHEDULE_H_
 
 /* routines that work with the schedule buffer */
- int read_sch(volatile uint32_t *);
- int write_sch(volatile uint32_t *);
+ int read_sch(void);
+ int write_sch(void);
  void clear_sch(volatile uint32_t *);
  void ld_sch(volatile uint32_t *);
- int init_sch(volatile uint32_t *);
+ int init_sch(void);
  void dump_sch(volatile uint32_t *);
  void dspl_sch(volatile uint32_t *, int, int);
  volatile uint32_t *get_schedule(volatile uint32_t *,int,int);
@@ -19,7 +19,6 @@ volatile uint32_t *find_schedule_record(volatile uint32_t *,int); 	//search a sc
 int		add_sch_rec(volatile uint32_t *,int,int);			//add a record to a schedule (schedule buffer,channel,key,state)
 int 	del_sch_rec(volatile uint32_t *,int);			//delet a record
 
-int init_sch(volatile uint32_t *s);
 void dump_schs(volatile uint32_t *s);
 void dump_sch(volatile uint32_t *s);
 

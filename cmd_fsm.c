@@ -1,4 +1,4 @@
- #include <propeller.h>
+#include <propeller.h>
 #include <stdio.h>
 #include <string.h>
 #include "simpletools.h"
@@ -22,6 +22,7 @@
     unsigned stack[_STACK_SIZE_DIO];
     volatile DIO_CB dio;
  } dio_cb;
+  extern uint32_t       bbb[_SCHEDULE_BUFFER];
 /*********************** globals **************************/
  char                prompt_buffer[_PROMPT_BUFFER];
  struct {
@@ -146,11 +147,11 @@ int c_25(int,int *,char *); /* set schedule record state to off */
 int c_26(int,int *,char *); /* delete schedule record */
 
 int c_27(int,int *,char *); /* load schedule buffer from SD card */
-int c_28(int,int *,char *); /* save schedule buffer to SD card */
+// int c_28(int,int *,char *); /* save schedule buffer to SD card */
 
 int c_29(int,int *,char *); /* dump schedule buffer */
-int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel*/
-int c_31(int,int *,char *); /* display dio_cb schedules for active day*/
+// int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel*/
+// int c_31(int,int *,char *); /* display dio_cb schedules for active day*/
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -162,17 +163,17 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  2    OTHER */   {c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12,  c_0, c_0,  c_0},
 /*  3    EMPTY */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_0,  c_0},
 /*  4     save */   {c_13,  c_6,  c_6,  c_0,  c_0,  c_0, c_14, c_14,  c_0,  c_0, c_14,  c_0, c_0,  c_0},
-/*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0 ,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
+/*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0, c_27, c_27,  c_0,  c_0, c_27,  c_0, c_0,  c_0},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7, c_13,  c_0, c_0,  c_0},
 /*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
-/*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
+/*  8 schedule */   {c_13,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  9  channel */   { c_3, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 10     name */   {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 11     mode */   {c_13, c_13, c_15, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 12       on */   {c_13,  c_0,  c_0,  c_0,  c_0, c_11,  c_0,  c_0,  c_0,  c_0, c_24,  c_0, c_0,  c_0},
 /* 13      off */   {c_13,  c_0,  c_0,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0, c_25,  c_0, c_0,  c_0},
 /* 14        ? */   { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0, c_0,  c_0},
-/* 15  display */   {c_13,  c_5, c_17, c_17, c_17, c_17, c_31, c_30,  c_0,  c_0, c_30,  c_0, c_0,  c_0},
+/* 15  display */   {c_13,  c_5, c_17, c_17, c_17, c_17,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_0,  c_0},
 /* 16      day */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0, c_0,  c_0},
@@ -349,10 +350,10 @@ int c_13(int tt, int *n, char *s) //save - s1
     return 0;
 }
 
-/* save edit schedule buffer */
+/* save schedule buffer */
 int c_14(int tt, int *n, char *s) 
 {
-   if( write_sch(bbb)==0)
+   if( write_sch()==0)
    {
         printf("schedule buffer saved to SD card\n");
         c_0(tt,n,s);
@@ -517,13 +518,14 @@ int c_26(int tt, int *n, char *s)
 /* load schedule buffer from SD card */
 int c_27(int tt, int *n, char *s) 
 {
-    read_sch(bbb);
+    read_sch();
     printf("schedule buffer loaded from the sd card\n");
     c_0(tt,n,s);
     return 0;
 }
 
 /* save edit schedule buffer to SD card */
+/*
 int c_28(int tt, int *n, char *s) 
 {
     write_sch(bbb);
@@ -531,8 +533,8 @@ int c_28(int tt, int *n, char *s)
     c_0(tt,n,s); 
     return 0;
 }
-
-/* save edit schedule buffer before load*/
+*/
+/* dump schedule buffer */
 int c_29(int tt, int *n, char *s) 
 {
     dump_schs(bbb);
@@ -540,13 +542,16 @@ int c_29(int tt, int *n, char *s)
     return 0;
 }
 /* display the schedule for active day and channel */
+/*
 int c_30(int tt, int *n, char *s) 
 {
     dump_sch(get_schedule(bbb,edit.day-1,edit.channel));
     c_0(tt,n,s); 
     return 0;
 }
+*/
 /* display the schedules for all days and all channels */
+/*
 int c_31(int tt, int *n, char *s) 
 {
     // int             c,d;
@@ -557,7 +562,7 @@ int c_31(int tt, int *n, char *s)
     return 0;
 
 }
-
+*/
 
 /*****************************************************/
 /*********  command parser state machine end  ********/

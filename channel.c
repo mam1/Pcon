@@ -53,10 +53,11 @@ void disp_channel_data(int cn)
 }
 int load_channel_data(void)
 {
+    int         h;
     fptr_channel = fopen(fn_channel,"r");
     if(fptr_channel)
       {
-        int h = fread(dio_cb.dio.cca,sizeof(dio_cb.dio.cca),1,fptr_channel);
+        h = fread(dio_cb.dio.cca,sizeof(dio_cb.dio.cca),1,fptr_channel);
         if(h != 1)
         {
             fclose(fptr_channel);

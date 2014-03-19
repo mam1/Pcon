@@ -23,13 +23,21 @@
  #include "schedule.h"
  #include "bitlit.h" 
 
+/*************************** drivers  ********************************/
+extern _Driver _FullDuplexSerialDriver;
+extern _Driver _FileDriver;
+_Driver *_driverlist[] = {
+  &_FullDuplexSerialDriver,
+  &_FileDriver,
+  NULL
+};
+
 /****************************** externals *******************************/
  /* control block & stack for dio cog */
 extern struct {
     unsigned stack[_STACK_SIZE_DIO];
     volatile DIO_CB dio;
 } dio_cb;
-
 
 /******************** global code to text conversion ********************/
  extern char *day_names_long[7];     
@@ -45,7 +53,7 @@ extern struct {
  volatile uint32_t       bbb[_SCHEDULE_BUFFER];
  char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
-int read_sch(volatile uint32_t *sbuf)    // read data from SD card load buffer 
+int read_sch(void)    // read data from SD card load buffer 
  {
     FILE    *sfp;
     int     rtn;
@@ -57,6 +65,7 @@ int read_sch(volatile uint32_t *sbuf)    // read data from SD card load buffer
         if(rtn!=1)
         {
             printf("*** problem reading schedule buffer from sd card\n");
+            printf("fread returned %i\n",rtn);
             fclose(sfp);
             return 1;
         }
@@ -68,7 +77,7 @@ int read_sch(volatile uint32_t *sbuf)    // read data from SD card load buffer
     return 1;
  }
 
-int write_sch(volatile uint32_t *sbuf)   // write data from buffer to SD card 
+int write_sch(void)   // write data from buffer to SD card 
  {
     FILE    *sfp;
     int     rtn;
@@ -80,6 +89,7 @@ int write_sch(volatile uint32_t *sbuf)   // write data from buffer to SD card
         if(rtn!=1)
         {
             printf("*** error writing schedule file\n");
+            printf("fwrite returned %i\n",rtn);
             fclose(sfp);
             return 1;
         }
@@ -105,7 +115,7 @@ void ld_sch(volatile uint32_t *sbuf)     // load schedule buffer with 0 - _SCHED
     return;
  }
 
-int init_sch(volatile uint32_t *sbuf)   // create schedule if necessary
+int init_sch(void)   // create schedule if necessary
  {
     FILE    *sfp;
     // int     rtn;
@@ -121,25 +131,23 @@ int init_sch(volatile uint32_t *sbuf)   // create schedule if necessary
         {
             printf("  schedule file <%s> created\n",fn_schedule);
             fclose(sfp);
-/*
             clear_sch(bbb);
-            if(write_sch(bbb)!=1)
+            if(write_sch()!=1)
             {
-                printf("*** error reading schedule record\n");
+                printf("*** error initializing schedule record on sd card\n");
                 return 1;
             }
-*/
-            printf("  schedule file initialized");       
+            printf("  schedule file initialized\n");       
             fclose(fn_schedule);
             return 0;
         }
         else
         {
-            printf("*** error can't create shedule file <%s>\n",fn_schedule);
+            printf("*** error can't create schedule file <%s>\n",fn_schedule);
             return 1;
         }
     }
-    printf("  schedle file <%s> found\n",fn_schedule);
+    printf("  schedule file <%s> found\n",fn_schedule);
     fclose(sfp);
     return 0;
  }

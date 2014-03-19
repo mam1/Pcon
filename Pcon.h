@@ -3,7 +3,7 @@
 
 #define _major_version 0
 #define _minor_version 16
-#define _FILE_SET_ID            "003"
+#define _FILE_SET_ID            "222"
 
 
 /* configuration options */
@@ -11,6 +11,7 @@
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
 #define _DRIVEN     _DIOB
+
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -73,7 +74,7 @@
 
 /* schedule parameters */
 #define _DAYS_PER_WEEK          7
-#define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
+// #define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 #define _MAX_SCHEDULE_RECS      10
 #define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
 #define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
@@ -87,7 +88,7 @@
 #define _TOKEN_BUFFER           128
 #define _VCMD_BUFFER            128
 #define _PROMPT_BUFFER          128
-#define _SCHEDULE_BUFFER        (_BYTES_PER_DAY * _DAYS_PER_WEEK)/4
+#define _SCHEDULE_BUFFER        _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 
 /* key codes */
 #define _ESC        27

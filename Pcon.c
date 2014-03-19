@@ -9,15 +9,6 @@
 #include "schedule.h"
 #include "char_fsm.h"
 
-
-/*************************** drivers  ********************************/
-extern _Driver _FullDuplexSerialDriver;
-extern _Driver _FileDriver;
-_Driver *_driverlist[] = {
-  &_FullDuplexSerialDriver,
-  &_FileDriver,
-  NULL
-};
 /***************************** external ******************************/
 // extern char    *day_names[];
  extern uint32_t       bbb[_SCHEDULE_BUFFER];
@@ -100,13 +91,13 @@ int sd_setup(void)
         return 1;
     }
     
-    if(init_sch(bbb))   //create a schedule file if it is not present
+    if(init_sch())              //create a schedule file if it is not present
     {
         printf("**** init_sch aborted application ****\n");
         return 1;
     }
     
-    if(read_sch(bbb))    
+    if(read_sch())              //load data from schedule file into bbb   
     {
         printf("**** read_sch aborted application ****\n");
         return 1;
@@ -131,10 +122,8 @@ int sd_setup(void)
     #else
         printf("system is configured to drive 5 IO pins\n");
     #endif
-/* build file set prefix */
-    // strcat(file_set_prefix,_F_PREFIX);
-    // strcat(file_set_prefix,_FILE_SET_ID);
-    // printf("file set prefix <%s>\n",file_set_prefix);
+    printf("channel buffer size  %i\n", sizeof(CCR) * _NUMBER_OF_CHANNELS);
+    printf("schedule buffer size %i\n",_SCHEDULE_BUFFER);
 /* check out the SD card */
     if(sd_setup())
     {
