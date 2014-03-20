@@ -121,11 +121,18 @@ int init_sch(void)   // create schedule if necessary
     // int     rtn;
 
     dio_cb.dio.sch_ptr = bbb;
+
     printf("schedule file name <%s>\n",fn_schedule);
+
+    return 1;
+    
     sfp = fopen(fn_schedule,"r");
+
+
     if(sfp==0)
     {
         printf("  schedule file <%s> not found, it will be created\n",fn_schedule);
+        fclose(sfp);
         sfp = fopen(fn_schedule,"w");
         if(sfp)
         {
@@ -147,6 +154,7 @@ int init_sch(void)   // create schedule if necessary
             return 1;
         }
     }
+
     printf("  schedule file <%s> found\n",fn_schedule);
     fclose(sfp);
     return 0;

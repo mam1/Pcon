@@ -3,7 +3,7 @@
 
 #define _major_version 0
 #define _minor_version 16
-#define _FILE_SET_ID            "222"
+#define _FILE_SET_ID            "322"
 
 
 /* configuration options */
@@ -53,7 +53,7 @@
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif
-#define _CHANNEL_NAME_SIZE  15
+#define _CHANNEL_NAME_SIZE  16
 #define _CHANNEL_NAME_BUFFER_SIZE  30
 #define _CHANNEL_FILE_NAME_SIZE 30
 

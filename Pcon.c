@@ -122,8 +122,8 @@ int sd_setup(void)
     #else
         printf("system is configured to drive 5 IO pins\n");
     #endif
-    printf("channel buffer size  %i\n", sizeof(CCR) * _NUMBER_OF_CHANNELS);
-    printf("schedule buffer size %i\n",_SCHEDULE_BUFFER);
+    printf("channel buffer size  %i bytes\n", sizeof(CCR) * _NUMBER_OF_CHANNELS);
+    printf("schedule buffer size %i bytes\n",_SCHEDULE_BUFFER);
 /* check out the SD card */
     if(sd_setup())
     {

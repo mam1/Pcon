@@ -53,11 +53,24 @@ void disp_channel_data(int cn)
 }
 int load_channel_data(void)
 {
-    int         h;
+    int         h,i;
     fptr_channel = fopen(fn_channel,"r");
     if(fptr_channel)
       {
-        h = fread(dio_cb.dio.cca,sizeof(dio_cb.dio.cca),1,fptr_channel);
+        while(i++<1000)
+        {
+            fclose(fptr_channel);
+            fptr_channel = fopen(fn_channel,"r");
+            h = fread(dio_cb.dio.cca,sizeof(dio_cb.dio.cca),1,fptr_channel);
+            if(h) 
+                {
+                    printf("h= %i\n",h);
+                    break;
+                } 
+            printf(".");
+            fclose(fptr_channel); 
+        }
+
         if(h != 1)
         {
             fclose(fptr_channel);
@@ -66,6 +79,7 @@ int load_channel_data(void)
         }
         else
         {
+            printf("  channel data loaded\n");
             fclose(fptr_channel);
             return 0;
         }
@@ -90,13 +104,14 @@ int save_channel_data(void)
         }
         else
         {
+            printf("  channel data saved\n");
             fclose(fptr_channel);
             return 0;
         }
       }
     else
     {
-        printf("*** bad open ***\n");
+        printf("*** bad open ***\nfile name <%s>\n",fn_channel);
         return 1;
     }
 }
@@ -111,10 +126,15 @@ char *channel_file_name(char *cfn)
 
 int init_channel_data(void)
 {
+    int         i;
     // strcat(fn_channel,file_set_prefix);
     // strcat(fn_channel,_F_CHANNEL_SUFIX);
     printf("channel file name <%s>\n",fn_channel);
+
+
     fptr_channel = fopen(fn_channel,"r");
+
+
     if(fptr_channel)
         printf("  channel file <%s> found\n",fn_channel);
     else
