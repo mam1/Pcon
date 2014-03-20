@@ -49,7 +49,7 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
 
     if(sfp)
     {
-        rtn = fread(bbb,_SCHEDULE_BUFFER,1,sfp);
+        rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
         printf("schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
     }
@@ -65,7 +65,7 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
     if(sfp)
     {
-        rtn = fwrite(bbb,_SCHEDULE_BUFFER,1,sfp);
+        rtn = fwrite(bbb,_SCHEDULE_BUFFER*4,1,sfp);
         printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
         fclose(sfp);   
     }
