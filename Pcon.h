@@ -88,7 +88,7 @@
 #define _TOKEN_BUFFER           128
 #define _VCMD_BUFFER            128
 #define _PROMPT_BUFFER          128
-#define _SCHEDULE_BUFFER        _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
+#define _SCHEDULE_BUFFER        (_BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK)/4
 
 /* key codes */
 #define _ESC        27
