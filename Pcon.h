@@ -10,7 +10,7 @@
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _DIOB
+#define _DRIVEN     _212GH
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
