@@ -33,25 +33,10 @@ static _COGMEM uint32_t    state_mask = B32(10000000,00000000,00000000,00000000)
 static _COGMEM uint32_t    key_mask   = B32(01111111,11111111,11111111,11111111);
 static _COGMEM int              hold_min;
 /************************ support routines **************************/
-_NATIVE
-int get_key(uint32_t b)
-{
-    uint32_t     k;
-    k = (int)(b & key_mask);
-    return (int)k;
-}
-_NATIVE
-int get_statev(uint32_t b)
-{
-    if (b & state_mask)
-        return 1;
-    return 0;
-}
-#if _DRIVEN == _DIOB
-/* send a control byte to the dio board */
-_NATIVE
-void send_ccb(byte)
-{
+
+#if _DRIVEN == _DIOB                
+_NATIVE void send_ccb(byte)         //sent control byte to dio board
+ {
     int         i;
     dir_out(_DataIO);   //setup to write 
     pin_low(_DataIO);  
@@ -68,12 +53,10 @@ void send_ccb(byte)
     pin_high(_HC595);       //set the LAT_RlY to high this will cause the HC595 to read the value from the shift register */     
     pin_low(_HC595);        //done - ready for next write */ 
     return;
-}
+ }
 #else
-/* send a control byte to the AQY212GH relays */
-_NATIVE
-void send_ccb(byte)
-{
+_NATIVE void send_ccb(byte)         // send a control byte to the AQY212GH relays 
+ {
     int         i;
  
     for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
@@ -82,42 +65,51 @@ void send_ccb(byte)
             pin_high(_RLY1 + i);  //send bit high
         else
             pin_low(_RLY1 + i);   //send bit low
-
     }   
-
     return;
-}
+ }
 #endif
-_NATIVE
-int test_sch(uint32_t cnt, volatile uint32_t *r, int k, volatile DIO_CB *m)
-{
-    static int                     i;
-    volatile uint32_t              *first_record;
 
-    if(cnt == 0)
-            return 0;
-    if(cnt == 1)
-            return 1;
-
-    first_record = r;
-    i=0;
-    while(i++ < cnt)
+_NATIVE int get_key(uint32_t b)     // extract key from a schedule record 
+ {
+    uint32_t     k;
+    k = (int)(b & key_mask);
+    return (int)k;
+ }
+_NATIVE int get_s(uint32_t b)       // extract state from a schedule record 
+ {
+    if (b & state_mask)
+        return 1;
+    return 0;
+ }
+_NATIVE int test_sch(volatile uint32_t *r, int k, int day, int channel,int *abt)
+ {
+    static int                     i,rnum;
+    volatile uint32_t              *first_record, *last_record;
+ 
+    r += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*(day-1)) + ((_MAX_SCHEDULE_RECS+1)*channel);
+    // *abt = day;
+    if(*r == 0) return 0; 
+    rnum = (int)*r++;
+    first_record = last_record = r;
+    for(i=0;i<rnum-1;i++) last_record++;
+    while(r <= last_record)
     {
         if(get_key(*r)==k)
-            return get_statev(*r);
+            return get_s(*r);
         if((get_key(*r) > k))     
-            return get_statev(*(--r));
+            return get_s(*(--r));
         r++;
     }
-    return get_statev(*first_record);
-}     
+    return get_s(*(--r));
+ }     
 /******************************************************************/
 /********************** start main routine ************************/
 /******************************************************************/
 _NAKED
 void main (volatile DIO_CB *m)
 { 
-    static  int i,key;
+    static int i,key,test_rtn;
     static  uint8_t    ccb,hccb;
 
 #if _DRIVEN == _DIOB
@@ -164,8 +156,11 @@ void main (volatile DIO_CB *m)
                         break;
                     case 1:     //time control
                         while(lockset(m->tdb_lock));    //wait for a lock
-                        key = ((m->td_ptr)->hour * 60) + (m->td_ptr)->min;
-                        if(test_sch(m->sch[i][0], &(m->sch[i][1]), key, m))
+                        key = (m->td_ptr->hour * 60) + m->td_ptr->min;
+                        while(lockset(m->sch_lock));
+                        test_rtn = test_sch (m->sch_ptr, key, m->td_ptr->dow, i, &(m->abort));
+                        lockclr(m->sch_lock);
+                        if(test_rtn)
                         {
                             ccb |= (1<<i);
                             m->cca[i].state = 1;
@@ -173,15 +168,16 @@ void main (volatile DIO_CB *m)
                         else
                         {
                             ccb &= ~(1<<i);
-                            m->cca[i].state = 0;
+                            m->cca[i].state = 1;
                         }
+
                         lockclr(m->tdb_lock);
                         break;
-                    case 2:     //time and sensor control, not implemented
+                    case 2:             //time and sensor control, not implemented
                         send_ccb(0);    //try to turn off all relays on the dio board 
                         m->abort = 2;   //abort application
                         break;
-                    default:    //should not happen
+                    default:            //should not happen
                         send_ccb(0);    //try to turn off all relays on the dio board 
                         m->abort = 1;   //abort application
                 }
