@@ -3,14 +3,15 @@
 
 #define _major_version 0
 #define _minor_version 16
-#define _FILE_SET_ID            "001"
+#define _FILE_SET_ID            "322"
 
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _212GH
+#define _DRIVEN     _DIOB
+
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -52,7 +53,7 @@
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif
-#define _CHANNEL_NAME_SIZE  15
+#define _CHANNEL_NAME_SIZE  16
 #define _CHANNEL_NAME_BUFFER_SIZE  30
 #define _CHANNEL_FILE_NAME_SIZE 30
 
@@ -73,7 +74,7 @@
 
 /* schedule parameters */
 #define _DAYS_PER_WEEK          7
-#define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
+// #define _NUMBER_OF_SCHEDULES    _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 #define _MAX_SCHEDULE_RECS      10
 #define _BYTES_PER_CHANNEL      (_MAX_SCHEDULE_RECS + 1) * 4
 #define _BYTES_PER_DAY          _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS
@@ -87,7 +88,7 @@
 #define _TOKEN_BUFFER           128
 #define _VCMD_BUFFER            128
 #define _PROMPT_BUFFER          128
-#define _SCHEDULE_BUFFER        (_BYTES_PER_DAY * _DAYS_PER_WEEK)/4
+#define _SCHEDULE_BUFFER        _BYTES_PER_CHANNEL * _NUMBER_OF_CHANNELS * _DAYS_PER_WEEK
 
 /* key codes */
 #define _ESC        27
@@ -152,8 +153,7 @@ typedef volatile struct
     int        *update_ptr;//pointer to triger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;    //pointer to the time date buffer
     CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
-//    SCH        sch[_NUMBER_OF_CHANNELS][_DAYS_PER_WEEK]; //schedule for each channel for current day
-    uint32_t   sch[_NUMBER_OF_CHANNELS][_MAX_SCHEDULE_RECS+1]; //schedule buffer
+    uint32_t   *sch_ptr;    //schedule buffer pointer
 }DIO_CB;
 #endif
 
