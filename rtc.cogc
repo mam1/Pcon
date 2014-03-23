@@ -145,13 +145,13 @@ void main (volatile RTC_CB *m)
         while(lockset(m->tdb_lock));    //wait until we can set the lock
         i2cStart();                     //generate an i2c start condition
         if(i2cwrite(DS3231_Write_addr)) //setup to read
-            m->abort = 1;
+            m->abt = 1;
         if(i2cwrite(0))                 //point at start of data registers
-            m->abort = 2;
+            m->abt = 2;
         i2cStop();                      //generate an i2c stop condition
         i2cStart();                     //generate an i2c start condition
         if(i2cwrite(DS3231_Read_addr))  //read the DS33231 data registers
-            m->abort = 3;
+            m->abt = 3;
         m->td_buffer.sec =   bcd_to_decimal(i2cread(ACK));
         m->td_buffer.min =   bcd_to_decimal(i2cread(ACK));
         m->td_buffer.hour =  bcd_to_decimal(i2cread(ACK));

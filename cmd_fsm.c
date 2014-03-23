@@ -157,12 +157,12 @@ int c_31(int,int *,char *); /* display dio_cb schedules for active day*/
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*            STATE    0     1     2     3    4     5      6    7     8     9     10     11    12   13*/ 
-/*  0      INT */   {c_13,  c_4,  c_0,  c_0, c_10, c_13, c_20,  c_21, c_0, c_22, c_13,  c_0, c_0,  c_0}, 
+/*  0      INT */   {c_13,  c_4,  c_0,  c_0, c_10, c_13, c_20, c_21,  c_0, c_22, c_13,  c_0, c_0,  c_0}, 
 /*  1      STR */   {c_13,  c_0,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  2    OTHER */   {c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12, c_12,  c_0, c_0,  c_0},
 /*  3    EMPTY */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_0,  c_0},
 /*  4     save */   {c_13,  c_6,  c_6,  c_0,  c_0,  c_0, c_14, c_14,  c_0,  c_0, c_14,  c_0, c_0,  c_0},
-/*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0 ,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
+/*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7, c_13,  c_0, c_0,  c_0},
 /*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
@@ -176,7 +176,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 16      day */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0, c_0,  c_0},
-/* 19     time */   {c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
+/* 19     time */   {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
 /* 20      yes */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
@@ -471,11 +471,12 @@ int c_22(int tt, int *n, char *s)
 int c_23(int tt, int *n, char *s) 
 {
 
-    printf("%i:%02i:%02i %s %i/%i/%i\n\n",
+    printf("%s, %i:%02i:%02i  %i/%i/%i\n\n",
+        day_names_long[rtc_cb.rtc.td_buffer.dow-1],
         rtc_cb.rtc.td_buffer.hour,
         rtc_cb.rtc.td_buffer.min,
         rtc_cb.rtc.td_buffer.sec,
-        day_names_long[rtc_cb.rtc.td_buffer.dow-1],
+
         rtc_cb.rtc.td_buffer.month,
         rtc_cb.rtc.td_buffer.day,
         rtc_cb.rtc.td_buffer.year+2000);

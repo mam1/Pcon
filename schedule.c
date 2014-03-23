@@ -179,7 +179,14 @@ void dspl_sch(uint32_t *sbuf, int d, int c)
 
 uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
  {
+    int                 i,ii,iii;
+
     sbuf += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*(d-1)) + ((_MAX_SCHEDULE_RECS+1)*c);
+
+    for(iii=0;iii<d-1;iii++)     
+        for(ii=0;ii<c;ii++)     
+            for(i=0;i<(_MAX_SCHEDULE_RECS+1);i++) sbuf++; 
+
     printf(" schedule for day %i channel %i: \n",d,c);
     return sbuf;
  }
