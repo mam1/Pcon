@@ -5,6 +5,8 @@
 #define _minor_version 16
 #define _FILE_SET_ID            "001"
 
+#define _XXXXXXXXX
+
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
