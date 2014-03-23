@@ -127,11 +127,17 @@ typedef volatile struct
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
  
-/*  data structure for each node in the schedule array */
-typedef struct{
-    int    cnt;
-    uint32_t    r[_MAX_SCHEDULE_RECS];
-}SCH;
+/*  data structures for the schedule array */
+typedef struct sch
+ {
+    uint32_t            rec[_MAX_SCHEDULE_RECORDS+1];
+ } SCH;
+
+typedef struct day
+ {
+    SCH                 sch[_NUMBER_OF_CHANNELS];
+ } DAY;
+
 
 /* dio cog control block */
 typedef volatile struct 
