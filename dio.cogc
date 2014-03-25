@@ -35,7 +35,7 @@ static _COGMEM int              hold_min;
 /************************ support routines **************************/
 
 #if _DRIVEN == _DIOB                
-_NATIVE void send_ccb(byte)         //sent control byte to dio board
+_NATIVE void send_ccb(byte)         //send control byte to dio board
  {
     int         i;
     dir_out(_DataIO);   //setup to write 
@@ -82,22 +82,25 @@ _NATIVE int get_s(uint32_t b)       // extract state from a schedule record
         return 1;
     return 0;
  }
-_NATIVE int test_sch(volatile uint32_t *r, int k, int day, int channel,int *abt)
+_NATIVE uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
  {
-    static int                     i,ii,iii,rnum;
-    volatile uint32_t              *first_record, *last_record;
+    SCH             *sch_ptr;
+    DAY             *day_ptr;
 
-    for(iii=0;iii<day-1;iii++)     
-        for(ii=0;ii<channel;ii++)     
-            for(i=0;i<(_MAX_SCHEDULE_RECS+1);i++) r++;  
- 
-    // *abt = day;
+    day_ptr = sbuf;         //set day pointer to the start of the schedule buffer
+    day_ptr += d-1;         //move day pointer to the start of the requested day
+    sch_ptr = day_ptr;      //set channel pointer to the start of the requested day
+    sch_ptr += c;           //move channel pointer to the requested channel
 
-    if(*r == 0) return 0; 
-    rnum = (int)*r++;
-    first_record = last_record = r;
-    for(i=0;i<rnum-1;i++) last_record++;
-    while(r <= last_record)
+    return sch_ptr;
+ }
+_NATIVE  int test_sch(volatile uint32_t *r, int k) //return state for key
+ {
+    volatile uint32_t              *last_record;
+
+    if(*r == 0) return 0;     //test for no schedule records     
+    last_record =  r + *r++;  //add number of records to first record pointer to set pointer to last record
+    while(r <= last_record)   // search schedule for state corresponding to key 
     {
         if(get_key(*r)==k)
             return get_s(*r);
@@ -106,7 +109,8 @@ _NATIVE int test_sch(volatile uint32_t *r, int k, int day, int channel,int *abt)
         r++;
     }
     return get_s(*(--r));
- }     
+ }
+     
 /******************************************************************/
 /********************** start main routine ************************/
 /******************************************************************/
@@ -138,32 +142,33 @@ void main (volatile DIO_CB *m)
 /*  loop forever */
     for(;;)  
     {
+
         if((hold_min != (m->td_ptr)->min)||(*(m->update_ptr)))
         {
-            // if(m->sch[0][0]==0)
-            // {
-                // m->abort = 44;
-            // }
             hold_min = (m->td_ptr)->min;
             *(m->update_ptr) = 0;
         /* build a channel control byte */
             while(lockset(m->cca_lock));
             ccb = 0;
+
             for(i=0;i<_NUMBER_OF_CHANNELS;i++)
                 switch(m->cca[i].c_mode)
                 {   
-                    case 0:     //manual control
+                    case 0:                                             //manual control
                         if(m->cca[i].state == 1)
-                            ccb |=(uint8_t)(1<<i);
+                            ccb |=(uint8_t)(1<<i);                      //set bit high
                         else
-                            ccb &= ~(uint8_t)(1<<i); 
+                            ccb &= ~(uint8_t)(1<<i);                    //set bit low 
                         break;
-                    case 1:     //time control
-                        while(lockset(m->tdb_lock));    //wait for a lock
-                        key = (m->td_ptr->hour * 60) + m->td_ptr->min;
-                        while(lockset(m->sch_lock));
-                        test_rtn = test_sch (m->sch_ptr, key, m->td_ptr->dow, i, &(m->abt));
-                        lockclr(m->sch_lock);
+                    case 1:                                             //time control
+                        while(lockset(m->tdb_lock));                    //wait for a lock
+                        key = (m->td_ptr->hour * 60) + m->td_ptr->min;  //build key, minutes past midnight
+                        while(lockset(m->sch_lock));                    //wait for a lock
+
+
+
+                        test_rtn = test_sch(get_schedule(m->sch_ptr,m->td_ptr->dow,i),key);          //determine what the state should be for the current time
+                        lockclr(m->sch_lock);                           //clear lock
                         if(test_rtn)
                         {
                             ccb |= (1<<i);
@@ -179,11 +184,11 @@ void main (volatile DIO_CB *m)
                         break;
                     case 2:             //time and sensor control, not implemented
                         send_ccb(0);    //try to turn off all relays on the dio board 
-                        m->abt = 2;   //abort application
+                        m->abt = 2;     //abort application
                         break;
                     default:            //should not happen
                         send_ccb(0);    //try to turn off all relays on the dio board 
-                        m->abt = 1;   //abort application
+                        m->abt = 1;     //abort application
                 }
             lockclr(m->cca_lock);
 

@@ -3,9 +3,7 @@
 
 #define _major_version 0
 #define _minor_version 16
-#define _FILE_SET_ID            "001"
-
-#define _DDDD
+#define _FILE_SET_ID            "101"
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
@@ -129,13 +127,13 @@ typedef volatile struct
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
  
-/*  data structures for the schedule array */
-typedef struct sch
+/*  data structures for indexing the schedule array */
+typedef struct
  {
-    uint32_t            rec[_MAX_SCHEDULE_RECORDS+1];
+    uint32_t            rec[_MAX_SCHEDULE_RECS+1];
  } SCH;
 
-typedef struct day
+typedef struct
  {
     SCH                 sch[_NUMBER_OF_CHANNELS];
  } DAY;

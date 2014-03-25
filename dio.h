@@ -11,7 +11,7 @@
 #define pin_high(pin) ( _OUTA |= (1<<pin))
 
 /* forward refferences */
-int test_sch(volatile uint32_t *,int,int,int,int *);
+int test_sch(volatile uint32_t *,int);
 
 
 

@@ -93,6 +93,7 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
     int     rtn;
 
     printf("schedule file name <%s>\n",fn_schedule);
+
     sfp = fopen(fn_schedule,"r");
     if(sfp==0)
     {
@@ -179,17 +180,17 @@ void dspl_sch(uint32_t *sbuf, int d, int c)
 
 uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a schedule
  {
-    int                 i,ii,iii;
+    SCH         *sch_ptr;   
+    DAY         *day_ptr;   
 
-    sbuf += ((_MAX_SCHEDULE_RECS+1)*_NUMBER_OF_CHANNELS*(d-1)) + ((_MAX_SCHEDULE_RECS+1)*c);
+    day_ptr = sbuf;         //set day pointer to the start of the schedule buffer
+    day_ptr += d-1;         //move day pointer to the start of the requested day
+    sch_ptr = day_ptr;      //set channel pointer to the start of the requested day
+    sch_ptr += c;           //move channel pointer to the requested channel
 
-    for(iii=0;iii<d-1;iii++)     
-        for(ii=0;ii<c;ii++)     
-            for(i=0;i<(_MAX_SCHEDULE_RECS+1);i++) sbuf++; 
-
-    printf(" schedule for day %i channel %i: \n",d,c);
-    return sbuf;
+    return sch_ptr;
  }
+
 
 int get_key(uint32_t b)    // extract key from a schedule record 
  {

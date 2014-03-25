@@ -59,10 +59,12 @@ struct {
     unsigned stack[_STACK_SIZE_DIO];
     volatile DIO_CB dio;
 } dio_cb;
+
 /* start dio cog */
 
 int start_dio(volatile void *parptr)
-{ 
+{
+
     int size = (_load_stop_dio_cog - _load_start_dio_cog)*4;
     printf("dio cog code size %i bytes\n",size);
     unsigned int code[size];
@@ -160,6 +162,7 @@ int sd_setup(void)
     dio_cb.dio.update_ptr = &(rtc_cb.rtc.update);
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
+    dio_cb.dio.sch_ptr = bbb; 
 
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);

@@ -490,6 +490,7 @@ int c_24(int tt, int *n, char *s)
     // printf("set to on\n");
     // printf("add_sch_rec parameters before call: edit_schedule address <%x>, active channel <%i>, key <%i>, state <1>\n",edit_schedule,channel,key);
     add_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key,1);
+    rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;
 }
@@ -499,6 +500,7 @@ int c_25(int tt, int *n, char *s)
 {
     // printf("set to off\n");
     add_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key,0);
+    rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;}
 
@@ -506,6 +508,7 @@ int c_25(int tt, int *n, char *s)
 int c_26(int tt, int *n, char *s) 
 {
     del_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key);
+     rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;
 }
