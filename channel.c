@@ -164,18 +164,7 @@ int set_channel_control_mode(int m)
     printf("** invalid channel mode, mode must be 0, 1, or 2\n");
     return 1;
 }
-/*
-int set_channel_schedule_mode(int m)
-{
-    if(m==0 || m==1)
-    {
-        dio_cb.dio.cca[edit.channel].s_mode = m;
-        return 0;
-    }
-    printf("** invalid schedule mode, mode must be 0 or 1\n");
-    return 1;
-}
-*/
+
 int set_channel_name(char *n)
 {
     int             sl;

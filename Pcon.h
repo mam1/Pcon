@@ -2,14 +2,14 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 17
+#define _minor_version 18
 #define _FILE_SET_ID            "101"
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _DIOB
+#define _DRIVEN     _212GH
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -122,7 +122,7 @@ typedef struct{
 typedef volatile struct 
 {
     int                 tdb_lock;   //lock ID for time date buffer
-    int                 abt;      //!= 0 cog requests a system abort,value = error code
+    int                 abt;        //!= 0 cog requests a system abort,value = error code
     int                 update;     //trigger update flag, 1=wait, 0=update 
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
@@ -145,11 +145,12 @@ typedef volatile struct
     int        tdb_lock;    //lock ID for time date buffer
     int        cca_lock;    //lock ID for the channel control array
     int        sch_lock;    //lock ID for schedule records
-    int        abt;       //!= 0 cog requests a system abort,value = error code
-    int        *update_ptr;//pointer to trigger update flag, 1=wait, 0=update 
-    TD_BUF     *td_ptr;    //pointer to the time date buffer
-    CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
+    int        abt;         //!= 0 cog requests a system abort,value = error code
+    int        *update_ptr; //pointer to trigger update flag, 1=wait, 0=update 
+    TD_BUF     *td_ptr;     //pointer to the time date buffer
     uint32_t   *sch_ptr;    //schedule buffer pointer
+        CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
+
 }DIO_CB;
 #endif
 

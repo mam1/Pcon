@@ -20,9 +20,4 @@ int pop_cmd_q(char *);
 int test_cmd_q();
 TQ *process_buffer(void);
 
-
-
-
-
-
 #endif

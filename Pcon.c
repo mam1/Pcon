@@ -199,22 +199,6 @@ int sd_setup(void)
         /* check for problems */
         if(ckeck_abort())
             return 1;
-        /* reload schedule buffer if the day has changed */    
-        if(rtc_cb.rtc.td_buffer.dow != hold_day)
-        {
-            /*
-            hold_day = rtc_cb.rtc.td_buffer.dow;
-            if(load_schedule_data(dio_cb.dio.sch,hold_day-1))
-            {
-                printf("**** load_schedule_data abborted application ****\n");
-                return 1;
-            }
-            printf("schedules for %s loaded\n\n",day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
-            // dump_sch_recs(dio_cb.dio.sch,0,2);
-            rtc_cb.rtc.update = 1;  //force update
-            */
-        }
-
         /* check the token stack */
         while(pop_cmd_q(tbuf))
         {
