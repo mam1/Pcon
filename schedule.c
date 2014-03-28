@@ -154,7 +154,7 @@ void dump_sch(uint32_t *sbuf)
     return;
  }
 
-/* display all schedule records (schedule) for a (channel,day) */
+/* display all schedules records (schedule) for a (channel,day) */
 void dspl_sch(uint32_t *sbuf, int d, int c)
 {
     int                         i,rsize;
@@ -222,7 +222,7 @@ void put_key(volatile uint32_t *value,int key)   // load key into a schedule rec
 void put_state(volatile uint32_t *b,int s)  // load state into a schedule record
  {
     // printf("setting state to %i\n",s);
-    if(s) *b |= state_mask;
+    if(s) *b |= state_mask; 
     else  *b &= ~state_mask;
     return;
  } 
@@ -316,4 +316,59 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     }
     return NULL;
  }
+
+ void disp_all_schedules(uint32_t *buffer)
+ {
+    SCH             *sch_ptr;
+    DAY             *day_ptr; 
+    uint32_t        *rec_ptr,*frec_ptr;
+    int             i,ii;
+    int             day,channel,hour,min,state;
+    char            time_state[9] ={'x','x'};
+    char            blank[9] = {' ',' ',' ',' ',' ',' ',' ',' ',' '};
+    int             rcnt[_DAYS_PER_WEEK],mrcnt;
+
+
+    day_ptr = buffer;
+    sch_ptr = buffer;
+    rec_ptr = &buffer[0];
+    frec_ptr = rec_ptr;
+
+
+    for(channel=0;channel<2;channel++)
+    {
+        printf("\nchannel %i\n",channel);
+        printf("        ");
+        mrcnt = 0;
+        for(i=0;i<_DAYS_PER_WEEK;i++)
+        {
+            printf("%s        ",day_names_short[i]); 
+            rcnt[i] = (int)*get_schedule(bbb,i,channel);
+            if(rcnt[i] > mrcnt)
+                mrcnt = rcnt[i];        //max number of records for the week
+        }
+        // printf("\n      ");
+
+        printf("max = %i\n",mrcnt);
+
+        for(i=0;i<_DAYS_PER_WEEK;i++)
+        {
+            printf("number of records = %i\n",rcnt[i]);
+        }
+        printf("\n");
+        for(i=0;i<_DAYS_PER_WEEK;i++)
+        {
+
+
+            sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
+            
+            printf("%s  ",time_state);
+            rec_ptr++;
+
+        }
+     } 
+
+    return;  
+ }
+
 

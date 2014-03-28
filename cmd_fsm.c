@@ -135,7 +135,7 @@ int c_14(int,int *,char *); /* save schedule buffer */
 int c_15(int,int *,char *); /* prompt for channel control mode */
 int c_16(int,int *,char *); /* prompt for channel state */
 int c_17(int,int *,char *); /* display data for a single channel */
-// int c_18(int,int *,char *); /* set schedule mode to week */
+int c_18(int,int *,char *); /* display formatted schedules */
 int c_19(int,int *,char *); /* set channel state to off */
 int c_20(int,int *,char *); /* set active day */
 int c_21(int,int *,char *); /* set active hour */
@@ -165,7 +165,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7, c_13,  c_0, c_0,  c_0},
 /*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
-/*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
+/*  8 schedule */   {c_18,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /*  9  channel */   { c_3, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 10     name */   {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 11     mode */   {c_13, c_13, c_15, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
@@ -181,7 +181,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
 /* 23   change */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13,  c_0, c_0,  c_0},
-/* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29  c_29, c_29, c_29, c_29, c_29, c_29, c_0,  c_0}};
+/* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_29, c_0,  c_0}};
 
 
 /***************start fsm support functions ********************/
@@ -390,18 +390,16 @@ int c_17(int tt, int *n, char *s)
 }
 
 
-/* set schedule mode to week */
-/*
+/*display formatted scheduls */
+
 int c_18(int tt, int *n, char *s)
 {
-    set_channel_schedule_mode(1);
-    day = 1;
-    printf("  channel schedule mode set:  \n    ");
-    disp_channel_data(channel);
+    disp_all_schedules(bbb);
+
     c_0(tt,n,s);
     return 0;
 }
-*/
+
 /* set channel state off */
 int c_19(int tt, int *n, char *s) //save - s1
 {
