@@ -59,17 +59,13 @@ _NATIVE void send_ccb(byte)         // send a control byte to the AQY212GH relay
  {
     int         i;
 
-
-        pin_high(5);
-        pin_low(6);
-    return;
  
     for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
     {
         if((1 << i) & byte)
-            pin_high(_RLY1 + i);  //send bit high
+            pin_high(6);  //send bit high
         else
-            pin_low(_RLY1 + i);   //send bit low
+            pin_low(6);   //send bit low
     }   
     return;
  }
@@ -135,11 +131,11 @@ void main (volatile DIO_CB *m)
     pin_low(_HC595);
 #else
     /* setup pins for driving AQY212GH relays */
-    dir_out(_RLY1);
-    dir_out(_RLY2);
-    dir_out(_RLY3);
-    dir_out(_RLY4);
-    dir_out(_RLY5);
+    dir_out(6);
+    // dir_out(_RLY2);
+    // dir_out(_RLY3);
+    // dir_out(_RLY4);
+    // dir_out(_RLY5);
 #endif
 
     send_ccb(0);    //turn off all relays  
