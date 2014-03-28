@@ -181,7 +181,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 23   change */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29  c_29, c_29, c_29, c_29, c_29}};
+/* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29,  c_29, c_29, c_29, c_29, c_29}};
 
 
 /***************start fsm support functions ********************/
