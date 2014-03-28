@@ -58,6 +58,11 @@ _NATIVE void send_ccb(byte)         //send control byte to dio board
 _NATIVE void send_ccb(byte)         // send a control byte to the AQY212GH relays 
  {
     int         i;
+
+
+        pin_high(5);
+        pin_low(6);
+    return;
  
     for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
     {
