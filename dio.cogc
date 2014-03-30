@@ -33,11 +33,28 @@ static _COGMEM uint32_t    state_mask = B32(10000000,00000000,00000000,00000000)
 static _COGMEM uint32_t    key_mask   = B32(01111111,11111111,11111111,11111111);
 static _COGMEM int              hold_min;
 /************************ support routines **************************/
+_NATIVE void high(int WCpin)
+{
+    unsigned int bits = 1 << WCpin;
+    DIRA |= bits;
+    OUTA |= bits;
+}
 
+/*
+ * Set a pin low without affecting other pins.
+ * param WCpin = pin number to set low.
+ */
+_NATIVE void low(int WCpin)
+{
+    unsigned int mask = 1 << WCpin;
+    DIRA |= mask;
+    OUTA &= ~mask;
+}
 #if _DRIVEN == _DIOB                
-_NATIVE void send_ccb(byte)         //send control byte to dio board
+_NATIVE void send_ccb(uint8_t byte)         //send control byte to dio board
  {
     int         i;
+
     dir_out(_DataIO);   //setup to write 
     pin_low(_DataIO);  
     for(i=7;i>=0;i--)   //serialize and reverse bits 
@@ -55,18 +72,14 @@ _NATIVE void send_ccb(byte)         //send control byte to dio board
     return;
  }
 #else
-_NATIVE void send_ccb(byte)         // send a control byte to the AQY212GH relays 
+_NATIVE void send_ccb(uint8_t byte)         // send a control byte to the AQY212GH relays 
  {
-    int         i;
 
- 
-    for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
-    {
-        if((1 << i) & byte)
-            pin_high(6);  //send bit high
-        else
-            pin_low(6);   //send bit low
-    }   
+    if(byte)
+        high(6);  //send bit high
+    else
+        low(6);   //send bit low
+       
     return;
  }
 #endif
@@ -138,7 +151,9 @@ void main (volatile DIO_CB *m)
     // dir_out(_RLY5);
 #endif
 
-    send_ccb(0);    //turn off all relays  
+    send_ccb(0);    //turn off all relays
+
+
 
 /*  loop forever */
     for(;;)  
@@ -151,15 +166,19 @@ void main (volatile DIO_CB *m)
         /* build a channel control byte */
             while(lockset(m->cca_lock));
             ccb = 0;
-
+            // m->abt =  m->cca[0].state; 
             for(i=0;i<_NUMBER_OF_CHANNELS;i++)
                 switch(m->cca[i].c_mode)
                 {   
-                    case 0:                                             //manual control
-                        if(m->cca[i].state == 1)
-                            ccb |=(uint8_t)(1<<i);                      //set bit high
+                    case 0:
+                        // m->abt =  m->cca[i].state;                                            //manual control
+                        if(m->cca[i].state)
+                            // ccb |=(uint8_t)(1<<i);                      //set bit high
+                            ccb = 1;
                         else
-                            ccb &= ~(uint8_t)(1<<i);                    //set bit low 
+                            // ccb &= ~(uint8_t)(1<<i);                    //set bit low 
+                            ccb = 0;
+                        
                         break;
                     case 1:                                             //time control
                         while(lockset(m->tdb_lock));                    //wait for a lock
