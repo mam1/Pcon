@@ -3,7 +3,7 @@
 
 #define _major_version 0
 #define _minor_version 1
-#define _FILE_SET_ID            "101"
+#define _FILE_SET_ID            "103"
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
