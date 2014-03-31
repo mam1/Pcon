@@ -17,6 +17,7 @@
 
 /***************************** includes *********************************/
  #include <stdio.h>
+ #include <string.h>
  #include <propeller.h>
  #include <unistd.h>
  #include "Pcon.h"
@@ -335,37 +336,41 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     frec_ptr = rec_ptr;
 
 
-    for(channel=0;channel<2;channel++)
+    for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
-        printf("\nchannel %i\n",channel);
-        printf("        ");
+        //print header
+        printf("channel %i\n           ",channel);
+        for (day=1;day<_DAYS_PER_WEEK;day++)
+            printf("%s          ",day_names_short[day]);
+        printf("\n");
         mrcnt = 0;
-        for(i=0;i<_DAYS_PER_WEEK;i++)
+        for(day=0;day<_DAYS_PER_WEEK;day++)
         {
-            printf("%s        ",day_names_short[i]); 
-            rcnt[i] = (int)*get_schedule(bbb,i,channel);
-            if(rcnt[i] > mrcnt)
-                mrcnt = rcnt[i];        //max number of records for the week
+            rcnt[day] = (int)*get_schedule(bbb,day,channel);
+            // printf("rcnt[%i] = %i\n",day,rcnt[day]);
+            if(rcnt[day] > mrcnt)
+                mrcnt = rcnt[day];        //max number of records for the week
         }
-        // printf("\n      ");
-
-        printf("max = %i\n",mrcnt);
-
-        for(i=0;i<_DAYS_PER_WEEK;i++)
+        // printf("mrcnt %i\n",mrcnt);
+        for(i=0;i<mrcnt;i++)
         {
-            printf("number of records = %i\n",rcnt[i]);
+            printf("         ");
+            for(day=0;day<_DAYS_PER_WEEK;day++)
+            {
+                rec_ptr = get_schedule(bbb,day,channel);
+                rec_ptr += i;
+                // printf("XXXXXX\n");
+                if(*get_schedule(bbb,day,channel) > i)
+                    strcpy(time_state,"         ");
+                else
+                    sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
+
+                printf("%s   ",time_state);
+
+            }
+            printf("\n");
         }
         printf("\n");
-        for(i=0;i<_DAYS_PER_WEEK;i++)
-        {
-
-
-            sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);
-            
-            printf("%s  ",time_state);
-            rec_ptr++;
-
-        }
      } 
 
     return;  
