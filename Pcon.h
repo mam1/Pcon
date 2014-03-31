@@ -43,7 +43,7 @@
 
 /* command parser fsm */
 #define _CMD_TOKENS     25
-#define _CMD_STATES     14 
+#define _CMD_STATES     11 
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
