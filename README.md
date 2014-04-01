@@ -2,9 +2,7 @@
 - - - - - - - - - 
 #####Code is under construction it is not stable
 - - - - - - - - -
-Channels can be controlled by time of day, time of day and a sensor value or manually. There can be different schedules for different days of the week. The code can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* .
-
-The code was developed on a Parallax C3. The interface between the controller code the device(s) being controlled is handled by a single cog. The code can be configured by the use of a preprocessor variable *_DRIVEN* in Pcon.h. This results in 2 versions of the application.  One to drive the Parallax Digital IO Board via its serial interface and a second to drive 5, IO pins(3-7).  I am using AQY212GH PhotoMOS relays connected to the 5 propeller IO pins.  The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relays are rated at 60 V AC/DC 1.1 A. The relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
+Channels can be controlled by time of day, time of day and a sensor value or manually. There are different schedules for each day of the week. The application can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* in Pcon.h.  It can be configured to drive IO pins or to drive the Parallax Digital IO Board serial interface. by the use of the preprocessor variable *_DRIVEN* in Pcon.h  In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The Parallax Digital IO board can control 8, 120 VAC 8 A loads and accept input from 8 sensors. The AQY212GH PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. 
 
 A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
@@ -13,7 +11,23 @@ C - Propgcc
 * Parallax - C3 micro controller 
 * Parallax - Digital IO Board (DIOB), Sharp solid state relays part# S202S02F
 * adafruit - ChronoDot real time clock module, based on a DS3231.
-*          - AQY212GH PhotoMOS relays
+* Newark   - AQY212GH PhotoMOS relays
+
+####Schedules:
+Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
+
+The schedule key is the number of minutes past midnight (0 - 1440).  A schedule is an array of 32 bit unsigned integers. The first element in the array contains the number of records to follow.  The following elements are parsed as follows:
+
+* bit 32 - state
+* bit 31-17 -  key
+* bit 16-1 sensor value
+
+A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
+
+* 1:00  on
+* 13:00 off
+
+will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.
 
 ####Architecture:
 A schedule is a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. The first 32 bits contain the number of active records in the schedule. The following 32 bit "records" are interpreted as:
@@ -44,22 +58,6 @@ Because the command processor is implemented by a state machine there is a lot o
 * load/save channel control information to SD card  
 * create and maintain schedules for each channel
 * load/save schedules to SD card
-
-####Schedules:
-Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
-
-The schedule key is the number of minutes past midnight (0 - 1440).  A schedule is an array of 32 bit unsigned integers. The first element in the array contains the number of records to follow.  The following elements are parsed as follows:
-
-* bit 32 - state
-* bit 31-17 -  key
-* bit 16-1 sensor value
-
-A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
-
-* 1:00  on
-* 13:00 off
-
-will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.
 
 ####SD Files:
 Schedules are stored on a SD card. The file names are generated in the following format: 
