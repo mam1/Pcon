@@ -9,6 +9,9 @@
 #include "schedule.h"
 #include "char_fsm.h"
 
+#include "simpletools.h"                      // Include simple tools
+#include "vgatext.h"                         // Include VGA text
+
 
 /*************************** drivers  ********************************/
 extern _Driver _FullDuplexSerialDriver;
@@ -125,7 +128,12 @@ int sd_setup(void)
     static char         tbuf[_TOKEN_BUFFER];
     char                c;   
 /************************ initializations ****************************/
-    sleep(1);   //wait for the serial terminal to start
+/* start vga driver */
+    // OUTA = 0;           //set directio to output and turn on pin 16
+    // DIRA |= 0x8000;     //which toggles the C3 vga port
+    // vga_text_start(16);  
+
+    sleep(1);   //wait for the vga driver to start
 /* display system info on serial terminal */
     printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
     #if _DRIVEN == _DIOB
@@ -133,6 +141,7 @@ int sd_setup(void)
     #else
         printf("system is configured to drive 5 IO pins\n");
     #endif
+
 /* build file set prefix */
     strcat(file_set_prefix,_F_PREFIX);
     strcat(file_set_prefix,_FILE_SET_ID);
