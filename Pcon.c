@@ -24,7 +24,7 @@ _Driver *_driverlist[] = {
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
-    char                *file_set_prefix[_SCHEDULE_NAME_SIZE];
+    char                file_set_prefix[_SCHEDULE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -121,7 +121,7 @@ int sd_setup(void)
 /********************************************************************/
  int main(void)
 {
-    static int          cog,hold_day;
+    static int          cog;
     static char         tbuf[_TOKEN_BUFFER];
     char                c;   
 /************************ initializations ****************************/
@@ -186,7 +186,7 @@ int sd_setup(void)
     input_buffer_ptr = input_buffer;//setup so actions routines can mess the buffer
     cmd_state = 0;                  //set initial command parser state
     char_state = 0;                 //set initial caracter parser state
-    hold_day = -1;                  //force schedule load first time through the main loop
+    // hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
     printf("initialization complete\n");

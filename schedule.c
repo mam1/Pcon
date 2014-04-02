@@ -60,7 +60,7 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
-        if(trn!=1)
+        if(rtn!=1)
         {
             printf("*** error reading schedula data\n");
             return 1;
@@ -81,6 +81,11 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     if(sfp)
     {
         rtn = fwrite(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+        if(rtn!=1)
+        {
+            printf("*** error writting schedula data\n");
+            return 1;
+        }
         printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
         fclose(sfp);   
     }
@@ -105,7 +110,6 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
  int init_sch(uint32_t *sbuf)
  {
     FILE    *sfp;
-    int     rtn;
 
     printf("schedule file name <%s>\n",fn_schedule);
 
@@ -132,7 +136,7 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
 
 void dump_schs(uint32_t *sbuf)
  {
-    int         i,ii,iii;
+    int         i,ii;
     ii = 0;
     // printf("day %i\n",iii++);
     // printf("\nchannel %i: ",ii);
@@ -146,7 +150,7 @@ void dump_schs(uint32_t *sbuf)
         }
         if(ii == _NUMBER_OF_CHANNELS)
         {
-                printf("\n",iii++);
+                printf("\n");
             ii = 0;   
         } 
         // if(  ((i%_BYTES_PER_DAY)==0)&&(i>0) ) printf("\n");
@@ -157,8 +161,8 @@ void dump_schs(uint32_t *sbuf)
 
 void dump_sch(uint32_t *sbuf)
  {
-    int         i,ii;
-    ii = 0;
+    int         i;
+
     printf("\n");
     for(i=0;i<_MAX_SCHEDULE_RECS+1;i++)
     {
@@ -198,12 +202,12 @@ uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to  a sche
     SCH         *sch_ptr;   
     DAY         *day_ptr;   
 
-    day_ptr = sbuf;         //set day pointer to the start of the schedule buffer
-    day_ptr += d-1;         //move day pointer to the start of the requested day
-    sch_ptr = day_ptr;      //set channel pointer to the start of the requested day
-    sch_ptr += c;           //move channel pointer to the requested channel
+    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
+    day_ptr += d-1;             //move day pointer to the start of the requested day
+    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
+    sch_ptr += c;               //move channel pointer to the requested channel
 
-    return sch_ptr;
+    return (uint32_t *)sch_ptr;
  }
 
 
@@ -244,8 +248,8 @@ void put_state(volatile uint32_t *b,int s)  // load state into a schedule record
 
 int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record */
  {
-    uint32_t       *rcnt, *end, *r;
-    int            i;
+    uint32_t       *end, *r;
+
     /* schedule has no records - insert one */
     if((int)*sch==0)
     {
@@ -261,7 +265,8 @@ int add_sch_rec(uint32_t *sch, int k, int s)  // add or change a schedule record
         return 1;
     }
     /* if record exists change it */
-    if (r=find_schedule_record(sch,k))
+    r=find_schedule_record(sch,k);
+    if (r)
     {
         put_state(r,s);
         return 0;
@@ -334,13 +339,10 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
  void disp_all_schedules(uint32_t *buffer)
  {
-    SCH             *sch_ptr;
-    DAY             *day_ptr; 
-    uint32_t        *rec_ptr,*frec_ptr;
-    int             i,ii;
-    int             day,channel,hour,min,state;
+    uint32_t        *rec_ptr;
+    int             i;
+    int             day,channel;
     char            time_state[9];
-    char            blank[9] = {' ',' ',' ',' ',' ',' ',' ',' ',' '};
     int             rcnt[_DAYS_PER_WEEK],mrcnt;
 
 

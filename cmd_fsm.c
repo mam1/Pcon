@@ -546,9 +546,9 @@ int c_30(int tt, int *n, char *s)
 /* display the schedules for all days and all channels */
 int c_31(int tt, int *n, char *s) 
 {
-    int             c,d;
-    printf("Schedules for %s\n",day_names_long[d]);
-    dump_schs(bbb);
+    
+
+    printf("fix me Schedules for\n");
     
     c_0(tt,n,s); 
     return 0;
