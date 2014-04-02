@@ -20,4 +20,4 @@ dio.h
 >-Wall
 >-fno-exceptions
 >defs::-std=c99
->BOARD::ACTIVITYBOARD
+>BOARD::C3F
