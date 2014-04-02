@@ -74,7 +74,7 @@ The command processor loops checking to see if a character has been typed. Input
 
 **If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
 
-**If a character is not found** the code checks to see if the the cogs have sent any messages.  It also checks for a change in the day of the week.  It reloads the schedule buffer as necessary. (see schedules below)
+**If a character is not found** the code checks to see if the the cogs have sent any messages.  
 
 ####SD Files:
 Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The file names are generated in the following format: 
