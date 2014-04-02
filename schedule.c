@@ -348,7 +348,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
     /* print channel header */
-        printf("channel %i - %s  controlled %s",channel,con_mode[dio_cb.dio.caa[channel].state]);
+        /*
+        printf("channel %i - %s  controlled %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode]);
         printf("  current time %s, %i:%02i:%02i  %i/%i/%i",
         day_names_long[rtc_cb.rtc.td_buffer.dow-1],
         rtc_cb.rtc.td_buffer.hour,
@@ -357,7 +358,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         rtc_cb.rtc.td_buffer.month,
         rtc_cb.rtc.td_buffer.day,
         rtc_cb.rtc.td_buffer.year+2000);
-        printf("  channel state is %s/n")
+        printf("  channel state is %s/n");
+        */
 
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
