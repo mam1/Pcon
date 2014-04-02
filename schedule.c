@@ -25,7 +25,16 @@
  #include "bitlit.h" 
 
 /****************************** externals *******************************/
-
+ /* rtc control block */ 
+ extern struct {
+    unsigned stack[_STACK_SIZE_RTC];
+    volatile RTC_CB rtc;
+ } rtc_cb;
+ /* control block & stack for dio cog */
+ extern struct {
+    unsigned stack[_STACK_SIZE_DIO];
+    volatile DIO_CB dio;
+ } dio_cb;
 /******************** global code to text conversion ********************/
  extern char *day_names_long[7];     
  extern char *day_names_short[7];
@@ -338,8 +347,18 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
 
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
-        //print header
-        printf("channel %i\n           ",channel);
+    /* print channel header */
+        printf("channel %i - %s  controlled %s",channel,con_mode[dio_cb.dio.caa[channel].state]);
+        printf("  current time %s, %i:%02i:%02i  %i/%i/%i",
+        day_names_long[rtc_cb.rtc.td_buffer.dow-1],
+        rtc_cb.rtc.td_buffer.hour,
+        rtc_cb.rtc.td_buffer.min,
+        rtc_cb.rtc.td_buffer.sec,
+        rtc_cb.rtc.td_buffer.month,
+        rtc_cb.rtc.td_buffer.day,
+        rtc_cb.rtc.td_buffer.year+2000);
+        printf("  channel state is %s/n")
+
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
         printf("\n");
