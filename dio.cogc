@@ -87,12 +87,12 @@ _NATIVE uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  // return pointer to
     SCH             *sch_ptr;
     DAY             *day_ptr;
 
-    day_ptr = sbuf;         //set day pointer to the start of the schedule buffer
-    day_ptr += d-1;         //move day pointer to the start of the requested day
-    sch_ptr = day_ptr;      //set channel pointer to the start of the requested day
-    sch_ptr += c;           //move channel pointer to the requested channel
+    day_ptr = (DAY *)sbuf;      //set day pointer to the start of the schedule buffer
+    day_ptr += d-1;             //move day pointer to the start of the requested day
+    sch_ptr = (SCH *)day_ptr;   //set channel pointer to the start of the requested day
+    sch_ptr += c;               //move channel pointer to the requested channel
 
-    return sch_ptr;
+    return (uint32_t *)sch_ptr;
  }
 _NATIVE  int test_sch(volatile uint32_t *r, int k) //return state for key
  {
