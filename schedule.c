@@ -60,6 +60,11 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+        if(trn!=1)
+        {
+            printf("*** error reading schedula data\n");
+            return 1;
+        }
         printf("schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
     }
@@ -348,10 +353,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
     /* print channel header */
-<<<<<<< HEAD
-=======
+
         /*
->>>>>>> 49204a6a34fd542a8b3aba90e24763df1d3becaf
         printf("channel %i - %s  controlled %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode]);
         printf("  current time %s, %i:%02i:%02i  %i/%i/%i",
         day_names_long[rtc_cb.rtc.td_buffer.dow-1],
@@ -361,12 +364,10 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         rtc_cb.rtc.td_buffer.month,
         rtc_cb.rtc.td_buffer.day,
         rtc_cb.rtc.td_buffer.year+2000);
-<<<<<<< HEAD
         printf("  channel state is %s/n",onoff[dio_cb.dio.caa[channel].state]);
-=======
+
         printf("  channel state is %s/n");
         */
->>>>>>> 49204a6a34fd542a8b3aba90e24763df1d3becaf
 
         for (day=0;day<_DAYS_PER_WEEK;day++)
             printf("%s         ",day_names_short[day]);
