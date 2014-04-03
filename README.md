@@ -24,6 +24,7 @@ C - Propgcc
 * load/save schedules to SD card
 * display current time and date
 * display schedules
+* display system configuration information
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
