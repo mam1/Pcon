@@ -129,9 +129,9 @@ int sd_setup(void)
     char                c;   
 /************************ initializations ****************************/
 /* start vga driver */
-    // OUTA = 0;           //set directio to output and turn on pin 16
-    // DIRA |= 0x8000;     //which toggles the C3 vga port
-    // vga_text_start(16);  
+    OUTA = 0;           //set directio to output and turn on pin 16
+    DIRA |= 0x8000;     //which toggles the C3 vga port
+    vga_text_start(16);  
 
     sleep(1);   //wait for the vga driver to start
 /* display system info on serial terminal */
