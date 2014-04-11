@@ -2,7 +2,7 @@
 #define PCON_H_
 
 #define _major_version 0
-#define _minor_version 20
+#define _minor_version 21
 #define _FILE_SET_ID            "101"
 
 /* configuration options */
