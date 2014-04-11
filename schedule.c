@@ -60,7 +60,7 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
     if(sfp)
     {
         rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
-        if(trn!=1)
+        if(rtn!=1)
         {
             printf("*** error reading schedula data\n");
             return 1;
