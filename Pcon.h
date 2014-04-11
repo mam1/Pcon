@@ -3,7 +3,9 @@
 
 #define _major_version 0
 #define _minor_version 21
-#define _FILE_SET_ID            "101"
+
+#define _FILE_SET_ID            "042"
+
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
@@ -51,7 +53,7 @@
 #else
     #define _NUMBER_OF_CHANNELS 5
 #endif
-#define _CHANNEL_NAME_SIZE          15
+#define _CHANNEL_NAME_SIZE          20
 #define _CHANNEL_NAME_BUFFER_SIZE   30
 #define _CHANNEL_FILE_NAME_SIZE     30
 
@@ -91,6 +93,9 @@
 #define _QUOTE      34
 #define _CR         13
 #define _NO_CHAR    255
+
+/****************** functions *****************/
+void disp_sys(void);
 
 /*******************/
 /* data structures */

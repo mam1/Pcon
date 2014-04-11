@@ -116,6 +116,17 @@ int sd_setup(void)
     
     return 0;
 }
+void disp_sys(void)
+{
+    /* display system info on serial terminal */
+    printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
+    #if _DRIVEN == _DIOB
+        printf("system is configured to drive a Parallax Digital IO Board\n");
+    #else
+        printf("system is configured to drive 5 IO pins\n");
+    #endif
+    return;
+}
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/

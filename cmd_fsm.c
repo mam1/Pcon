@@ -76,7 +76,7 @@ char    *keyword[_CMD_TOKENS] = {
  /* 14 */    "?",
  /* 15 */    "display",
  /* 16 */    "day",
- /* 17 */    "week",
+ /* 17 */    "system",
  /* 18 */    "delete",
  /* 19 */    "time",
  /* 20 */    "yes",
@@ -106,7 +106,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 14        ? */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 15  display */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 16      day */   {0, 1, 2, 3, 4, 5, 7, 7, 8,  9, 10},
-/* 17     week */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
+/* 17   system */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  7},
 /* 19     time */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
@@ -149,8 +149,8 @@ int c_27(int,int *,char *); /* load schedule buffer from SD card */
 int c_28(int,int *,char *); /* save schedule buffer to SD card */
 
 int c_29(int,int *,char *); /* dump schedule buffer */
-int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel*/
-int c_31(int,int *,char *); /* display dio_cb schedules for active day*/
+int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel */
+int c_31(int,int *,char *); /* display system configuration infromation */
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -174,13 +174,13 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 14        ? */   { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
 /* 15  display */   {c_18,  c_5, c_17, c_17, c_17, c_17, c_31, c_30,  c_0,  c_0, c_30},
 /* 16      day */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 17   system */   {c_31,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26},
 /* 19     time */   {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
-/* 20      yes */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 23   change */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 20      yes */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 21       no */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 22      add */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 23   change */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29,  c_29, c_29, c_29, c_29, c_29}};
 
 
@@ -548,7 +548,7 @@ int c_31(int tt, int *n, char *s)
 {
     
 
-    printf("fix me Schedules for\n");
+    disp_sys();
     
     c_0(tt,n,s); 
     return 0;
