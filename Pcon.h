@@ -20,11 +20,11 @@
     #define _HC595           7              // DIO LAT_RLY Pin
 #else
     /* if configure to drie AYQ212GH relays */
-    #define _RLY1           3              // relay 1
-    #define _RLY2           4              // relay 2
-    #define _RLY3           5              // relay 3
-    #define _RLY4           6              // relay 4
-    #define _RLY5           7              // relay 5
+    #define _RLY0           3              // relay 0
+    #define _RLY1           4              // relay 1
+    #define _RLY2           5              // relay 2
+    #define _RLY3           6              // relay 3
+    #define _RLY4           7              // relay 4
 #endif
 #define _toggle_VGA     15              // toggle the port B header to VGA
 #define _VGA_start      16              // VGA uses pins 16-

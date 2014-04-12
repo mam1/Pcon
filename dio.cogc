@@ -32,6 +32,8 @@
 static _COGMEM uint32_t    state_mask = B32(10000000,00000000,00000000,00000000);
 static _COGMEM uint32_t    key_mask   = B32(01111111,11111111,11111111,11111111);
 static _COGMEM int              hold_min;
+
+static int          relay_pin[_NUMBER_OF_CHANNELS] = {_RLY0,_RLY1,_RLY2,_RLY3,_RLY4};
 /************************ support routines **************************/
 
 #if _DRIVEN == _DIOB                
@@ -59,12 +61,12 @@ _NATIVE void send_ccb(byte)         // send a control byte to the AQY212GH relay
  {
     int         i;
  
-    for(i=0;i>=_NUMBER_OF_CHANNELS;i++)  
+    for(i=_NUMBER_OF_CHANNELS-1;i>=0;i--)  
     {
         if((1 << i) & byte)
-            pin_high(_RLY1 + i);  //send bit high
+            pin_high(relay_pin[i] + i);  //send bit high
         else
-            pin_low(_RLY1 + i);   //send bit low
+            pin_low(relay_pin[i] + i);   //send bit low
     }   
     return;
  }
@@ -130,11 +132,11 @@ void main (volatile DIO_CB *m)
     pin_low(_HC595);
 #else
     /* setup pins for driving AQY212GH relays */
+    dir_out(_RLY0);
     dir_out(_RLY1);
     dir_out(_RLY2);
     dir_out(_RLY3);
     dir_out(_RLY4);
-    dir_out(_RLY5);
 #endif
 
     send_ccb(0);    //turn off all relays  
