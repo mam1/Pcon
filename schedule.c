@@ -355,8 +355,8 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
     /* print channel header */        
-        printf("channel %i <%s> control %s, ",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode]);
-        printf(" channel is %s",onoff[dio_cb.dio.cca[channel].state]);
+        printf("channel %i <%s> control %s, %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode],onoff[dio_cb.dio.cca[channel].state]);
+        // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
         printf(" as of %i:%02i, %s\n           ",
         rtc_cb.rtc.td_buffer.hour,
         rtc_cb.rtc.td_buffer.min,
