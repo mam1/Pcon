@@ -32,15 +32,15 @@ C - Propgcc, SimpleIDE, Sublime Text
 * schedule commands:
     * status(s)
         * display a formated dump of schedules for all channels for all days
-    * copy(c)          {channel #} {day #}
+    * copy(c)          {channel #}{day #}
         * copy the schedule for a channel and day to a buffer
-    * paste(p)         {channel #} {day #}
+    * paste(p)         {channel #}{day #}
         * paste the buffered schedule into a channel and day
-    * setall(a)        {target channel #} 
+    * setall(sa)       {target channel #} 
         * load the buffered schedule into all days for the channel
-    * delete
+    * delete           {channel #}{day #}
         * delete the schedules for the channel and day
-    * edit(e)          {channel #} {day #}
+    * edit(e)          {channel #}{day #}
         * edit the schedule for a channel and day
 * edit mode commands - edit schedules for the channel and day in the edit command
     * delete(d)        {channel #}{day #}{HH}{MM}
@@ -66,9 +66,9 @@ C - Propgcc, SimpleIDE, Sublime Text
     * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
         * set the real time clock
 * system commands
-    * save(s)          schedule(s) | channel(c) | all
+    * save(s)          {schedule(s)} | {channel(c)} | {all}
         * save schedules, channel information or both to the SD card
-    * load(l)          all | channel(c) | schedule(s)
+    * load(l)          {schedule(s)} | {channel(c)} | {all}
         * load schedules, channel information or both from the SD card
     * shutdown
         * set force all channels to manual control and turn them off
