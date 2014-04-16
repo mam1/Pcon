@@ -83,38 +83,33 @@ Because the command processor is implemented by a state machine there is a lot o
 * load/save channel control information to SD card  
 * create and maintain schedules for each channel
 * load/save schedules to SD card
+
 ####Command processor commands:
-   * schedule commands:
+* schedule commands:
+    * display(d)
+    * copy(c)          <CHANNEL> <DAY>
+    * paste(p)         <CHANNEL> <DAY>
+    * setall(a)        <CHANNEL> <CHANNEL> <DAY>
+    * edit(e)          <CHANNEL> <DAY>
 
-      * display(d)
-      * copy(c)          <CHANNEL> <DAY>
-      * paste(p)         <CHANNEL> <DAY>
-      * setall(a)         <CHANNEL> <CHANNEL> <DAY>
-      * edit(e)            <CHANNEL> <DAY>
+* edit commands
+    * delete(d)        <CHANNEL><DAY><HOUR><MINUTE>
+    * add(a)           <CHANNEL><DAY><HOUR><MINUTE>
+    * change(c)        <CHANNEL><DAY><HOUR><MINUTE>            
 
-   * edit commands
+* channel commands
+    * name(n)          <CHANNEL><“string”>
+    * mode(m)          <CHANNEL><#>
+    * on               <CHANNEL>
+    * off              <CHANNEL>
 
-      * delete(d)         <CHANNEL><DAY><HOUR><MINUTE>
-      * add(a)             <CHANNEL><DAY><HOUR><MINUTE>
-      * change(c)       <CHANNEL><DAY><HOUR><MINUTE>            
+* clock commands
+    * time
+    * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
 
-   * channel commands
-
-      * name(n)          <CHANNEL><“string”>
-      * mode(m)         <CHANNEL><#>
-      * on                    <CHANNEL>
-
-      * off                    <CHANNEL>
-
-   * clock commands
-
-      * time
-      * set                   <YYYY><MM><DD> <DOW#><HH><MM><SS>
-
-   * system commands
-
-      * shutdown
-      * restart
+* system commands
+    * shutdown
+    * restart
 
 ####Schedules:
 Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
