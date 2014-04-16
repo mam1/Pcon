@@ -6,7 +6,7 @@ Channels can be controlled by time of day, time of day and a sensor value or man
 
 In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. The second instance is driving a Parallax Digital IO board which can control 8, 120 VAC 8 A loads and accept input from 8 sensors. 
 
-The code was developed on a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
+The code was developed in c using SimpleIDE. The development platform is a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
 C - Propgcc
 ####Hardware:
@@ -23,31 +23,37 @@ C - Propgcc
 * create and maintain schedules for each channel
 * load/save schedules to SD card
 * display current time and date
+* set date and time
 * display schedules
 * display system configuration information
 
 ####Command processor commands:
 * schedule commands:
     * display(d)
-    * copy(c)          <CHANNEL> <DAY>
-    * paste(p)         <CHANNEL> <DAY>
-    * setall(a)        <CHANNEL> <CHANNEL> <DAY>
-    * edit(e)          <CHANNEL> <DAY>
+    * copy(c)          <CHANNEL #> <DAY #>
+    * paste(p)         <CHANNEL #> <DAY #>
+    * setall(a)        <CHANNEL #> <CHANNEL #> <DAY #>
+    * edit(e)          <CHANNEL #> <DAY #>
 * edit commands
-    * delete(d)        <CHANNEL><DAY><HOUR><MINUTE>
-    * add(a)           <CHANNEL><DAY><HOUR><MINUTE>
-    * change(c)        <CHANNEL><DAY><HOUR><MINUTE>            
+    * delete(d)        <CHANNEL #><DAY #><HOUR><MINUTE>
+    * add(a)           <CHANNEL #><DAY #><HOUR><MINUTE>
+    * change(c)        <CHANNEL #><DAY #><HOUR><MINUTE>
+    * done            
 * channel commands
-    * name(n)          <CHANNEL><“string”>
-    * mode(m)          <CHANNEL><#>
-    * on               <CHANNEL>
-    * off              <CHANNEL>
+    * name(n)          <CHANNEL #><“string”>
+    * mode(m)          <CHANNEL #><MODE #>
+    * on               <CHANNEL #>
+    * off              <CHANNEL #>
 * clock commands
     * time
     * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
 * system commands
+    * save(s)          all | channel(c) | schedule(s)
+    * load(l)          all | channel(c) | schedule(s)
     * shutdown
     * restart
+    * help(?)
+    * system
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
@@ -57,7 +63,12 @@ A schedule is a list of times and corresponding states.  A channel that is contr
 * 1:00  on
 * 13:00 off
 
-will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.  
+will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on. While a schedule of:
+
+* 1:00  off
+* 13:00 on 
+
+will result in the channel being off between 1:00 - 13:00. It will be on at any time before 1:00 or after 13:00.
 
 * 1:00  on
 * 13:00 off
@@ -99,36 +110,6 @@ The command processor loops checking to see if a character has been typed. Input
 **If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
-####Command processor functions:
-* name channels  
-* manually control channel state  
-* set channel control mode (manual, time, time & sensor)
-* load/save channel control information to SD card  
-* create and maintain schedules for each channel
-* load/save schedules to SD card
-
-####Command processor commands:
-* schedule commands:
-    * display(d)
-    * copy(c)          <CHANNEL> <DAY>
-    * paste(p)         <CHANNEL> <DAY>
-    * setall(a)        <CHANNEL> <CHANNEL> <DAY>
-    * edit(e)          <CHANNEL> <DAY>
-* edit commands
-    * delete(d)        <CHANNEL><DAY><HOUR><MINUTE>
-    * add(a)           <CHANNEL><DAY><HOUR><MINUTE>
-    * change(c)        <CHANNEL><DAY><HOUR><MINUTE>            
-* channel commands
-    * name(n)          <CHANNEL><“string”>
-    * mode(m)          <CHANNEL><#>
-    * on               <CHANNEL>
-    * off              <CHANNEL>
-* clock commands
-    * time
-    * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
-* system commands
-    * shutdown
-    * restart
 
 ####Schedules:
 Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
@@ -141,7 +122,6 @@ The schedule key is the number of minutes past midnight (0 - 1440).  A schedule 
  
 **If a character is not found** the code checks to see if the the cogs have sent any messages.  
 
-
 ####SD Files:
 Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The file names are generated in the following format: 
 >   s<tag>d<day #>c<chanel #>.SCH
@@ -149,12 +129,10 @@ Schedules and persistent channel information (name, control mode, state) are sto
 
 The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable. 
 
-
-
 ####Propeller Pins:
 
-    0 
-    1
+    0 - day light savings on
+    1 - power monitor MID400
     2
 
         3 - 
