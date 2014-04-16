@@ -26,6 +26,29 @@ C - Propgcc
 * display schedules
 * display system configuration information
 
+####Command processor commands:
+* schedule commands:
+    * display(d)
+    * copy(c)          <CHANNEL> <DAY>
+    * paste(p)         <CHANNEL> <DAY>
+    * setall(a)        <CHANNEL> <CHANNEL> <DAY>
+    * edit(e)          <CHANNEL> <DAY>
+* edit commands
+    * delete(d)        <CHANNEL><DAY><HOUR><MINUTE>
+    * add(a)           <CHANNEL><DAY><HOUR><MINUTE>
+    * change(c)        <CHANNEL><DAY><HOUR><MINUTE>            
+* channel commands
+    * name(n)          <CHANNEL><“string”>
+    * mode(m)          <CHANNEL><#>
+    * on               <CHANNEL>
+    * off              <CHANNEL>
+* clock commands
+    * time
+    * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
+* system commands
+    * shutdown
+    * restart
+
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
 ####Schedules:
@@ -91,22 +114,18 @@ Because the command processor is implemented by a state machine there is a lot o
     * paste(p)         <CHANNEL> <DAY>
     * setall(a)        <CHANNEL> <CHANNEL> <DAY>
     * edit(e)          <CHANNEL> <DAY>
-
 * edit commands
     * delete(d)        <CHANNEL><DAY><HOUR><MINUTE>
     * add(a)           <CHANNEL><DAY><HOUR><MINUTE>
     * change(c)        <CHANNEL><DAY><HOUR><MINUTE>            
-
 * channel commands
     * name(n)          <CHANNEL><“string”>
     * mode(m)          <CHANNEL><#>
     * on               <CHANNEL>
     * off              <CHANNEL>
-
 * clock commands
     * time
     * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
-
 * system commands
     * shutdown
     * restart
