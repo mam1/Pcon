@@ -8,12 +8,13 @@ In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 prope
 
 The code was developed in c using SimpleIDE. The development platform is a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
-C - Propgcc
+C - Propgcc, SimpleIDE, Sublime Text
 ####Hardware:
-* Parallax - C3 micro controller 
-* Parallax - Digital IO Board (DIOB), Sharp solid state relays part# S202S02F
-* adafruit - ChronoDot real time clock module, based on a DS3231.
-* Newark   - AQY212GH PhotoMOS relays
+* C3 micro controller, Parallax  
+* Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
+* ChronoDot real time clock module, based on a DS3231, adafruit 
+* AQY212GH PhotoMOS relays, Newark
+* MID400 Line Monitor, Newark 
 
 ####Command processor functions:
 * name channels  
@@ -109,25 +110,19 @@ The command processor loops checking to see if a character has been typed. Input
 
 **If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
 
-Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
-
-####Schedules:
-Schedules are stored on the sd card. There are 57 schedule files, one file for each (day,channel) tuple. Only the schedules for the current day are loaded into memory (one schedule for each channel).
-
-The schedule key is the number of minutes past midnight (0 - 1440).  A schedule is an array of 32 bit unsigned integers. The first element in the array contains the number of records to follow.  The following elements are parsed as follows:
-
-* bit 32 - state
-* bit 31-17 -  key
-* bit 16-1 sensor value
- 
 **If a character is not found** the code checks to see if the the cogs have sent any messages.  
 
 ####SD Files:
-Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The file names are generated in the following format: 
->   s<tag>d<day #>c<chanel #>.SCH
-    s<tag>  .
+Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The files are loaded when the code is initialized or reset. They can also be loaded or saved on command.  The files are alway closed after use so the SD card can be replaced to make copies or change behavior.  The file names are generated using the following preprocessor variables:
 
-The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable. 
+    #define _FILE_SET_ID            "NNN"
+    #define _F_PREFIX               "SSS"
+    #define _F_SCHEDULE_SUFIX       ".sch"
+    #define _F_CHANNEL_SUFIX        ".ch"
+
+in the following format: 
+    channel information <SSS><NNN>.ch
+    schedules           <SSS><NNN>.sch
 
 ####Propeller Pins:
 
