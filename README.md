@@ -14,7 +14,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 * Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
 * ChronoDot real time clock module, based on a DS3231, adafruit 
 * AQY212GH PhotoMOS relays, Newark
-* MID400 Line Monitor, Newark 
+* MID400 AC Line Monitor, Newark 
 
 ####Command processor functions:
 * name channels  
@@ -30,31 +30,55 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 ####Command processor commands:
 * schedule commands:
-    * display(d)
-    * copy(c)          <CHANNEL #> <DAY #>
-    * paste(p)         <CHANNEL #> <DAY #>
-    * setall(a)        <CHANNEL #> <CHANNEL #> <DAY #>
-    * edit(e)          <CHANNEL #> <DAY #>
-* edit commands
-    * delete(d)        <CHANNEL #><DAY #><HOUR><MINUTE>
-    * add(a)           <CHANNEL #><DAY #><HOUR><MINUTE>
-    * change(c)        <CHANNEL #><DAY #><HOUR><MINUTE>
-    * done            
+    * status(s)
+        * display a formated dump of schedules for all channels for all days
+    * copy(c)          {channel #} {day #}
+        * copy the schedule for a channel and day to a buffer
+    * paste(p)         {channel #} {day #}
+        * paste the buffered schedule into a channel and day
+    * setall(a)        {target channel #} 
+        * load the buffered schedule into all days for the channel
+    * delete
+        * delete the schedules for the channel and day
+    * edit(e)          {channel #} {day #}
+        * edit the schedule for a channel and day
+* edit mode commands - edit schedules for the channel and day in the edit command
+    * delete(d)        {channel #}{day #}{HH}{MM}
+        * delete a schedule record for the time
+    * add(a)           {channel #}{day #}{HH}{MM}
+        * add a new a schedule record for the time
+    * change(c)        {channel #}{day #}{HH}{MM}
+        * change a schedule record for the time
+    * exit(e) 
+        * exit edit mode           
 * channel commands
-    * name(n)          <CHANNEL #><“string”>
-    * mode(m)          <CHANNEL #><MODE #>
-    * on               <CHANNEL #>
-    * off              <CHANNEL #>
+    * name(n)          {channel #}{“string”}
+        * set the name of a channel
+    * mode(m)          {channel #}{control mode #}
+        * set the control mode of a channel, 0-manual, 1-time, 2-time & sensor
+    * on               {channel #}
+        * force the control mode of a channel to manual and set the state to on
+    * off              {channel #}
+        * force the control mode of a channel to manual and set the state to off
 * clock commands
     * time
-    * set              <YYYY><MM><DD> <DOW#><HH><MM><SS>
+        * display current time and date
+    * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
+        * set the real time clock
 * system commands
-    * save(s)          all | channel(c) | schedule(s)
+    * save(s)          schedule(s) | channel(c) | all
+        * save schedules, channel information or both to the SD card
     * load(l)          all | channel(c) | schedule(s)
+        * load schedules, channel information or both from the SD card
     * shutdown
+        * set force all channels to manual control and turn them off
+        * stop control cogs
     * restart
+        * start control cogs
     * help(?)
+        * display list of valid commands
     * system
+        * display system information
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
@@ -108,7 +132,7 @@ The complex part of the application is the command processor.  XMMC is required 
 
 The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
 
-**If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
+**If a character is present**, unless it is an ESC, it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The first fsm, char_fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  The command processor pops tokens off the stack and feeds them to a second fsm, cmd_fsm until the stack is empty when the command processor lets the cms_fsm know there is no more input then continues the main loop.  While cmd_fsm is processing a token stack the main loop is waiting, however, the the control cogs are running independently and are not affected.  They continue to control the channels based the the real time. 
 
 **If a character is not found** the code checks to see if the the cogs have sent any messages.  
 
@@ -120,14 +144,15 @@ Schedules and persistent channel information (name, control mode, state) are sto
     #define _F_SCHEDULE_SUFIX       ".sch"
     #define _F_CHANNEL_SUFIX        ".ch"
 
-in the following format: 
+In the following format:
+
     channel information <SSS><NNN>.ch
     schedules           <SSS><NNN>.sch
 
 ####Propeller Pins:
 
     0 - day light savings on
-    1 - power monitor MID400
+    1 - AC line power monitor MID400
     2
 
         3 - 
