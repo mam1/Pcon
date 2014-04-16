@@ -30,7 +30,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 ####Command processor commands:
 * schedule commands:
-    * status(s)
+    * status(st)
         * display a formated dump of schedules for all channels for all days
     * copy(c)          {channel #}{day #}
         * copy the schedule for a channel and day to a buffer
