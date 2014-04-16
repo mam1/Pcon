@@ -8,8 +8,11 @@
  void ld_sch(uint32_t *);
  int init_sch(uint32_t *);
  void dump_sch(uint32_t *);
+ void dump_schs(uint32_t *);
+ void dspl_schs(uint32_t *, int, int);
  void dspl_sch(uint32_t *, int, int);
  uint32_t *get_schedule(uint32_t *,int,int);
+ void disp_all_schedules(uint32_t *);
 
 /* routines to work with schedules */
 // int      save_schedule_data(uint32_t *,int); 			//write to sd (schedule buffer, day)    

@@ -24,11 +24,11 @@ _Driver *_driverlist[] = {
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
-    char                *file_set_prefix[_SCHEDULE_NAME_SIZE];
+    char                file_set_prefix[_SCHEDULE_NAME_SIZE];
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-char *day_names_short[7] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
+char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};
 char *onoff[2] = {"off"," on"};
 char *con_mode[3] = {"manual","  time","time & sensor"};
 char *sch_mode[2] = {"day","week"};
@@ -116,12 +116,23 @@ int sd_setup(void)
     
     return 0;
 }
+void disp_sys(void)
+{
+    /* display system info on serial terminal */
+    printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
+    #if _DRIVEN == _DIOB
+        printf("system is configured to drive a Parallax Digital IO Board\n");
+    #else
+        printf("system is configured to drive 5 IO pins\n");
+    #endif
+    return;
+}
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
  int main(void)
 {
-    static int          cog,hold_day;
+    static int          cog;
     static char         tbuf[_TOKEN_BUFFER];
     char                c;   
 /************************ initializations ****************************/
@@ -186,7 +197,7 @@ int sd_setup(void)
     input_buffer_ptr = input_buffer;//setup so actions routines can mess the buffer
     cmd_state = 0;                  //set initial command parser state
     char_state = 0;                 //set initial caracter parser state
-    hold_day = -1;                  //force schedule load first time through the main loop
+    // hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
     printf("initialization complete\n");

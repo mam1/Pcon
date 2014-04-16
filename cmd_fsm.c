@@ -76,7 +76,7 @@ char    *keyword[_CMD_TOKENS] = {
  /* 14 */    "?",
  /* 15 */    "display",
  /* 16 */    "day",
- /* 17 */    "week",
+ /* 17 */    "system",
  /* 18 */    "delete",
  /* 19 */    "time",
  /* 20 */    "yes",
@@ -106,7 +106,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 14        ? */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 15  display */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 16      day */   {0, 1, 2, 3, 4, 5, 7, 7, 8,  9, 10},
-/* 17     week */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
+/* 17   system */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  7},
 /* 19     time */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
 /* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10},
@@ -135,7 +135,7 @@ int c_14(int,int *,char *); /* save schedule buffer */
 int c_15(int,int *,char *); /* prompt for channel control mode */
 int c_16(int,int *,char *); /* prompt for channel state */
 int c_17(int,int *,char *); /* display data for a single channel */
-// int c_18(int,int *,char *); /* set schedule mode to week */
+int c_18(int,int *,char *); /* display formatted schedules */
 int c_19(int,int *,char *); /* set channel state to off */
 int c_20(int,int *,char *); /* set active day */
 int c_21(int,int *,char *); /* set active hour */
@@ -149,8 +149,8 @@ int c_27(int,int *,char *); /* load schedule buffer from SD card */
 int c_28(int,int *,char *); /* save schedule buffer to SD card */
 
 int c_29(int,int *,char *); /* dump schedule buffer */
-int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel*/
-int c_31(int,int *,char *); /* display dio_cb schedules for active day*/
+int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel */
+int c_31(int,int *,char *); /* display system configuration infromation */
 
 
 /* cmd processor action table - initialized with fsm functions */
@@ -165,22 +165,22 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*  5     load */   {c_13,  c_7,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /*  6     done */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_7, c_13},
 /*  7    state */   {c_13, c_13, c_16,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/*  8 schedule */   {c_31,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/*  8 schedule */   {c_18,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /*  9  channel */   { c_3, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 10     name */   {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 11     mode */   {c_13, c_13, c_15, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 12       on */   {c_13,  c_0,  c_0,  c_0,  c_0, c_11,  c_0,  c_0,  c_0,  c_0, c_24},
 /* 13      off */   {c_13,  c_0,  c_0,  c_0,  c_0, c_19,  c_0,  c_0,  c_0,  c_0, c_25},
 /* 14        ? */   { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
-/* 15  display */   {c_13,  c_5, c_17, c_17, c_17, c_17, c_31, c_30,  c_0,  c_0, c_30},
+/* 15  display */   {c_18,  c_5, c_17, c_17, c_17, c_17, c_31, c_30,  c_0,  c_0, c_30},
 /* 16      day */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 17     week */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 17   system */   {c_31,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 18   delete */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26},
 /* 19     time */   {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
-/* 20      yes */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 21       no */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 22      add */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
-/* 23   change */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 20      yes */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 21       no */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 22      add */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
+/* 23   change */   {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_13},
 /* 24    dump  */   {c_29, c_29, c_29, c_29, c_29, c_29,  c_29, c_29, c_29, c_29, c_29}};
 
 
@@ -390,18 +390,16 @@ int c_17(int tt, int *n, char *s)
 }
 
 
-/* set schedule mode to week */
-/*
+/*display formatted scheduls */
+
 int c_18(int tt, int *n, char *s)
 {
-    set_channel_schedule_mode(1);
-    day = 1;
-    printf("  channel schedule mode set:  \n    ");
-    disp_channel_data(channel);
+    disp_all_schedules(bbb);
+
     c_0(tt,n,s);
     return 0;
 }
-*/
+
 /* set channel state off */
 int c_19(int tt, int *n, char *s) //save - s1
 {
@@ -548,9 +546,9 @@ int c_30(int tt, int *n, char *s)
 /* display the schedules for all days and all channels */
 int c_31(int tt, int *n, char *s) 
 {
-    int             c,d;
-    printf("Schedules for %s\n",day_names_long[d]);
-    dump_schs(bbb);
+    
+
+    disp_sys();
     
     c_0(tt,n,s); 
     return 0;
