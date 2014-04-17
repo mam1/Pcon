@@ -96,6 +96,8 @@
 
 /****************** functions *****************/
 void disp_sys(void);
+int startup_rtc_cog(void);
+int startup_dio_cog(void);
 
 /*******************/
 /* data structures */

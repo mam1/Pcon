@@ -1,5 +1,5 @@
 /**
- * This is the main pc program file.
+ * This is the main Pcon program file.
  */
 #include <stdio.h>
 #include <propeller.h>
@@ -25,7 +25,7 @@ _Driver *_driverlist[] = {
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
     char                file_set_prefix[_SCHEDULE_NAME_SIZE];
-    ini                 dio_cog_number,rtc_cog_number;
+    int                 dio_cog_number = -1,rtc_cog_number = -1;
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -189,12 +189,12 @@ int startup_dio_cog(void)
         printf("**** sd_setup aborted application ****\n");
         return 1;
     }    
-/* start monitoring the real time clock DS3231 */
+/* start the rtc cog - real time clock DS3231 */
     rtc_cb.rtc.tdb_lock = locknew();
     lockclr(rtc_cb.rtc.tdb_lock);
     // if(startup_rtc_cog) return 1;
 
-/* setup  the dio control block */
+/* setup the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
     lockclr(dio_cb.dio.cca_lock);
@@ -206,7 +206,7 @@ int startup_dio_cog(void)
     dio_cb.dio.sch_ptr = bbb; 
 
 /* start the dio cog  */
-    if(startup_dio_cog()) return 1;
+    // if(startup_dio_cog()) return 1;
      
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);

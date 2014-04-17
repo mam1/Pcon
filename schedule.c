@@ -1,12 +1,10 @@
 /************************************************************************/
 /*  schedule.c                                                          */
-/*      Functions which support loading and saving schedules from a sd   */
-/*      card.  Each (day of the week, channel)has a unique schedule.    */
-/*      A schedule is an array of unsigned int where the first int   d  */
-/*      is the number of records in the schedule the following int      */
+/*      Functions which support loading and saving schedules from a sd  */
+/*      card.  A schedule is an array of unsigned int where the first   */
+/*      int is the number of records in the schedule the following ints */
 /*      indicate a time and state transition for each channel.          */                                                       
 /*                                                                      */
-/*      Functions with support                                           */
 /*      buffer to a sd card also CRUD for schedule records              */
 /*                                                                      */
 /*      A schedule record is a unsigned 32 bit value.  The high bit     */ 
