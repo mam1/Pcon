@@ -224,7 +224,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 31        l */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 32 shutdown */   {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 33  restart */   {c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 34   system */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 34   system */   {c_31,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 35       st */   { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},    
 /* 36     help */   { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 37        ? */   { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
@@ -657,7 +657,7 @@ int is_valid_int(const char *str)
    return -1;
 }
 
-int cmd_type(char *c)
+int  (char *c)
 {
     int     i;
     /*test for an empty command que */
@@ -673,7 +673,7 @@ int cmd_type(char *c)
         return 3;
     }
     /* test for a keyword */
-    for(i=3;i<_CMD_TOKENS;i++)
+    for(i=4;i<_CMD_TOKENS;i++)
     {   
         if(strlen(c) == strlen(keyword[i]))
             if(strncmp(c,keyword[i],strlen(c))==0)
@@ -698,8 +698,8 @@ void cmd_fsm(char *token,int *state)
     static int         tt, num,*n_ptr;         
     static char        *s_ptr;
 
-    tt = cmd_type(token);
-//    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",token,tt, *state);
+    tt =  (token);
+    printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",token,tt, *state);
     if((tt==1)||(tt==2))
     {
         n_ptr = NULL;
