@@ -94,7 +94,7 @@ char    *keyword[_CMD_TOKENS] = {
  /* 31 */    "l",
  /* 32 */    "shutdown",
  /* 33 */    "restart",
- /* 34 */    "system"
+ /* 34 */    "system",
  /* 35 */    "st",
  /* 36 */    "help",
  /* 37 */    "?" 
@@ -657,7 +657,7 @@ int is_valid_int(const char *str)
    return -1;
 }
 
-int  (char *c)
+int  cmd_type(char *c)
 {
     int     i;
     /*test for an empty command que */
@@ -698,7 +698,7 @@ void cmd_fsm(char *token,int *state)
     static int         tt, num,*n_ptr;         
     static char        *s_ptr;
 
-    tt =  (token);
+    tt =  cmd_type(token);
     printf("cmd_fsm called: token <%s>, token type <%i>, state <%i>\n",token,tt, *state);
     if((tt==1)||(tt==2))
     {
