@@ -83,7 +83,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
 
-This image will display if you open the file directly (Pcon/state\ diagram/Slide1.png)
+This image will display if you open the file directly (Pcon/state\ diagram/cmd_fsm.png)
 
 ![Command Procssor FSM](state\ diagram/cmd_fsm.png?raw=true)
 
