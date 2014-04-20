@@ -85,7 +85,7 @@ Because the command processor is implemented by a state machine there is a lot o
 
 This image will display if you open the file directly (Pcon/state\ diagram/Slide1.png)
 
-![Command Procssor FSM](/Users/mam1/Git/Pcon/state\ diagram/Slide1.PNG?raw=true)
+![Command Procssor FSM](state\ diagram/Slide1.PNG?raw=true)
 
 ####Schedules:
 A schedule is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
