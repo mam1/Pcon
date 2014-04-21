@@ -29,9 +29,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 * display system configuration information
 
 ####Command processor commands:
-* schedule commands:
-    * status(st)
-        * display a formated dump of schedules, channel information and current state for all channels for all days
+######schedule commands:
     * copy(c)          {channel #}{day #}
         * copy the schedule for a channel and day to a buffer
     * paste(p)         {channel #}{day #}
@@ -42,16 +40,16 @@ C - Propgcc, SimpleIDE, Sublime Text
         * delete the schedules for the channel and day
     * edit(e)          {channel #}{day #}
         * edit the schedule for a channel and day
-* edit mode commands - edit schedules for the channel and day in the edit command
+######edit mode commands - edit schedules for the channel and day in the edit command
     * delete(d)        {channel #}{day #}{HH}{MM}
         * delete a schedule record for the time
     * add(a)           {channel #}{day #}{HH}{MM}
         * add a new a schedule record for the time
     * change(c)        {channel #}{day #}{HH}{MM}
         * change a schedule record for the time
-    * exit(e) 
+    * quit(q) 
         * exit edit mode           
-* channel commands
+######channel commands
     * name(n)          {channel #}{“string”}
         * set the name of a channel
     * mode(m)          {channel #}{control mode #}
@@ -60,30 +58,30 @@ C - Propgcc, SimpleIDE, Sublime Text
         * force the control mode of a channel to manual and set the state to on
     * off              {channel #}
         * force the control mode of a channel to manual and set the state to off
-* clock commands
-    * time
-        * display current time and date
+######clock commands
     * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
         * set the real time clock
-* system commands
+######system commands
+    * system
+        * display system information
+    * status(st)
+        * display a formated dump of schedules, channel information and current state for all channels for all days
+    * time
+        * display current time and date
+    * shutdown
+        * force all channels to manual control and turn them off
+        * stop control cogs
+    * restart
+        * start control cogs
     * save(s)          {schedule(s)} | {channel(c)} | {all}
         * save schedules, channel information or both to the SD card
     * load(l)          {schedule(s)} | {channel(c)} | {all}
         * load schedules, channel information or both from the SD card
-    * shutdown
-        * set force all channels to manual control and turn them off
-        * stop control cogs
-    * restart
-        * start control cogs
     * help(?)
         * display list of valid commands
-    * system
-        * display system information
+
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
-
-
-This image will display if you open the file directly (Pcon/state\ diagram/cmd_fsm.png)
 
 ![Command Procssor FSM](state\ diagram/cmd_fsm.png?raw=true)
 
