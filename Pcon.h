@@ -1,10 +1,10 @@
 #ifndef PCON_H_
 #define PCON_H_
 
-#define _major_version 0
+#define _major_version 1
 #define _minor_version 0
 
-#define _FILE_SET_ID            "042"
+#define _FILE_SET_ID            "000"
 
 
 /* configuration options */
@@ -44,8 +44,8 @@
 #define _CHAR_STATES     4
 
 /* command parser fsm */
-#define _CMD_TOKENS     25
-#define _CMD_STATES     11 
+#define _CMD_TOKENS     38
+#define _CMD_STATES     26 
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
@@ -96,6 +96,8 @@
 
 /****************** functions *****************/
 void disp_sys(void);
+int startup_rtc_cog(void);
+int startup_dio_cog(void);
 
 /*******************/
 /* data structures */

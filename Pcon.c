@@ -1,5 +1,5 @@
 /**
- * This is the main pc program file.
+ * This is the main Pcon program file.
  */
 #include <stdio.h>
 #include <propeller.h>
@@ -25,6 +25,7 @@ _Driver *_driverlist[] = {
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
     char                file_set_prefix[_SCHEDULE_NAME_SIZE];
+    int                 dio_cog_number = -1,rtc_cog_number = -1;
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -127,6 +128,40 @@ void disp_sys(void)
     #endif
     return;
 }
+int startup_rtc_cog(void)
+{
+    if(rtc_cog_number!= 0) cogstop(rtc_cog_number);
+    /* start monitoring the real time clock DS3231 */
+
+    rtc_cog_number = start_rtc(&rtc_cb.rtc);
+    if(rtc_cog_number == -1)
+    {
+        printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",rtc_cog_number);
+        return 1;
+    }     
+    printf(" DS3231 monitored by code running on cog %i\n",rtc_cog_number);
+    return 0;
+}
+
+int startup_dio_cog(void)
+{
+    if(dio_cog_number!= 0) cogstop(dio_cog_number);
+    /* start the dio cog */
+    dio_cog_number = start_dio(&dio_cb.dio);
+    if(dio_cog_number == -1)
+    {
+        printf("** error attempting to start dio cog\n  cognew returned %i\n\n",dio_cog_number);
+        return 1;
+    }
+    #if _DRIVEN == _DIOB
+            printf(" DIO Board controlled by code running on cog %i\n",dio_cog_number);
+    #else
+         printf(" relays controlled by code running on cog %i\n",dio_cog_number);
+
+    #endif 
+
+    return 0;
+}
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
@@ -154,17 +189,12 @@ void disp_sys(void)
         printf("**** sd_setup aborted application ****\n");
         return 1;
     }    
-/* start monitoring the real time clock DS3231 */
+/* start the rtc cog - real time clock DS3231 */
     rtc_cb.rtc.tdb_lock = locknew();
     lockclr(rtc_cb.rtc.tdb_lock);
-    cog = start_rtc(&rtc_cb.rtc);
-    if(cog == -1)
-    {
-        printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",cog);
-        return 1;
-    }     
-    printf(" DS3231 monitored by code running on cog %i\n",cog);
-/* setup  the dio control block */
+    // if(startup_rtc_cog) return 1;
+
+/* setup the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
     lockclr(dio_cb.dio.cca_lock);
@@ -176,18 +206,8 @@ void disp_sys(void)
     dio_cb.dio.sch_ptr = bbb; 
 
 /* start the dio cog  */
-    cog = start_dio(&dio_cb.dio);
-    if(cog == -1)
-    {
-        printf("** error attempting to start dio cog\n  cognew returned %i\n\n",cog);
-        return 1;
-    }
-    #if _DRIVEN == _DIOB
-            printf(" DIO Board controlled by code running on cog %i\n",cog);
-    #else
-         printf(" relays controlled by code running on cog %i\n",cog);
-
-    #endif      
+    // if(startup_dio_cog()) return 1;
+     
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);
     setvbuf(stdout, NULL, _IONBF, 0);

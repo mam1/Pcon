@@ -6,14 +6,15 @@ Channels can be controlled by time of day, time of day and a sensor value or man
 
 In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. The second instance is driving a Parallax Digital IO board which can control 8, 120 VAC 8 A loads and accept input from 8 sensors. 
 
-The code was developed on a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
+The code was developed in c using SimpleIDE. The development platform is a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
 ####Language:
-C - Propgcc
+C - Propgcc, SimpleIDE, Sublime Text
 ####Hardware:
-* Parallax - C3 micro controller 
-* Parallax - Digital IO Board (DIOB), Sharp solid state relays part# S202S02F
-* adafruit - ChronoDot real time clock module, based on a DS3231.
-* Newark   - AQY212GH PhotoMOS relays
+* C3 micro controller, Parallax  
+* Digital IO Board (DIOB), Sharp solid state relays part# S202S02F, Parallax 
+* ChronoDot real time clock module, based on a DS3231, adafruit 
+* AQY212GH PhotoMOS relays, Newark
+* MID400 AC Line Monitor, Newark 
 
 ####Command processor functions:
 * name channels  
@@ -23,10 +24,66 @@ C - Propgcc
 * create and maintain schedules for each channel
 * load/save schedules to SD card
 * display current time and date
+* set date and time
 * display schedules
 * display system configuration information
 
+####Command processor commands:
+######schedule commands:
+    * copy(c)          {channel #}{day #}
+        * copy the schedule for a channel and day to a buffer
+    * paste(p)         {channel #}{day #}
+        * paste the buffered schedule into a channel and day
+    * setall(sa)       {target channel #} 
+        * load the buffered schedule into all days for the channel
+    * delete           {channel #}{day #}
+        * delete the schedules for the channel and day
+    * edit(e)          {channel #}{day #}
+        * edit the schedule for a channel and day
+######edit mode commands - edit schedules for the channel and day in the edit command
+    * delete(d)        {channel #}{day #}{HH}{MM}
+        * delete a schedule record for the time
+    * add(a)           {channel #}{day #}{HH}{MM}
+        * add a new a schedule record for the time
+    * change(c)        {channel #}{day #}{HH}{MM}
+        * change a schedule record for the time
+    * quit(q) 
+        * exit edit mode           
+######channel commands
+    * name(n)          {channel #}{“string”}
+        * set the name of a channel
+    * mode(m)          {channel #}{control mode #}
+        * set the control mode of a channel, 0-manual, 1-time, 2-time & sensor
+    * on               {channel #}
+        * force the control mode of a channel to manual and set the state to on
+    * off              {channel #}
+        * force the control mode of a channel to manual and set the state to off
+######clock commands
+    * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
+        * set the real time clock
+######system commands
+    * system
+        * display system information
+    * status(st)
+        * display a formated dump of schedules, channel information and current state for all channels for all days
+    * time
+        * display current time and date
+    * shutdown
+        * force all channels to manual control and turn them off
+        * stop control cogs
+    * restart
+        * start control cogs
+    * save(s)          {schedule(s)} | {channel(c)} | {all}
+        * save schedules, channel information or both to the SD card
+    * load(l)          {schedule(s)} | {channel(c)} | {all}
+        * load schedules, channel information or both from the SD card
+    * help(?)
+        * display list of valid commands
+
+
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
+
+![Command Procssor FSM](state\ diagram/cmd_fsm.png?raw=true)
 
 ####Schedules:
 A schedule is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
@@ -34,7 +91,12 @@ A schedule is a list of times and corresponding states.  A channel that is contr
 * 1:00  on
 * 13:00 off
 
-will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on.  
+will result in the channel turning on at 1:00AM and off at 1:00PM.  If the current time is between 13:00 and 24:00 or between 0:0 and 13:00 the channel will be off.  Between 1:00 and 13:00 it will be on. While a schedule of:
+
+* 1:00  off
+* 13:00 on 
+
+will result in the channel being off between 1:00 - 13:00. It will be on at any time before 1:00 or after 13:00.
 
 * 1:00  on
 * 13:00 off
@@ -73,23 +135,27 @@ The complex part of the application is the command processor.  XMMC is required 
 
 The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
 
-**If a character is present**, unless it is an ESC, it is passed to the first fsm char_fsm). An ESC will clear all buffers and reset both state machines.  char_fsm pareses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor fsm (cms_fsm). When cmd_fsm finds a full token stack it pops tokens off the stack until it is empty.
+**If a character is present**, unless it is an ESC, it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The first fsm, char_fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  The command processor pops tokens off the stack and feeds them to a second fsm, cmd_fsm until the stack is empty when the command processor lets the cms_fsm know there is no more input then continues the main loop.  While cmd_fsm is processing a token stack the main loop is waiting, however, the the control cogs are running independently and are not affected.  They continue to control the channels based the the real time. 
 
 **If a character is not found** the code checks to see if the the cogs have sent any messages.  
 
 ####SD Files:
-Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The file names are generated in the following format: 
->   s<tag>d<day #>c<chanel #>.SCH
-    s<tag>  .
+Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The files are loaded when the code is initialized or reset. They can also be loaded or saved on command.  The files are alway closed after use so the SD card can be replaced to make copies or change behavior.  The file names are generated using the following preprocessor variables:
 
-The tag is a user supplied 3 digit number, it is currently implemented as a preprocessor variable. 
+    #define _FILE_SET_ID            "NNN"
+    #define _F_PREFIX               "SSS"
+    #define _F_SCHEDULE_SUFIX       ".sch"
+    #define _F_CHANNEL_SUFIX        ".ch"
 
+In the following format:
 
+    channel information <SSS><NNN>.ch
+    schedules           <SSS><NNN>.sch
 
 ####Propeller Pins:
 
-    0 
-    1
+    0 - day light savings on
+    1 - AC line power monitor MID400
     2
 
         3 - 
