@@ -54,6 +54,8 @@ C - Propgcc, SimpleIDE, Sublime Text
         * set the name of a channel
     * mode(m)          {channel #}{control mode #}
         * set the control mode of a channel, 0-manual, 1-time, 2-time & sensor
+    * zero             {channel #}
+        * reset the on time accumlator for a channel to 0
     * on               {channel #}
         * force the control mode of a channel to manual and set the state to on
     * off              {channel #}

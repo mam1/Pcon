@@ -156,7 +156,10 @@ void main (volatile DIO_CB *m)
                 {   
                     case 0:                                             //manual control
                         if(m->cca[i].state == 1)
-                            ccb |=(uint8_t)(1<<i);                      //set bit high
+                            {
+                                ccb |=(uint8_t)(1<<i);                      //set bit high
+                                m->cca[i].on_time++;
+                            }
                         else
                             ccb &= ~(uint8_t)(1<<i);                    //set bit low 
                         break;
@@ -173,6 +176,7 @@ void main (volatile DIO_CB *m)
                         {
                             ccb |= (1<<i);
                             m->cca[i].state = 1;
+                            m->cca[i].on_time++;
                         }
                         else
                         {

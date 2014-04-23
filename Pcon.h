@@ -112,6 +112,7 @@ typedef struct
     int                 c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
     int                 state;  //Channel State: 0-off, 1-on
     char                name[_CHANNEL_NAME_SIZE];
+    int                 on_time; //on time accumlator
 }CCR;
 
 /* time/date buffer */

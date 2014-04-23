@@ -35,11 +35,12 @@ void disp_channel_data(int cn)
     if(cn<0)
     {
         for(i=0;i<_NUMBER_OF_CHANNELS;i++)
-            printf("channel %i:  state <%s>, mode <%s>, name <%s>\n",
+            printf("channel %i:  state <%s>, mode <%s>, name <%s>, on time <%i>\n",
                 i, 
                 onoff[dio_cb.dio.cca[i].state], 
                 con_mode[dio_cb.dio.cca[i].c_mode],
-                dio_cb.dio.cca[i].name);
+                dio_cb.dio.cca[i].name,
+                dio_cb.dio.cca[i].on_time);
         printf("\n");
         return;
     }       
