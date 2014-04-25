@@ -25,7 +25,7 @@ _Driver *_driverlist[] = {
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
     char                file_set_prefix[_SCHEDULE_NAME_SIZE];
-    int                 dio_cog_number = -1,rtc_cog_number = -1;
+    int                 dio_cog_number = -1,rtc_cog_number = -1;    //the cog number or -1 if stoped
 /***************** global code to text conversion ********************/
 char *day_names_long[7] = {
      "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
@@ -37,20 +37,52 @@ char *sch_mode[2] = {"day","week"};
 /* beginning and ending addresses of the code for the rtc cog */
   extern unsigned int _load_start_rtc_cog[];
   extern unsigned int _load_stop_rtc_cog[]; 
+
 /* allocate control block & stack for rtc cog */
 struct {
     unsigned stack[_STACK_SIZE_RTC];
     volatile RTC_CB rtc;
 } rtc_cb;
-/* start rtc cog */
+
+/************************** functions to start rtc cog ***************************/
 int start_rtc(volatile void *parptr)
-{ 
+{
+    /* stop the rtc cog if it is running */
+    if(rtc_cog_number!= -1) cogstop(rtc_cog_number);
+    /* calulate the size of the cog code */ 
     int size = (_load_stop_rtc_cog - _load_start_rtc_cog)*4;//code size in bytes
     printf("rtc cog code size %i bytes\n",size);
-    unsigned int code[size];  //allocate enough HUB to hold the COG code
-    memcpy(code, _load_start_rtc_cog, size); //assume xmmc
-    return cognew(code, parptr);
+    /* allocate enough HUB memory to hold the COG code */
+    unsigned int code[size];
+    /* copy code into HUB memory assume xmmc */                 
+    memcpy(code, _load_start_rtc_cog, size);    
+    rtc_cog_number = cognew(code, parptr);
+    if(rtc_cog_number == -1)
+    {
+        printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",rtc_cog_number);
+        return 1;
+    }     
+    printf(" DS3231 monitored by code running on cog %i\n",rtc_cog_number);
+    return 0;
 }
+
+int shutdown_rtc_cog(void)
+{
+    cogstop(rtc_cog_number);
+    rtc_cog_number = -1;
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
 //**************** digital IO board cog stuff ************************/
 /* begining and ending address of the code for the dio cog */
  extern unsigned int _load_start_dio_cog[];
@@ -147,6 +179,7 @@ int startup_dio_cog(void)
 {
     if(dio_cog_number!= 0) cogstop(dio_cog_number);
     /* start the dio cog */
+
     dio_cog_number = start_dio(&dio_cb.dio);
     if(dio_cog_number == -1)
     {
@@ -190,9 +223,17 @@ int startup_dio_cog(void)
         return 1;
     }    
 /* start the rtc cog - real time clock DS3231 */
+    printf("get locks\n");
     rtc_cb.rtc.tdb_lock = locknew();
     lockclr(rtc_cb.rtc.tdb_lock);
-    // if(startup_rtc_cog) return 1;
+    printf("start the cog to monitor the rtc\n");
+/* start the rtc cog - real time clock DS3231 */
+    if(start_rtc(&rtc_cb.rtc))
+    {
+        printf("problem starting rtc cog\nPcon terminated\n");
+        return 1;
+    } 
+
 
 /* setup the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
@@ -206,7 +247,7 @@ int startup_dio_cog(void)
     dio_cb.dio.sch_ptr = bbb; 
 
 /* start the dio cog  */
-    // if(startup_dio_cog()) return 1;
+    if(start_dio(&dio_cb.dio)) return 1;
      
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);

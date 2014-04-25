@@ -6,12 +6,6 @@
 #ifndef _RTC_H_
 #define _RTC_H_
 
-#define _rtc_major_version 1
-#define _rtc_minor_version 1
-
-
-
-
 /* set i2c high by allowing the pin to float high, set low by forcing it low */
 #define i2c_float_scl_high  DIRA &= ~(1<<scl)
 #define i2c_set_scl_low     DIRA |= (1<<scl)

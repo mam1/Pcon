@@ -4,7 +4,7 @@
 #define _major_version 1
 #define _minor_version 0
 
-#define _FILE_SET_ID            "000"
+#define _FILE_SET_ID            "001"
 
 
 /* configuration options */
@@ -44,7 +44,7 @@
 #define _CHAR_STATES     4
 
 /* command parser fsm */
-#define _CMD_TOKENS     38
+#define _CMD_TOKENS     39
 #define _CMD_STATES     26 
 
 /* channel parameters */
@@ -123,7 +123,7 @@ typedef struct{
     uint8_t     day;
     uint8_t     month;
     uint8_t     year;
-    uint8_t     dow;
+    uint8_t     dow;  // Sun-1, Mon-2, ... Sat-7
 }TD_BUF;
 
 /* rtc cog control block */
@@ -131,7 +131,9 @@ typedef volatile struct
 {
     int                 tdb_lock;   //lock ID for time date buffer
     int                 abt;        //!= 0 cog requests a system abort,value = error code
-    int                 update;     //trigger update flag, 1=wait, 0=update 
+    int                 update;     //trigger update flag, 1=wait, 0=update
+    int                 set_flag;   //if !=0 set the ds3231 to a new time/date
+    TD_BUF              set_buffer; 
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
  

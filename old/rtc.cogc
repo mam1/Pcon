@@ -1,6 +1,6 @@
 /****************************************************************/
 /*                                                              */
-/*  rtc.cogc -   v 2.0                                          */
+/*  rtc.cogc -  version 0.10                                    */
 /*                                                              */
 /*  This code reads a DS3231, converts the BDC to integer and   */
 /*  updates the time/date control block in hub memory.  It also */
@@ -10,11 +10,6 @@
 /*  The cog contains i2c bit banging code because the library   */
 /*  code is too large to fit in a cog and because the DS3231    */
 /*  requires clock stretching if the code is running in a cog.  */
-/*                                                              */
-/*  added 4/25/2014                                             */
-/*  support for setting the DS3231 - if the set_flag is on the  */
-/*  DS3231 is set to the date time contained in the set_buffer  */
-/*  in the rtc control block                                    */
 /*                                                              */
 /****************************************************************/
 
@@ -135,14 +130,6 @@ void comm_init(void)
     }       
     while((INA & sda_mask)==0);     //if the DS3231 is holding sda low, try again 
 }
-/* set DS3231 date and time */
-_NATIVE
-void set(void)     
-{
-    
-    return;
-
-}
 
 /******************************************************************/
 /********************** start main routine ************************/
@@ -151,20 +138,10 @@ void set(void)
 /* loop forever updating the time and date in the control block */
 _NAKED
 void main (volatile RTC_CB *m)
-{
-
-
+{ 
     i2cOpen(_rtcDataPin,_rtcClockPin);  //set up the i2c bus
     comm_init();                        //initialize DS3231 communication interface
-    while(1)                            //loop forever
-    {
-        if(m->set_flag == 1)            //is a reset requested
-        {
-            while(lockset(m->tdb_lock));//wait until we can set the lock
-            set();
-            m->set_flag = 0;            // reset the DS3231 time and date
-            lockclr(m->tdb_lock);       //clear the lock
-        }
+    while(1){                           //loop forever
         while(lockset(m->tdb_lock));    //wait until we can set the lock
         i2cStart();                     //generate an i2c start condition
         if(i2cwrite(DS3231_Write_addr)) //setup to read
