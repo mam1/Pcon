@@ -45,7 +45,7 @@ struct {
 int start_rtc(volatile void *parptr)
 { 
     int size = (_load_stop_rtc_cog - _load_start_rtc_cog)*4;//code size in bytes
-    printf("rtc cog code size %i bytes\n",size);
+    printf("  rtc cog code size %i bytes\n",size);
     unsigned int code[size];  //allocate enough HUB to hold the COG code
     memcpy(code, _load_start_rtc_cog, size); //assume xmmc
     return cognew(code, parptr);
@@ -66,7 +66,7 @@ int start_dio(volatile void *parptr)
 {
 
     int size = (_load_stop_dio_cog - _load_start_dio_cog)*4;
-    printf("dio cog code size %i bytes\n",size);
+    printf("  dio cog code size %i bytes\n",size);
     unsigned int code[size];
     memcpy(code, _load_start_dio_cog, size); //assume xmmc
     return cognew(code, parptr);
@@ -147,7 +147,7 @@ void disp_sys(void)
 /* build file set prefix */
     strcat(file_set_prefix,_F_PREFIX);
     strcat(file_set_prefix,_FILE_SET_ID);
-    printf("file set prefix <%s>\n",file_set_prefix);
+    // printf("file set prefix <%s>\n",file_set_prefix);
 /* check out the SD card */
     if(sd_setup())
     {
@@ -163,7 +163,7 @@ void disp_sys(void)
         printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",cog);
         return 1;
     }     
-    printf(" DS3231 monitored by code running on cog %i\n",cog);
+    printf("  DS3231 monitored by code running on cog %i\n",cog);
 /* setup  the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
@@ -183,9 +183,9 @@ void disp_sys(void)
         return 1;
     }
     #if _DRIVEN == _DIOB
-            printf(" DIO Board controlled by code running on cog %i\n",cog);
+            printf("  DIO Board controlled by code running on cog %i\n",cog);
     #else
-         printf(" relays controlled by code running on cog %i\n",cog);
+         printf("  relays controlled by code running on cog %i\n",cog);
 
     #endif      
 /* set up unbuffered nonblocking io */
@@ -200,7 +200,7 @@ void disp_sys(void)
     // hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
-    printf("initialization complete\n");
+    printf("initialization complete\n\n");
 
 /************************************************************/
 /********************** main processing loop ****************/
