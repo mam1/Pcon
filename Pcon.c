@@ -45,14 +45,14 @@ struct {
     volatile RTC_CB rtc;
 } rtc_cb;
 
-/************************** functions to start rtc cog ***************************/
+/************************** rtc cog stuff ***************************/
 int start_rtc(volatile void *parptr)
 {
     /* stop the rtc cog if it is running */
     if(rtc_cog_number!= -1) cogstop(rtc_cog_number);
     /* calulate the size of the cog code */ 
     int size = (_load_stop_rtc_cog - _load_start_rtc_cog)*4;//code size in bytes
-    printf("rtc cog code size %i bytes\n",size);
+    printf("  rtc cog code size %i bytes\n",size);
     /* allocate enough HUB memory to hold the COG code */
     unsigned int code[size];
     /* copy code into HUB memory assume xmmc */                 
@@ -63,7 +63,7 @@ int start_rtc(volatile void *parptr)
         printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",rtc_cog_number);
         return 1;
     }     
-    printf(" DS3231 monitored by code running on cog %i\n",rtc_cog_number);
+    printf("  DS3231 monitored by code running on cog %i\n",rtc_cog_number);
     return 0;
 }
 
@@ -73,16 +73,6 @@ int shutdown_rtc_cog(void)
     rtc_cog_number = -1;
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
 
 //**************** digital IO board cog stuff ************************/
 /* begining and ending address of the code for the dio cog */
@@ -98,12 +88,28 @@ struct {
 
 int start_dio(volatile void *parptr)
 {
-
+    /* stop the rtc cog if it is running */
+    if(dio_cog_number!= -1) cogstop(dio_cog_number);
+    /* calulate the size of the cog code */ 
     int size = (_load_stop_dio_cog - _load_start_dio_cog)*4;
-    printf("dio cog code size %i bytes\n",size);
+    printf("  dio cog code size %i bytes\n",size);
+    /* allocate enough HUB memory to hold the COG code */
     unsigned int code[size];
+    /* copy code into HUB memory assume xmmc */                 
     memcpy(code, _load_start_dio_cog, size); //assume xmmc
-    return cognew(code, parptr);
+    dio_cog_number =  cognew(code, parptr);
+    if(rtc_cog_number == -1)
+    {
+        printf("** error attempting to start dio cog\n  cognew returned %i\n\n",dio_cog_number);
+        return 1;
+    } 
+    #if _DRIVEN == _DIOB
+            printf("  DIO Board controlled by code running on cog %i\n",dio_cog_number);
+    #else
+         printf("  relays controlled by code running on cog %i\n",dio_cog_number);
+
+    #endif
+    return 0;
 }
 
 /******************************* support functions *********************/
@@ -162,41 +168,7 @@ void disp_sys(void)
     printf("schedule file <%s>\nchannel file <%s>\n\n",fn_schedule,fn_channel);
     return;
 }
-int startup_rtc_cog(void)
-{
-    if(rtc_cog_number!= 0) cogstop(rtc_cog_number);
-    /* start monitoring the real time clock DS3231 */
 
-    rtc_cog_number = start_rtc(&rtc_cb.rtc);
-    if(rtc_cog_number == -1)
-    {
-        printf("** error attempting to start rtc cog\n  cognew returned %i\n\n",rtc_cog_number);
-        return 1;
-    }     
-    printf(" DS3231 monitored by code running on cog %i\n",rtc_cog_number);
-    return 0;
-}
-
-int startup_dio_cog(void)
-{
-    if(dio_cog_number!= 0) cogstop(dio_cog_number);
-    /* start the dio cog */
-
-    dio_cog_number = start_dio(&dio_cb.dio);
-    if(dio_cog_number == -1)
-    {
-        printf("** error attempting to start dio cog\n  cognew returned %i\n\n",dio_cog_number);
-        return 1;
-    }
-    #if _DRIVEN == _DIOB
-            printf(" DIO Board controlled by code running on cog %i\n",dio_cog_number);
-    #else
-         printf(" relays controlled by code running on cog %i\n",dio_cog_number);
-
-    #endif 
-
-    return 0;
-}
 /********************************************************************/
 /************************** start main  *****************************/
 /********************************************************************/
@@ -217,26 +189,24 @@ int startup_dio_cog(void)
 /* build file set prefix */
     strcat(file_set_prefix,_F_PREFIX);
     strcat(file_set_prefix,_FILE_SET_ID);
-    printf("file set prefix <%s>\n",file_set_prefix);
+    // printf("file set prefix <%s>\n",file_set_prefix);
 /* check out the SD card */
     if(sd_setup())
     {
         printf("**** sd_setup aborted application ****\n");
         return 1;
     }    
-/* start the rtc cog - real time clock DS3231 */
-    printf("get locks\n");
+/* setup  the rtc control block */
+    // printf("get locks\n");
     rtc_cb.rtc.tdb_lock = locknew();
     lockclr(rtc_cb.rtc.tdb_lock);
-    printf("start the cog to monitor the rtc\n");
+    // printf("start the cog to monitor the rtc\n");
 /* start the rtc cog - real time clock DS3231 */
     if(start_rtc(&rtc_cb.rtc))
     {
-        printf("problem starting rtc cog\nPcon terminated\n");
+        printf("\n\n*** problem starting rtc cog\nPcon terminated\n");
         return 1;
     } 
-
-
 /* setup the dio control block */
     dio_cb.dio.tdb_lock = rtc_cb.rtc.tdb_lock;
     dio_cb.dio.cca_lock = locknew();
@@ -247,10 +217,12 @@ int startup_dio_cog(void)
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
     dio_cb.dio.sch_ptr = bbb; 
-
 /* start the dio cog  */
-    if(start_dio(&dio_cb.dio)) return 1;
-     
+    if(start_dio(&dio_cb.dio))
+    {
+        printf("\n\n*** problem starting dio cog\nPcon terminated\n");
+        return 1;    
+    }    
 /* set up unbuffered nonblocking io */
     setvbuf(stdin, NULL, _IONBF, 0);
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -260,8 +232,9 @@ int startup_dio_cog(void)
     input_buffer_ptr = input_buffer;//setup so actions routines can mess the buffer
     cmd_state = 0;                  //set initial command parser state
     char_state = 0;                 //set initial caracter parser state
-    // hold_day = -1;                  //force schedule load first time through the main loop
+
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
+    printf("pre prompt\n");
     process_buffer();
     printf("initialization complete\n");
 

@@ -15,6 +15,7 @@ TQ *process_buffer(void)
 {
     char        tb[_INPUT_BUFFER],*t_ptr,*start_char;        //,*end_char;
     int         i; 
+    printf("process buffer <%s>\n",input_buffer);
     input_buffer_ptr = input_buffer;
     t_ptr = tb;    
     start_char = input_buffer_ptr;
@@ -22,12 +23,13 @@ TQ *process_buffer(void)
     tail = head;    
     while(*input_buffer_ptr != '\0')
     {
-    if(*input_buffer_ptr==_QUOTE)
-    {
-        *t_ptr++ = *input_buffer_ptr++;            
-        while((*input_buffer_ptr != _QUOTE)&&(*input_buffer_ptr != '\0'))
+        printf("input char <%c>\n",*input_buffer_ptr);
+        if(*input_buffer_ptr==_QUOTE)       //handle quoted strings
+        {
             *t_ptr++ = *input_buffer_ptr++;            
-        *t_ptr++ = _QUOTE;
+            while((*input_buffer_ptr != _QUOTE)&&(*input_buffer_ptr != '\0'))
+                *t_ptr++ = *input_buffer_ptr++;            
+            *t_ptr++ = _QUOTE;
             *(++input_buffer_ptr)='\0';
             if(tail == '\0')
             {             
@@ -43,32 +45,45 @@ TQ *process_buffer(void)
             memcpy(tail->tptr,start_char,input_buffer_ptr - start_char + 1);
             tail->next='\0';
             start_char = input_buffer_ptr;
+
             start_char++;         
-    }          
-        if((*input_buffer_ptr==_SPACE)||(*input_buffer_ptr==_COLON)||(*input_buffer_ptr==_SLASH)) 
+        }
+
+        if((*input_buffer_ptr==_SPACE)||(*input_buffer_ptr==_COLON)||(*input_buffer_ptr==_SLASH)) //handle deliniters
         {
             *input_buffer_ptr='\0';
+            printf("before allocations\n");
             if(tail == '\0')
-            {             
+            {
+                printf("1\n"); 
+                printf("sizeof(TQ) <%i>\n",sizeof(TQ));            
                 tail = malloc(sizeof(TQ));
                 head = tail;
             }
             else
             {
+                printf("2\n");
                 tail->next = malloc(sizeof(TQ));
                 tail = tail->next;
             }
+            printf("done with allocations\n");
             tail->tptr = malloc(input_buffer_ptr - start_char );
             memcpy(tail->tptr,start_char,input_buffer_ptr - start_char + 1);
             tail->next='\0';
             start_char = input_buffer_ptr;
             start_char++;
+            printf("comming back\n");
         }
-        *t_ptr++ = *input_buffer_ptr++;            
-    }    
+        printf("before char <%c>\n",*t_ptr);            
+        *t_ptr++ = *input_buffer_ptr++;
+        printf("after char <%c>\n",*t_ptr);            
+    }
+
+    /* erase input buffer */    
     for(i=0;i<_INPUT_BUFFER;i++) input_buffer[i] = '\0';
-    input_buffer_ptr = input_buffer;
-    return head;
+    input_buffer_ptr = input_buffer;    //reset pointer to start of buffer
+
+    return head; //return the head of a FIFO stack of tokens
 }
 char *pop()
 {

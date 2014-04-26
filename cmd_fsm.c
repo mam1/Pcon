@@ -603,8 +603,8 @@ int c_31(int tt, int *n, char *s)
 /* start both control cogs */
 int c_32(int tt, int *n, char *s) 
 {
-    startup_rtc_cog();
-    startup_dio_cog();  
+    // startup_rtc_cog();
+    // startup_dio_cog();  
     c_0(tt,n,s); 
     return 0;
 
@@ -623,7 +623,7 @@ int c_33(int tt, int *n, char *s)
 /* start dio cog */
 int c_34(int tt, int *n, char *s) 
 {
-    startup_rtc_cog();  
+    // startup_rtc_cog();  
     c_0(tt,n,s); 
     return 0;
 
@@ -631,7 +631,7 @@ int c_34(int tt, int *n, char *s)
 /* start rtc cog */
 int c_35(int tt, int *n, char *s) 
 {
-    startup_rtc_cog();  
+    // startup_rtc_cog();  
     c_0(tt,n,s); 
     return 0;
 

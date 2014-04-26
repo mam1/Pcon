@@ -63,7 +63,7 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
             // printf("*** error reading schedula data\n");
             // return 1;
         // }
-        printf("schedule data loaded into buffer from SD card\n");;
+        printf("  schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
     }
     return 0;
@@ -109,7 +109,7 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
  {
     FILE    *sfp;
 
-    printf("schedule file name <%s>\n",fn_schedule);
+    // printf("schedule file name <%s>\n",fn_schedule);
 
     sfp = fopen(fn_schedule,"r");
     if(sfp==0)
@@ -127,7 +127,7 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
             return 1;
         }
     }
-    printf("  schedle file <%s> found\n",fn_schedule);
+    printf("  schedule file <%s> found\n",fn_schedule);
     fclose(sfp);
     return 0;
  }
