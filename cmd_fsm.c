@@ -592,13 +592,10 @@ int c_30(int tt, int *n, char *s)
     c_0(tt,n,s); 
     return 0;
 }
-/* display the schedules for all days and all channels */
+/* display system configuration info */
 int c_31(int tt, int *n, char *s) 
 {
-    
-
-    disp_sys();
-    
+    disp_sys();   
     c_0(tt,n,s); 
     return 0;
 

@@ -20,7 +20,8 @@ _Driver *_driverlist[] = {
 };
 /***************************** external ******************************/
 // extern char    *day_names[];
- extern uint32_t       bbb[_SCHEDULE_BUFFER];
+ extern uint32_t        bbb[_SCHEDULE_BUFFER];
+ extern char            fn_schedule[],fn_channel[];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
@@ -158,6 +159,7 @@ void disp_sys(void)
     #else
         printf("system is configured to drive 5 IO pins\n");
     #endif
+    printf("schedule file <%s>\nchannel file <%s>\n\n",fn_schedule,fn_channel);
     return;
 }
 int startup_rtc_cog(void)

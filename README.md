@@ -40,6 +40,7 @@ C - Propgcc, SimpleIDE, Sublime Text
         * delete the schedules for the channel and day
     * edit(e)          {channel #}{day #}
         * edit the schedule for a channel and day
+    * file             {file name}{save|load}
 ######edit mode commands - edit schedules for the channel and day in the edit command
     * delete(d)        {channel #}{day #}{HH}{MM}
         * delete a schedule record for the time
@@ -75,7 +76,7 @@ C - Propgcc, SimpleIDE, Sublime Text
         * stop control cogs
     * restart
         * start control cogs
-    * save(s)          {schedule(s)} | {channel(c)} | {all}
+    * save(s)          {schedule(s)} | {channel(c)} | {all} 
         * save schedules, channel information or both to the SD card
     * load(l)          {schedule(s)} | {channel(c)} | {all}
         * load schedules, channel information or both from the SD card
