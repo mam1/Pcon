@@ -11,7 +11,7 @@
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
 #define _212GH      2       //configure to drive 5 AYQ212GH relays
 
-#define _DRIVEN     _212GH
+#define _DRIVEN     _DIOB
 
 /* propeller io pin assignments */
 #if _DRIVEN == _DIOB
@@ -96,14 +96,12 @@
 
 /****************** functions *****************/
 void disp_sys(void);
-int startup_rtc_cog(void);
-int startup_dio_cog(void);
 
 /*******************/
 /* data structures */
 /*******************/
 
-/* action routines for the cmd fsm */
+/* prototype action routines for the cmd fsm */
 typedef int(*CMD_ACTION_PTR)(int, int *,char *); 
 
 /* channel control record (ccr) */
@@ -112,7 +110,7 @@ typedef struct
     int                 c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
     int                 state;  //Channel State: 0-off, 1-on
     char                name[_CHANNEL_NAME_SIZE];
-    int                 on_time; //on time accumlator
+    int                 on_time; //on time accumulator
 }CCR;
 
 /* time/date buffer */
@@ -133,7 +131,7 @@ typedef volatile struct
     int                 abt;        //!= 0 cog requests a system abort,value = error code
     int                 update;     //trigger update flag, 1=wait, 0=update
     int                 set_flag;   //if !=0 set the ds3231 to a new time/date
-    TD_BUF              set_buffer; 
+    TD_BUF              set_buffer; //user entered, time, date & dow
     TD_BUF              td_buffer;  //time, date & dow stored as uint8_t 
 }RTC_CB;
  
@@ -148,7 +146,6 @@ typedef struct
     SCH                 sch[_NUMBER_OF_CHANNELS];
  } DAY;
 
-
 /* dio cog control block */
 typedef volatile struct 
 {
@@ -159,7 +156,7 @@ typedef volatile struct
     int        *update_ptr; //pointer to trigger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;     //pointer to the time date buffer
     uint32_t   *sch_ptr;    //schedule buffer pointer
-        CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
+    CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
 
 }DIO_CB;
 #endif
