@@ -355,12 +355,21 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
     for(channel=0;channel<_NUMBER_OF_CHANNELS;channel++)
     {
     /* print channel header */        
-        printf("channel %i <%s> control %s, %s",channel,dio_cb.dio.cca[channel].name,con_mode[dio_cb.dio.cca[channel].c_mode],onoff[dio_cb.dio.cca[channel].state]);
+        printf("%s <%i> - %s, %s",
+            
+            dio_cb.dio.cca[channel].name,
+            channel,
+            con_mode[dio_cb.dio.cca[channel].c_mode],
+            onoff[dio_cb.dio.cca[channel].state]);
+
+
         // printf("%s",onoff[dio_cb.dio.cca[channel].state]);
-        printf(" as of %i:%02i, %s\n           ",
+        printf(" as of %i:%02i, %s total on time %i\n           ",
         rtc_cb.rtc.td_buffer.hour,
         rtc_cb.rtc.td_buffer.min,
-        day_names_long[rtc_cb.rtc.td_buffer.dow-1]);
+        day_names_long[rtc_cb.rtc.td_buffer.dow-1],
+        dio_cb.dio.cca[channel].time_on
+        );
 
 
         for (day=0;day<_DAYS_PER_WEEK;day++)

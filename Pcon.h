@@ -4,7 +4,7 @@
 #define _major_version 0
 #define _minor_version 0
 
-#define _FILE_SET_ID            "000"
+#define _FILE_SET_ID            "001"
 
 
 /* configuration options */
@@ -110,6 +110,7 @@ typedef struct
     int                 c_mode; //Control mode: 0-manual, 1-time, 2-time & sensor
     int                 state;  //Channel State: 0-off, 1-on
     char                name[_CHANNEL_NAME_SIZE];
+    int                 time_on; // accumulated minutes of on time for channel
 }CCR;
 
 /* time/date buffer */
@@ -154,7 +155,7 @@ typedef volatile struct
     int        *update_ptr; //pointer to trigger update flag, 1=wait, 0=update 
     TD_BUF     *td_ptr;     //pointer to the time date buffer
     uint32_t   *sch_ptr;    //schedule buffer pointer
-        CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
+    CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
 
 }DIO_CB;
 #endif
