@@ -42,7 +42,7 @@ C - Propgcc, SimpleIDE, Sublime Text
         * save or load a named schedule file
     * edit(e)          {channel #}{day #}
         * edit the schedule for a channel and day
-######edit mode commands - edit schedules for the channel and day in the edit command
+######edit mode commands - edit schedule for the channel and day specified in the edit command
     * delete(d)        {HH}{MM}
         * delete a schedule record for the time
     * add(a)           {HH}{MM}
@@ -197,14 +197,14 @@ In the following format:
 
 
 
-    * copy          {channel #}{day #}
-    * paste         {channel #}{day #}
-    * pastall       {target channel #} 
-    * delete        {channel #}{day #}
-    * file          {file name}{save|load}
+    * copy      {channel #}{day #}
+    * paste     {channel #}{day #}
+    * pastall   {target channel #} 
+    * delete    {channel #}{day #}
+    * file      {file name}{save|load}
     * edit          {channel #}{day #}
     * e          {channel #}{day #}
-    * d        {channel #}{day #}{HH}{MM}
+    * d       {channel #}{day #}{HH}{MM}
     * add           {channel #}{day #}{HH}{MM}
     * a           {channel #}{day #}{HH}{MM}
     * change        {channel #}{day #}{HH}{MM}
