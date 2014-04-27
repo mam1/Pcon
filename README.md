@@ -30,47 +30,47 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 ####Command processor commands:
 ######schedule commands:
-    * copy(c)          {channel #}{day #}
+    * copy             {channel #}{day #}
         * copy the schedule for a channel and day to a buffer
-    * paste(p)         {channel #}{day #}
+    * paste            {channel #}{day #}
         * paste the buffered schedule into a channel and day
-    * setall(sa)       {target channel #} 
+    * pastall          {target channel #} 
         * load the buffered schedule into all days for the channel
     * delete           {channel #}{day #}
         * delete the schedules for the channel and day
+    * file             {file name}{save|load}
+        * save or load a named schedule file
     * edit(e)          {channel #}{day #}
         * edit the schedule for a channel and day
-    * file             {file name}{save|load}
 ######edit mode commands - edit schedules for the channel and day in the edit command
-    * delete(d)        {channel #}{day #}{HH}{MM}
+    * delete(d)        {HH}{MM}
         * delete a schedule record for the time
-    * add(a)           {channel #}{day #}{HH}{MM}
+    * add(a)           {HH}{MM}
         * add a new a schedule record for the time
-    * change(c)        {channel #}{day #}{HH}{MM}
+    * change(c)        {HH}{MM}
         * change a schedule record for the time
     * quit(q) 
         * exit edit mode           
 ######channel commands
-    * name(n)          {channel #}{“string”}
+    * name             {channel #}{“string”}
         * set the name of a channel
-    * mode(m)          {channel #}{control mode #}
+    * mode             {channel #}{control mode #}
         * set the control mode of a channel, 0-manual, 1-time, 2-time & sensor
     * zero             {channel #}
-        * reset the on time accumlator for a channel to 0
+        * set the on time accumlator for a channel to 0
     * on               {channel #}
         * force the control mode of a channel to manual and set the state to on
     * off              {channel #}
         * force the control mode of a channel to manual and set the state to off
-######clock commands
-    * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
-        * set the real time clock
 ######system commands
     * system
         * display system information
-    * status(st)
+    * status
         * display a formated dump of schedules, channel information and current state for all channels for all days
     * time
         * display current time and date
+    * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
+        * set the real time clock
     * shutdown
         * force all channels to manual control and turn them off
         * stop control cogs
@@ -194,3 +194,74 @@ In the following format:
     29 - i2c
     30 - USB
     31 - USB
+
+
+
+    * copy          {channel #}{day #}
+    * paste         {channel #}{day #}
+    * pastall       {target channel #} 
+    * delete        {channel #}{day #}
+    * file          {file name}{save|load}
+    * edit          {channel #}{day #}
+    * e          {channel #}{day #}
+    * d        {channel #}{day #}{HH}{MM}
+    * add           {channel #}{day #}{HH}{MM}
+    * a           {channel #}{day #}{HH}{MM}
+    * change        {channel #}{day #}{HH}{MM}
+    * c        {channel #}{day #}{HH}{MM}
+    * quit
+    * q 
+    * name          {channel #}{“string”}
+    * mode          {channel #}{control mode #}
+    * zero             {channel #}
+    * on               {channel #}
+    * off              {channel #}
+    * system
+    * status
+    * time
+    * set              {YYYY}{MM}{DD}{day of the week #}{HH}{MM}{SS}
+    * shutdown
+    * restart
+    * save              {schedule(s)} | {channel(c)} | {all} 
+    * schedule
+    * s
+    * channel
+    * all
+    * load              {schedule(s)} | {channel(c)} | {all}
+    * help
+    * ?
+
+
+"copy",
+"paste",
+"pastall",
+"delete",
+"file",
+"edit",
+"e",
+"d",
+"add",
+"a",
+"change",
+"c",
+"quit",
+"q",
+"name",
+"mode",
+"zero",
+"on",
+"off",
+"system",
+"status",
+"time",
+"set",
+"shutdown",
+"restart",
+"save",
+"schedule",
+"s",
+"channel",
+"all",
+"load",
+"help",
+"?",
