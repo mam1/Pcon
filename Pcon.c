@@ -210,6 +210,13 @@ void disp_sys(void)
         /* check for problems */
         if(ckeck_abort())
             return 1;
+        /* see if the channel data needs to be saved */
+        if(dio_cb.dio.save_cca)
+        {
+            dio_cb.dio.save_cca = 0;
+            if(save_channel_data())
+                return 1;
+        }
         /* check the token stack */
         while(pop_cmd_q(tbuf))
         {

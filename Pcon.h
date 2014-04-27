@@ -156,6 +156,7 @@ typedef volatile struct
     TD_BUF     *td_ptr;     //pointer to the time date buffer
     uint32_t   *sch_ptr;    //schedule buffer pointer
     CCR        cca[_NUMBER_OF_CHANNELS];                 //channel control array
+    int        save_cca     //!= 0 cog request a save of the channel data
 
 }DIO_CB;
 #endif
