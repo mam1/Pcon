@@ -22,6 +22,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 * set channel control mode (manual, time, time & sensor)
 * load/save channel control information to SD card  
 * create and maintain schedules for each channel
+* copy and paste schedules between days across channels
 * load/save schedules to SD card
 * display current time and date
 * set date and time
@@ -34,13 +35,11 @@ C - Propgcc, SimpleIDE, Sublime Text
         * copy the schedule for a channel and day to a buffer
     * paste            {channel #}{day #}
         * paste the buffered schedule into a channel and day
-    * pastall          {target channel #} 
-        * load the buffered schedule into all days for the channel
     * delete           {channel #}{day #}
         * delete the schedules for the channel and day
     * file             {file name}{save|load}
         * save or load a named schedule file
-    * edit(e)          {channel #}{day #}
+    * edit          {channel #}{day #}
         * edit the schedule for a channel and day
 ######edit mode commands - edit schedule for the channel and day specified in the edit command
     * delete(d)        {HH}{MM}
