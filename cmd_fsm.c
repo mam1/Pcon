@@ -642,18 +642,11 @@ int is_valid_int(const char *str)
 int cmd_type(char *c)
 {
     int     i;
+    
     /*test for an empty command que */
-    if(*c==NULL)
-    {
-//        printf("\nNULL buffer\n");
+    if((*c==NULL) || (*c==' '))
         return 3;
-    }
-    /*test empty buffer */
-    if(*c==' ')
-    {
-//        printf("\nempty buffer\n");
-        return 3;
-    }
+
     /* test for a keyword */
     for(i=3;i<_CMD_TOKENS;i++)
     {   
