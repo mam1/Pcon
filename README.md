@@ -78,11 +78,13 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**time** - display current time and date
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY} {MM} {DD} {day of the week #} {HH}  {MM}{SS}** - set the real time clock
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY}{MM}{DD}{N(day #)}{HH}{MM}{SS}** - set the real time clock, uses in line code, fsm added too many additional states
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**shutdown** - force all channels to manual control and turn them off, stop control cogs
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**restart** - start control cogs
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**start** - start control cogs
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**restartD** - initialize the digital io board if it is present
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**help(?)** - display list of valid commands
 
