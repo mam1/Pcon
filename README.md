@@ -88,7 +88,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in they way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. Tokens can be entered individually or strung together. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
 
-![Command Procssor FSM](FSM-docs/cmd_fsm.png?raw=true)
+![Command Processor FSM](FSM-docs/cmd_fsm.png?raw=true)
 
 ####Schedules:
 A schedule is a list of times and corresponding states.  A channel that is controlled by time will be a list of times and states.  For example, a schedule of:
@@ -132,6 +132,8 @@ The schedule and control information are stored on a SD card and loaded into hub
 The complex part of the application is the command processor.  XMMC is required because of the code size.  It uses a finite state machine (fsm) to parse the input character stream into tokens and a second fsm to process the tokens.  This type of command processor is probably inappropriate for a micro controller, however no one is paying me anymore so I can do what I want. 
 
 The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
+
+![Main Event Loop](flow_charts/main_loop.png?raw=true)
 
 **If a character is present**, unless it is an ESC, it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The first fsm, char_fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  The command processor pops tokens off the stack and feeds them to a second fsm, cmd_fsm until the stack is empty when the command processor lets the cms_fsm know there is no more input then continues the main loop.  While cmd_fsm is processing a token stack the main loop is waiting, however, the the control cogs are running independently and are not affected.  They continue to control the channels based the the real time. 
 
