@@ -109,15 +109,8 @@ will result in the channel being off between 1:00 - 13:00. It will be on at any 
 
 will result in the channel turning on at 1:00, off at 13:00 and on at 18:00.  If the current time is between 1:00 and 13:00 the channel will be on, between 13:00 and 18:00 it will be off, between 18:00 and 0:0 it will be on and between 0:0 and 13:00 it will also be on. 
 
-The maximum number of records for a schedule is configured by setting the preprocessor variable *_MAX_SCHEDULE_RECS* .
+The maximum number of records for a schedule is configured by setting the preprocessor variable *_MAX_SCHEDULE_RECS*.  Schedules are stored on the SD card. 
 
-Schedules are stored on the SD card. 
-
-A schedule record is 32 bits.  A schedule is implemented as an array of 32 bit unsigned integers. The schedule key is the number of minutes past midnight (0 - 1440).  The first element in the array contains the number of records to follow.  The following bits are parsed as follows:
-
-* bit 32 - state
-* bit 31-17 -  key
-* bit 16-1 sensor value
 
 ####Architecture:
 A schedule is a vector of 32 bit unsigned integers. The length is configured by the preprocessor variable *_MAX_SCHEDULE_RECS* .  These are fixed length vectors. I have an alternate implementation using linked lists but his approach is much simpler and has less chance of memory leaks. Since I am already using xmmc size is not a big deal.
@@ -130,7 +123,7 @@ The first 32 bits of the vector contain the number of active records in the sche
 
 The schedules for each (day,channel) tuple are combined into one contiguous vector of unsigned integers. The schedule for a particular tuple is accessed via pointer offsets. 
 
-The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decimal and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code because the library code is too large to run from a cog and because the DS3231 requires clock stretching if the code is running in a cog. 
+The control part of the application uses 2 cogs, "rtc.cogc" and "dio.cogc".  The rtc cog talks to the DS3231, converts BCD to decimal and updates a time/date buffer in hub memory.  The rtc cog contains i2c bit banging code; first - because the DS3231 requires clock stretching if the code is running in a cog and  second - the library i2c routines are too large. I discovered the need for clock stretching  by developing the bit banging code on the xmmc cog, have it running fine, moving it to a cog and it dies.  It must be the difference in execution speed.  Once I implemented the complete i2c spec (add clock stretching) it runs fine on a cog.  The library i2c routines do not support clock stretching, but that is not important as they are too large to run from a cog.
 
 The dio cog reads the time from the buffer in hub memory.  Once a minute the dio cog creates a control byte.  Each bit controls the state of the corresponding channel. The bits are set based on the current time, the schedule for the channel and the control information for the channel. The dio cog can be forced to update by use of a flag in hub memory. The control byte is sent to either the Parallax Digital IO Board or the PhotoMos relays depending on the application configuration.
 
