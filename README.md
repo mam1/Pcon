@@ -78,7 +78,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**time** - display current time and date
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY}{MM}{DD}{N(day #)}{HH}{MM}{SS}** - set the real time clock, uses in line code, fsm added too many additional states
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY}{MM}{DD}{N(day #)}{HH}{MM}{SS}** - set the real time clock
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**shutdown** - force all channels to manual control and turn them off, stop control cogs
 
@@ -135,12 +135,9 @@ The complex part of the application is the command processor.  XMMC is required 
 
 The command processor loops checking to see if a character has been typed. Input buffering has been disabled so the read is non blocking.
 
+**If a character is present**, unless it is an ESC, it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The first fsm, char_fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  The command processor pops tokens off the stack and feeds them to a second fsm, cmd_fsm until the stack is empty. Then the command processor lets the cms_fsm know there is no more input then continues the main loop.  While cmd_fsm is processing a token stack the main loop is waiting, however, the the control cogs are running independently and are not affected.  They continue to control the channels based the the real time. 
+**If a character is not found** the code checks to see if the the cogs have sent any messages.  If the dio cog changes the state of a channel it sets a flag to let the main loop know to update the channel info stored on disk.
 ![Main Event Loop](flow_charts/main_loop.png?raw=true)
-
-**If a character is present**, unless it is an ESC, it is passed to the first state machine (char_fsm). An ESC will clear all buffers and reset both state machines.  The first fsm, char_fsm parses the input stream into tokens and pushes them on to FIFO stack.  A CR will cause char_fsm to pass the stack of tokes to the command processor.  The command processor pops tokens off the stack and feeds them to a second fsm, cmd_fsm until the stack is empty when the command processor lets the cms_fsm know there is no more input then continues the main loop.  While cmd_fsm is processing a token stack the main loop is waiting, however, the the control cogs are running independently and are not affected.  They continue to control the channels based the the real time. 
-
-**If a character is not found** the code checks to see if the the cogs have sent any messages.  
-
 ####SD Files:
 Schedules and persistent channel information (name, control mode, state) are stored in files on a SD card. The files are loaded when the code is initialized or reset. They can also be loaded or saved on command.  The files are alway closed after use so the SD card can be replaced to make copies or change behavior.  The file names are generated using the following preprocessor variables:
 
@@ -231,36 +228,3 @@ In the following format:
     * ?
 
 
-"copy",
-"paste",
-"pastall",
-"delete",
-"file",
-"edit",
-"e",
-"d",
-"add",
-"a",
-"change",
-"c",
-"quit",
-"q",
-"name",
-"mode",
-"zero",
-"on",
-"off",
-"system",
-"status",
-"time",
-"set",
-"shutdown",
-"restart",
-"save",
-"schedule",
-"s",
-"channel",
-"all",
-"load",
-"help",
-"?",

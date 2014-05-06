@@ -44,8 +44,8 @@
 #define _CHAR_STATES     4
 
 /* command parser fsm */
-#define _CMD_TOKENS     37
-#define _CMD_STATES     34 
+#define _CMD_TOKENS     29
+#define _CMD_STATES     13 
 
 /* channel parameters */
 #if _DRIVEN == _DIOB

@@ -147,7 +147,6 @@ void disp_sys(void)
 /* build file set prefix */
     strcat(file_set_prefix,_F_PREFIX);
     strcat(file_set_prefix,_FILE_SET_ID);
-    // printf("file set prefix <%s>\n",file_set_prefix);
 /* check out the SD card */
     if(sd_setup())
     {
@@ -174,7 +173,6 @@ void disp_sys(void)
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
     dio_cb.dio.sch_ptr = bbb; 
-
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);
     if(cog == -1)
@@ -197,7 +195,6 @@ void disp_sys(void)
     input_buffer_ptr = input_buffer;//setup so actions routines can mess the buffer
     cmd_state = 0;                  //set initial command parser state
     char_state = 0;                 //set initial caracter parser state
-    // hold_day = -1;                  //force schedule load first time through the main loop
     *input_buffer = ' ';            //load a a blank into the buffer to force first prompt
     process_buffer();
     printf("initialization complete\n\n");
