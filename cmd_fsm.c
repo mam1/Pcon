@@ -69,7 +69,7 @@ char    *keyword[_CMD_TOKENS] = {
 /*  7 */    "file",
 /*  8 */    "edit",
 /*  9 */    "quit",
-/* 10 */    "cancel"
+/* 10 */    "cancel",
 /* 11 */    "name",
 /* 12 */    "mode",
 /* 13 */    "zero",
@@ -80,48 +80,50 @@ char    *keyword[_CMD_TOKENS] = {
 /* 18 */    "time",
 /* 19 */    "set",
 /* 20 */    "shutdown",
-/* 21 */    "start"
-/* 22 */    "restartD",
+/* 21 */    "startup",
+/* 22 */    "reboot",
 /* 23 */    "save",
 /* 24 */    "schedule",
 /* 25 */    "channel", 
 /* 26 */    "load",
 /* 27 */    "help",
-/* 28 */    "?",  
-};
+/* 28 */    "?"  };
 
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2  3  4  5  6  7  8   9  10  11  12  13 */
-/*  0      INT */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  1      STR */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  2    OTHER */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  3    EMPTY */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  4     copy */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}, 
-/*  5    paste */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  6     done */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  7    state */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  8 schedule */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  9  channel */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 10     name */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 11     mode */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 12       on */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 13      off */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 14        ? */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 15  display */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 16      day */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 17   system */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 18   delete */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 19     time */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 20      yes */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 21       no */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 22      add */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 23   change */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 24     dump */   {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}};  
-
+/*  0  INT      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  1  STR      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  2  OTHER    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  3  EMPTY    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  4  copy     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  5  paste    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  7  file     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  8  edit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  9  quit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 10  cancel   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 11  name     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 12  mode     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 13  zero     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 14  on       */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 15  off      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 16  system   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 17  status   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 18  time     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 19  set      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 20  shutdown */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 21  startup  */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 22  reboot   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 23  save     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 24  schedule */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 25  channel  */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 26  load     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 27  help     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 28  ?        */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}};
 
 /*cmd processor functions */
-int c_0(int,int *,char *); /* do nothing */
+int c_0(int,int *,char *); /* prompt if needed else do nothing */
 int c_1(int,int *,char *); /* display all valid commands for the current state */  
 int c_2(int,int *,char *); /* prompt */
 int c_3(int,int *,char *); /* prompt for channel number */
@@ -148,56 +150,47 @@ int c_23(int,int *,char *); /* display time and date */
 int c_24(int,int *,char *); /* set schedule record state to on */
 int c_25(int,int *,char *); /* set schedule record state to off */
 int c_26(int,int *,char *); /* delete schedule record */
-
 int c_27(int,int *,char *); /* load schedule buffer from SD card */
 int c_28(int,int *,char *); /* save schedule buffer to SD card */
-
 int c_29(int,int *,char *); /* dump schedule buffer */
 int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel */
-int c_31(int,int *,char *); /* display system configuration infromation */
+int c_31(int,int *,char *); /* display system configuration information */
+int c_32(int,int *,char *); /* invalid integer */
+int c_33(int,int *,char *); /* system reboot */
  
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
-/*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15    16    17    18    19    20    21    22    23    24    25    26    27    28    29    30    31    32    33 */ 
-/*  0  INT      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  1  STR      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  2  OTHER    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  3  EMPTY    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  4  copy     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  5  paste    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6  pastall  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  7  delete   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  file     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  edit     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 10  e        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 11  d        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 12  add      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 13  a        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  change   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 15  c        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 16  quit     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 17  q        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 18  name     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 19  mode     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 20  zero     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 21  on       */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 22  off      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 23  system   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 24  status   */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 25  time     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 26  set      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 27  shutdown */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 28  restart  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 29  save     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 30  schedule */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 31  s        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 32  channel  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 33  all      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 34  load     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 35  help     */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 36  ?        */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
-
+/*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13 */ 
+/*  0  INT      */  {c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  1  STR      */  {c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  2  OTHER    */  {c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  3  EMPTY    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  4  copy     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  5  paste    */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  6  delete   */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  7  file     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  edit     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  quit     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 10  cancel   */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 11  name     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 12  mode     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 13  zero     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  off      */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 16  system   */  {c_31,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 17  status   */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 18  time     */  {c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 19  set      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 20  shutdown */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 22  reboot   */  {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 23  save     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 24  schedule */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 25  channel  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 26  load     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 27  help     */  { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 28  ?        */  { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
 
 /***************start fsm support functions ********************/
 //char *valid_cmds(void);
@@ -211,7 +204,7 @@ int c_0(int tt, int *n, char *s)
     if(test_cmd_q()== 0)
     {
         *prompt_buffer = '\0';
-        printf("%s\n\n>> ",build_prompt(prompt_buffer,tt));
+        printf("%s\n>> ",build_prompt(prompt_buffer,tt));
     }
     return 0;
 }
@@ -237,6 +230,8 @@ int c_1(int tt, int *n, char *s)
         if(cmd_action[i][cmd_state] == c_13)
             continue;
         if(cmd_action[i][cmd_state] == c_1)
+            continue;
+        if(cmd_action[i][cmd_state] == c_32)
             continue;
         printf("<%s> ",keyword[i]);        
     }
@@ -348,18 +343,18 @@ int c_11(int tt, int *n, char *s) //save - s1
 }
 
 /* unrecognized input */
-int c_12(int tt, int *n, char *s) //save - s1
+int c_12(int tt, int *n, char *s) 
 {
-    printf("unrecognized command\n>>");
+    printf("<%s> is not a recognized command, enter ? for a list of valid commands\n\n",s);
     c_0(tt,n,s);  
     return 0;
 }
 
 
 /* invalid input */
-int c_13(int tt, int *n, char *s) //save - s1
+int c_13(int tt, int *n, char *s) 
 {
-    printf("command is not valid in state %i, enter <?> for a list of valid commands\n>>",cmd_state); 
+    printf("<%s> is not a valid command in state %i, enter ? for a list of valid commands\n\n",keyword[tt],cmd_state); 
     c_0(tt,n,s);  
     return 0;
 }
@@ -558,18 +553,28 @@ int c_30(int tt, int *n, char *s)
     c_0(tt,n,s); 
     return 0;
 }
-/* display the schedules for all days and all channels */
+/* display system information */
 int c_31(int tt, int *n, char *s) 
 {
-    
-
-    disp_sys();
-    
+    disp_sys();   
     c_0(tt,n,s); 
     return 0;
-
 }
-
+/* unrecognized integer */ 
+int c_32(int tt, int *n, char *s) 
+{
+    printf("<%i> is not valid input in state %i, enter ? for a list of valid commands\n\n",*n,cmd_state); 
+    c_0(tt,n,s);  
+    return 0;
+}
+/* system reboo3 */ 
+int c_33(int tt, int *n, char *s) 
+{
+    printf("\n\nrebooting system ................\n\n",*n,cmd_state); 
+    reboot();
+    c_0(tt,n,s);  
+    return 0;
+}
 
 /*****************************************************/
 /*********  command parser state machine end  ********/
@@ -639,12 +644,6 @@ void cmd_fsm(char *token,int *state)
         n_ptr = &num;
         s_ptr = NULL;
     }
-//    else if(tt==6)
-//    {
-//        tt=3;
-//        n_ptr = NULL;
-//        s_ptr = token;        
-//    }
     else
     {
         num = tt;

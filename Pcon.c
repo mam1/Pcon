@@ -21,6 +21,7 @@ _Driver *_driverlist[] = {
 /***************************** external ******************************/
 // extern char    *day_names[];
  extern uint32_t       bbb[_SCHEDULE_BUFFER];
+ extern char           fn_channel[], fn_schedule[];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
     char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;
@@ -119,12 +120,15 @@ int sd_setup(void)
 void disp_sys(void)
 {
     /* display system info on serial terminal */
-    printf("\n*** Pcon  %i.%i ***\n\n",_major_version,_minor_version);
+    printf("Pcon  version %i.%i\n",_major_version,_minor_version);
     #if _DRIVEN == _DIOB
-        printf("system is configured to drive a Parallax Digital IO Board\n");
+        printf("  system is configured to drive a Parallax Digital IO Board\n");
     #else
-        printf("system is configured to drive 5 IO pins\n");
+        printf("  system is configured to drive 5 IO pins\n");
     #endif
+    printf("  channel  file <%s>\n",fn_channel);
+    printf("  schedule file <%s>\n",fn_schedule);
+    printf("\n");
     return;
 }
 /********************************************************************/

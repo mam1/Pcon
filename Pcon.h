@@ -45,7 +45,7 @@
 
 /* command parser fsm */
 #define _CMD_TOKENS     29
-#define _CMD_STATES     13 
+#define _CMD_STATES     14 
 
 /* channel parameters */
 #if _DRIVEN == _DIOB
@@ -93,6 +93,9 @@
 #define _QUOTE      34
 #define _CR         13
 #define _NO_CHAR    255
+
+/* reboot system */
+#define reboot() __builtin_propeller_clkset(0x80)
 
 /****************** functions *****************/
 void disp_sys(void);
