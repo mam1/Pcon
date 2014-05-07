@@ -92,7 +92,7 @@ char    *keyword[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2  3  4  5  6  7  8   9  10  11  12  13 */
-/*  0  INT      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  0  INT      */  {0, 2, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  1  STR      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  2  OTHER    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  3  EMPTY    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -101,7 +101,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  7  file     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  8  edit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  9  quit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  9  quit     */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 10  cancel   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 11  name     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 12  mode     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -116,8 +116,8 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /* 21  startup  */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 22  reboot   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 23  save     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 24  schedule */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 25  channel  */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 24  schedule */  {5, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 25  channel  */  {1, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 26  load     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 27  help     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 28  ?        */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13}};
@@ -157,22 +157,24 @@ int c_30(int,int *,char *); /* display edit buffer schedule for active day and c
 int c_31(int,int *,char *); /* display system configuration information */
 int c_32(int,int *,char *); /* invalid integer */
 int c_33(int,int *,char *); /* system reboot */
+int c_34(int,int *,char *); /* stop rtc & dio cogs */
+int c_35(int,int *,char *); /* sstart rtc & dio cogs */
  
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13 */ 
-/*  0  INT      */  {c_32,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  1  STR      */  {c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  2  OTHER    */  {c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  {c_32,  c_4,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  1  STR      */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  2  OTHER    */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  EMPTY    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  4  copy     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  5  paste    */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6  delete   */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  7  file     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  edit     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  quit     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 10  cancel   */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  4  copy     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  5  paste    */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  6  delete   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  7  file     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  edit     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  quit     */  {c_13,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 10  cancel   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  name     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  mode     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -182,15 +184,15 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 17  status   */  {c_18,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 18  time     */  {c_23,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 19  set      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 20  shutdown */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 21  startup  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 21  startup  */  {c_35,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 23  save     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 24  schedule */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 25  channel  */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 27  help     */  { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 28  ?        */  { c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
+/* 27  help     */  { c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 28  ?        */  { c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
 
 /***************start fsm support functions ********************/
 //char *valid_cmds(void);
@@ -567,7 +569,7 @@ int c_32(int tt, int *n, char *s)
     c_0(tt,n,s);  
     return 0;
 }
-/* system reboo3 */ 
+/* system reboot */ 
 int c_33(int tt, int *n, char *s) 
 {
     printf("\n\nrebooting system ................\n\n",*n,cmd_state); 
@@ -575,7 +577,18 @@ int c_33(int tt, int *n, char *s)
     c_0(tt,n,s);  
     return 0;
 }
-
+/* shutdown rtc & dio cogs  */ 
+int c_34(int tt, int *n, char *s) 
+{
+    c_0(tt,n,s);  
+    return 0;
+}
+/* start rtc and dio cogs */ 
+int c_35(int tt, int *n, char *s) 
+{
+    c_0(tt,n,s);  
+    return 0;
+}
 /*****************************************************/
 /*********  command parser state machine end  ********/
 /*****************************************************/
