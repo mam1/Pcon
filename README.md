@@ -84,7 +84,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**start** - start control cogs
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**restartD** - initialize the digital io board if it is present
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**reboot** - reboot the system from EEPROM
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**help(?)** - display list of valid commands
 
