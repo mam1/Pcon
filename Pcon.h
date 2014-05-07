@@ -4,7 +4,7 @@
 #define _major_version 1
 #define _minor_version 0
 
-#define _FILE_SET_ID            "001"
+#define _FILE_SET_ID            "002"
 
 
 /* configuration options */
