@@ -16,3 +16,8 @@
 *.exe
 *.out
 *.app
+
+# SimpleIDE files
+*.elf
+*.cog
+*.side
