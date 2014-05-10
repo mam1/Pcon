@@ -191,8 +191,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 27  help     */  { c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 28  ?        */  { c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
+/* 27  help     */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
 
 /***************start fsm support functions ********************/
 //char *valid_cmds(void);
@@ -250,9 +250,9 @@ int c_2(int tt, int *n, char *s)
 /* prompt for channel number */
 int c_3(int tt, int *n, char *s)
 {
-    char    dump[_TOKEN_BUFFER];    
+    // char    dump[_TOKEN_BUFFER];    
     /* if queue is empty prompt for input */
-    if(test_cmd_q(dump))   
+    if(test_cmd_q())   
         return 0;
 //    printf("enter <save>,<load>,<display> or channel number to edit >>");
     c_0(tt,n,s);
@@ -261,17 +261,19 @@ int c_3(int tt, int *n, char *s)
 /* set active channel */
 int c_4(int tt, int *n, char *s)
 {
+    char        tbuf[_TOKEN_BUFFER];
+
     if((*n >= 0) && (*n<_NUMBER_OF_CHANNELS))
     {      
-        edit.channel = *n;
-        // printf("********* channel %i\n>>",channel);
-        c_0(tt,n,s);
+        edit.channel = *n;          //set active channel
+        c_2(tt,n,s);
         return 0;
     }
     printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_DRIVEN);
-    cmd_state = 1; // back out the state transition
+    while(pop_cmd_q(tbuf));     //empty token stack
     c_3(tt,n,s);
-    return 1;
+    return 1;    // do not transition state
+
 }
 /* display info for all channels */
 int c_5(int tt, int *n, char *s) 
@@ -664,11 +666,11 @@ void cmd_fsm(char *token,int *state)
         s_ptr = NULL;
     }
 //    printf("call cmd_action[%i][%i](<%i>,<%i>,<%s>)\n",tt,*state,tt,*n_ptr,s_ptr);    
-    if(cmd_action[tt][*state](tt,n_ptr,s_ptr)==0) 
-        *state = cmd_new_state[tt][*state];
+    if(cmd_action[tt][*state](tt,n_ptr,s_ptr)==0)   //fire off an fsm action routine
+        *state = cmd_new_state[tt][*state];         //transition to next state
     else
     {
-        printf("*** error returned from action routine\n");
+        // printf("*** error returned from action routine\n");
     }
     return;
 }
@@ -686,7 +688,7 @@ char *build_prompt(char *b,int tt)
             strcat(b,"enter a command");
             break;
         case 1:
-            strcat(b,"editing channels\nenter <#> to edit channel or <display> <load> <save> channel information");
+            strcat(b,"channel mode\nenter <#> to edit channel or <display> <load> <save> channel information");
             break;
         case 2:
             sprintf(temp,"%i",edit.channel);
