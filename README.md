@@ -35,7 +35,33 @@ C - Propgcc, SimpleIDE, Sublime Text
 
 ####Command processor commands:
 ######schedule mode commands:
- 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**copy** - copy the schedule for a channel and day to a buffer<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**paste** - paste the buffered schedule into a channel and day<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**delete** - delete the schedule for the channel and day<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**save** - save edited schedules data to default file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**load** - load schedules from default file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**file {file name} {load|save}** - save or load a named schedule file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**edit** - edit the schedule for a specific channel and day<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**delete** - delete a schedule record for the specified time<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**on** - set the schedule state to on for the specified time<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**off** - set the schedule state to off for the specified time<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**quit** - exit schedule edit mode<br />           
+######channel mode commands:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**save** - save current channel data to default file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**load** - load channel data from default file<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**name** - set the name of a channel<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**mode** - set the control mode of a channel, 0-manual, 1-time, 2-time & sensor<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**zero {channel #}** - set the on time accumlator for a channel to 0<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**on {channel #}** - force the control mode of a channel to manual and set the state to on<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**off {channel #}** - force the control mode of a channel to manual and set the state to off<br />
+######system commands:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**system** - display system information<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**status** - display a formated dump of schedules, channel information and current state for all channels for all days<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**time** - display current time and date<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**set {YYYY}{MM}{DD}{N(day #)}{HH}{MM}{SS}** - set the real time clock<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**shutdown** - force all channels to manual control and turn them off, stop control cogs<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**start** - start control cogs<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**reboot** - reboot the system from EEPROM<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**help(?)** - display list of valid commands<br />
 
 Because the command processor is implemented by a state machine there is a lot of flexibility in the way tokens can be entered.  Entering a '?' will display the current state of the command fsm and a list of commands and tokens (INT for a integer and STR for a quoted string) that are valid in that state. ESC will clear input buffers and reset the state machines.   Tokens can be entered individually or strung together. Spaces, commas, colons and slashes will work as a delimiters. If the fsm requires additional information a prompt will be displayed, however the main loop will not wait for input.
