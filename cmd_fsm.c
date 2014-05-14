@@ -43,19 +43,6 @@ extern char *sch_mode[2];
 /***************************************/
 /*****  command  parser fsm start ******/
 /***************************************/
-/* state prompts */
- char    *s_prompt[] ={
- /*  0 */    "enter command",
- /*  1 */    "channel maintenance: <save><load><display> or chanel number to edit",
- /*  2 */    "editing channel:",
- /*  3 */    "EMPTY",
- /*  4 */    "save",
- /*  5 */    "load",
- /*  6 */    "done",
- /*  7 */    "state",
- /*  8 */    "schedule",
- /*  9 */    "channel",
- /* 10 */    "name"};
 
 /* key word list */
 char    *keyword[_CMD_TOKENS] = {
@@ -92,24 +79,24 @@ char    *keyword[_CMD_TOKENS] = {
 /* cmd processor state transition table */
 int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*                   0  1  2  3  4  5  6  7  8   9  10  11  12  13 */
-/*  0  INT      */  {0, 2, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  1  STR      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  0  INT      */  {0, 2, 2, 3, 0, 5, 6, 7, 9, 10, 11, 12, 12, 13},
+/*  1  STR      */  {0, 1, 2, 0, 4, 5, 7, 7, 8,  9, 10, 11, 12, 13},
 /*  2  OTHER    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  3  EMPTY    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  4  copy     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  5  paste    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  4  copy     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
+/*  5  paste    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
+/*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
 /*  7  file     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  8  edit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  9  quit     */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 10  cancel   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 11  name     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 12  mode     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 13  zero     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 14  on       */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 15  off      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  9  quit     */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
+/* 10  cancel   */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 11  name     */  {0, 1, 3, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 12  mode     */  {0, 1, 4, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 13  zero     */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 14  on       */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 15  off      */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 16  system   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 17  status   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 17  status   */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 18  time     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 19  set      */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 20  shutdown */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -125,7 +112,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*cmd processor functions */
 int c_0(int,int *,char *); /* prompt if needed else do nothing */
 int c_1(int,int *,char *); /* display all valid commands for the current state */  
-int c_2(int,int *,char *); /* prompt */
+int c_2(int,int *,char *); /* zero on time for channel */
 int c_3(int,int *,char *); /* prompt for channel number */
 int c_4(int,int *,char *); /* set active channel */
 int c_5(int,int *,char *); /* display info for all channels */
@@ -158,16 +145,16 @@ int c_31(int,int *,char *); /* display system configuration information */
 int c_32(int,int *,char *); /* invalid integer */
 int c_33(int,int *,char *); /* system reboot */
 int c_34(int,int *,char *); /* stop rtc & dio cogs */
-int c_35(int,int *,char *); /* sstart rtc & dio cogs */
+int c_35(int,int *,char *); /* start rtc & dio cogs */
  
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13 */ 
-/*  0  INT      */  {c_32,  c_4,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  1  STR      */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  {c_32,  c_4,  c_0,  c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  1  STR      */  {c_12, c_12,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  3  EMPTY    */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  3  EMPTY    */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  copy     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5  paste    */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  delete   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -177,11 +164,11 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 10  cancel   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  name     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  mode     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 13  zero     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  on       */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 15  off      */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 13  zero     */  {c_13,  c_0,  c_2,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  {c_13,  c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 15  off      */  {c_13,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  system   */  {c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31},
-/* 17  status   */  {c_18,  c_5,  c_5, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18},
+/* 17  status   */  {c_18,  c_5,  c_5,  c_5,  c_5,  c_5, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18},
 /* 18  time     */  {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
 /* 19  set      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -225,8 +212,8 @@ int c_1(int tt, int *n, char *s)
     {
         if(cmd_action[i][cmd_state] == c_0)
             continue;
-        if(cmd_action[i][cmd_state] == c_2)
-            continue;
+        // if(cmd_action[i][cmd_state] == c_2)
+            // continue;
         if(cmd_action[i][cmd_state] == c_12)
             continue;
         if(cmd_action[i][cmd_state] == c_13)
@@ -241,10 +228,12 @@ int c_1(int tt, int *n, char *s)
     c_0(tt,n,s);
     return 0;
 }
-/* prompt */
+/* zero on time for channel */
 int c_2(int tt, int *n, char *s)
 {    
-    printf("%s >>",s_prompt[cmd_state]);    
+    printf("on time for channel %i set to zero\n",edit.channel);
+    dio_cb.dio.cca[edit.channel].time_on = 0;   
+    c_0(tt,n,s);
     return 0;
 }
 /* prompt for channel number */
@@ -266,7 +255,8 @@ int c_4(int tt, int *n, char *s)
     if((*n >= 0) && (*n<_NUMBER_OF_CHANNELS))
     {      
         edit.channel = *n;          //set active channel
-        c_2(tt,n,s);
+        c_0(tt,n,s);
+        // c_2(tt,n,s);
         return 0;
     }
     printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_DRIVEN);
@@ -311,7 +301,7 @@ int c_8(int tt, int *n, char *s) //save - s1
 {
     set_channel_name(s);
     printf("channel name set\n\n"); 
-    disp_channel_data(edit.channel);
+    // disp_channel_data(edit.channel);
 //    printf("editing channel %i\n>>",channel);
     c_0(tt,n,s); 
     return 0;
@@ -327,7 +317,7 @@ int c_10(int tt, int *n, char *s) //save - s1
 {
     set_channel_control_mode(*n); 
     printf("channel control mode set\n\n");
-    disp_channel_data(edit.channel);
+    // disp_channel_data(edit.channel);
 //    printf("editing channel %i\n>>",channel);
     c_0(tt,n,s); 
     return 0;
@@ -335,13 +325,13 @@ int c_10(int tt, int *n, char *s) //save - s1
 /* set channel state on */
 int c_11(int tt, int *n, char *s) //save - s1
 {
-    printf("setting state for channel %i\n",edit.channel);
+    // printf("setting state for channel %i\n",edit.channel);
     set_channel_state(1);
     set_channel_control_mode(0);
     rtc_cb.rtc.update = 1;
-    printf("channel state set to on, control mode forced to manual\n");
-    printf("displaying data for channel %i\n",edit.channel);
-    disp_channel_data(edit.channel);
+    printf("channel %i state set to on, control mode forced to manual\n",edit.channel);
+    // printf("displaying data for channel %i\n",edit.channel);
+    // disp_channel_data(edit.channel);
     c_0(tt,n,s);  
     return 0;
 }
@@ -420,8 +410,8 @@ int c_19(int tt, int *n, char *s) //save - s1
     set_channel_state(0);
     set_channel_control_mode(0);
     rtc_cb.rtc.update = 1;
-    printf("channel state set to off, control mode forced to manual\n");
-    disp_channel_data(edit.channel);
+    printf("channel %i state set to off, control mode forced to manual\n",edit.channel);
+    // disp_channel_data(edit.channel);
     c_0(tt,n,s);  
     return 0;
 }
@@ -574,7 +564,7 @@ int c_32(int tt, int *n, char *s)
 /* system reboot */ 
 int c_33(int tt, int *n, char *s) 
 {
-    printf("\n\nrebooting system ................\n\n",*n,cmd_state); 
+    printf("\n\nrebooting system ................\n\n");
     reboot();
     c_0(tt,n,s);  
     return 0;
