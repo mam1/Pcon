@@ -45,7 +45,7 @@ TQ *process_buffer(void)
             start_char = input_buffer_ptr;
             start_char++;         
     }          
-        if((*input_buffer_ptr==_SPACE)||(*input_buffer_ptr==_COLON)||(*input_buffer_ptr==_SLASH)) 
+        if((*input_buffer_ptr==_SPACE)||(*input_buffer_ptr==_COLON)||(*input_buffer_ptr==_SLASH)||(*input_buffer_ptr==_COMMA)) 
         {
             *input_buffer_ptr='\0';
             if(tail == '\0')

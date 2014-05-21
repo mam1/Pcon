@@ -4,9 +4,9 @@
 - - - - - - - - -
 The state of up to 8 channels can be controlled by time of day, time of day and a sensor value or manually. Each channel has it onwn schedules.  There can be different schedules for each day of the week. The user interface is a serial terminal command line, the command processor fuctions are detailed below. 
 
-The application can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* in Pcon.h.  It can be configured to drive IO pins or to drive the Parallax Digital IO Board serial interface. The the preprocessor variable *_DRIVEN* in Pcon.h controls which interface is used. In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. The second instance is driving a Parallax Digital IO board which can control 8, 120 VAC 8 A loads and accept input from 8 sensors. 
-
 The code was developed in c using SimpleIDE. The development platform is a Parallax C3 making use of flash memory and the SD card.  A DS3231 real time clock module is connected to the C3's i2c bus (pins 28,29) to provide a time reference. The DS3231 module, the AQY212GH relays and terminals for the external connections are mounted on an additional board connected to the C3.
+
+The application can be configured to drive 1 to 8 channels using the preprocessor variable *_NUMBER_OF_CHANNELS* in Pcon.h.  It can be configured to drive IO pins or to drive the Parallax Digital IO Board serial interface. The the preprocessor variable *_DRIVEN* in Pcon.h controls which interface is used. In one implementation I am driving AQY212GH PhotoMOS relays connected to 5 propeller IO pins.  The PhotoMOS relays are rated at 60 V AC/DC 1.1 A. These relays come in a 4-pin DIP package.  They work great to control 24 V zone valves. The second instance is driving a Parallax Digital IO board which can control 8, 120 VAC 8 A loads and accept input from 8 sensors. 
 ####Language:
 C - Propgcc, SimpleIDE, Sublime Text
 ####Hardware:
@@ -32,6 +32,7 @@ C - Propgcc, SimpleIDE, Sublime Text
 * display system configuration information
 * stop and start the control cogs
 * set the real time clock
+* reboot from EEPROM
 
 ####Command processor commands:
 ######schedule mode commands:

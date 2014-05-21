@@ -89,6 +89,7 @@
 #define _SPACE      32
 #define _COLON      58
 #define _SLASH      47
+#define _COMMA      44
 #define _BS         8
 #define _QUOTE      34
 #define _CR         13

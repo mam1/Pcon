@@ -87,7 +87,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  5  paste    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
 /*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
 /*  7  file     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  8  edit     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/*  8  edit     */  {0, 1, 2, 3, 4, 8, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  9  quit     */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
 /* 10  cancel   */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 11  name     */  {0, 1, 3, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -151,15 +151,15 @@ int c_35(int,int *,char *); /* start rtc & dio cogs */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13 */ 
-/*  0  INT      */  {c_32,  c_4,  c_0,  c_0, c_10,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  {c_32,  c_4,  c_0,  c_0, c_10,  c_0,  c_0,  c_0,  c_4, c_20,  c_0,  c_0,  c_0,  c_0},
 /*  1  STR      */  {c_12, c_12,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  EMPTY    */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  copy     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5  paste    */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  6  delete   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  7  file     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  8  edit     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  7  file     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  8  edit     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  9  quit     */  {c_13,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 10  cancel   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  name     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -168,7 +168,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 14  on       */  {c_13,  c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 15  off      */  {c_13,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 16  system   */  {c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31},
-/* 17  status   */  {c_18,  c_5,  c_5,  c_5,  c_5,  c_5, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18},
+/* 17  status   */  {c_18,  c_5,  c_5,  c_5,  c_5, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18},
 /* 18  time     */  {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
 /* 19  set      */  { c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -178,8 +178,8 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 27  help     */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0}};
+/* 27  help     */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1},
+/* 28  ?        */  { c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1,  c_1}};
 
 /***************start fsm support functions ********************/
 //char *valid_cmds(void);
@@ -699,12 +699,9 @@ char *build_prompt(char *b,int tt)
             strcat(b,temp);
             break;
         case 5:
-            sprintf(temp,"%i",edit.channel);
-            strcat(b,"editing state for channel ");
-            strcat(b,temp);
-            strcat(b," state - enter: <on>|<off>");
+            strcat(b,"schedule mode: enter command ");
             break;
-        case 6:
+        case 9:
             strcat(b,"editing schedules for channel ");
             sprintf(temp,"%i",edit.channel);
             strcat(b,temp);
@@ -723,7 +720,7 @@ char *build_prompt(char *b,int tt)
             strcat(b,"\nenter time <HH:MM>");
             break;
        case 8:
-            strcat(b,"save schedule buffer?\n>>");
+            strcat(b,"enter <channel #> <day #>");
             // sprintf(temp,"%i",edit.channel);
             // strcat(b,"editing schedule for edit.channel ");
             // strcat(b,temp);
@@ -732,10 +729,10 @@ char *build_prompt(char *b,int tt)
             // dump_sch_recs(dio_cb.dio.sch, edit.channel, day);
             // strcat(b," - enter time HH:MM to edit schedule record");
             break;
-        case 9:
+        case 6:
             strcat(b,"editing ");
             strcat(b,day_names_long[edit.day-1]);
-            strcat(b," schedules for edit.channel ");
+            strcat(b," schedule for channel ");
             sprintf(temp,"%i",edit.channel);
             strcat(b,temp);
             strcat(b," hour ");
@@ -745,8 +742,14 @@ char *build_prompt(char *b,int tt)
             break;
         case 10:
             strcat(b,"editing ");
+            strcat(b, day_names_long[edit.day-1]);
+            sprintf(temp," schedule for channel %i",edit.channel);
+            strcat(b,temp);
+            strcat(b,"\nenter a command or a time to edit an individual schedule record");
+            /*
+            strcat(b,"editing ");
             strcat(b,day_names_long[edit.day-1]);
-            strcat(b," schedules for edit.channel ");
+            strcat(b," schedule for channel ");
             sprintf(temp,"%i",edit.channel);
             strcat(b,temp);
             printf("%s\n",b);
@@ -763,6 +766,7 @@ char *build_prompt(char *b,int tt)
             // sprintf(temp,", %s %i:%i",day_names[day-1],hour,minute);
             // strcat(b,temp);
             // dump_sch_recs(dio_cb.dio.sch, edit.channel, day);
+            */
             break;
         case 11:
             strcat(b,"editing ");
