@@ -30,6 +30,9 @@
     int                 hour; 
     int                 minute; 
     int                 key;
+    uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];
+    uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];
+
     } edit;
  uint8_t             editing;
 /***************** global code to text conversion ********************/
@@ -85,16 +88,16 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 /*  3  EMPTY    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  4  copy     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
 /*  5  paste    */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
-/*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
+/*  6  delete   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 10, 13},
 /*  7  file     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /*  8  edit     */  {0, 1, 2, 3, 4, 8, 6, 7, 8,  9, 10, 11, 12, 13},
-/*  9  quit     */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9,  8, 11, 12, 13},
+/*  9  quit     */  {0, 0, 0, 3, 4, 0, 0, 7, 5,  5,  5, 10, 10, 13},
 /* 10  cancel   */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 11  name     */  {0, 1, 3, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 12  mode     */  {0, 1, 4, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 13  zero     */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 14  on       */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
-/* 15  off      */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
+/* 14  on       */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 10, 13},
+/* 15  off      */  {0, 1, 0, 3, 4, 5, 6, 7, 8,  9, 10, 11, 10, 13},
 /* 16  system   */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 17  status   */  {0, 0, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
 /* 18  time     */  {0, 1, 2, 3, 4, 5, 6, 7, 8,  9, 10, 11, 12, 13},
@@ -146,27 +149,35 @@ int c_32(int,int *,char *); /* invalid integer */
 int c_33(int,int *,char *); /* system reboot */
 int c_34(int,int *,char *); /* stop rtc & dio cogs */
 int c_35(int,int *,char *); /* start rtc & dio cogs */
+int c_36(int,int *,char *); /* copy schedule for (channel,day) into hold buffer */
+int c_37(int,int *,char *); /* quit channel mode */
+int c_38(int,int *,char *); /* quit schedule mode */
+int c_39(int,int *,char *); /* quit schedule edit mode */
+
+
+
+
  
 /* cmd processor action table - initialized with fsm functions */
 
 CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /*                STATE 0     1     2     3     4     5     6     7     8     9    10    11    12    13 */ 
-/*  0  INT      */  {c_32,  c_4,  c_0,  c_0, c_10,  c_0,  c_0,  c_0,  c_4, c_20,  c_0,  c_0,  c_0,  c_0},
+/*  0  INT      */  {c_32,  c_4,  c_0,  c_0, c_10,  c_0,  c_0,  c_0,  c_4, c_20, c_21, c_22,  c_0,  c_0},
 /*  1  STR      */  {c_12, c_12,  c_0,  c_8,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  2  OTHER    */  {c_12, c_12,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  3  EMPTY    */  { c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  4  copy     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  5  paste    */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  6  delete   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  6  delete   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_26,  c_0},
 /*  7  file     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /*  8  edit     */  {c_13, c_13,  c_0,  c_0,  c_0,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/*  9  quit     */  {c_13,  c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/*  9  quit     */  {c_13,  c_9, c_37, c_37, c_37, c_38, c_38, c_38, c_38, c_38, c_38, c_39, c_39,  c_0},
 /* 10  cancel   */  {c_13, c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 11  name     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 12  mode     */  {c_13,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 13  zero     */  {c_13,  c_0,  c_2,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 14  on       */  {c_13,  c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 15  off      */  {c_13,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 14  on       */  {c_13,  c_0, c_11,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_24,  c_0},
+/* 15  off      */  {c_13,  c_0, c_19,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0, c_25,  c_0},
 /* 16  system   */  {c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31, c_31},
 /* 17  status   */  {c_18,  c_5,  c_5,  c_5,  c_5, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18, c_18},
 /* 18  time     */  {c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23, c_23},
@@ -203,10 +214,15 @@ int c_1(int tt, int *n, char *s)
     int     i;
 
     printf("state %i, ", cmd_state);
+
+/*
     if((cmd_state > 1) && (cmd_state < 6))
         printf("editing channel %i, ",edit.channel);
-    else if(cmd_state > 6)
+    else if(cmd_state > 2)
         printf("editing channel %i schedule, ",edit.channel);
+*/
+    printf("channel <%i> day <%i> hour <%i> minute <%i>\n",edit.channel,edit.day,edit.hour,edit.minute);
+
     printf("valid commands: <?> ");
     for(i=0; i<_CMD_TOKENS;i++)
     {
@@ -225,6 +241,7 @@ int c_1(int tt, int *n, char *s)
         printf("<%s> ",keyword[i]);        
     }
     printf("\n\n");
+
     c_0(tt,n,s);
     return 0;
 }
@@ -254,12 +271,12 @@ int c_4(int tt, int *n, char *s)
 
     if((*n >= 0) && (*n<_NUMBER_OF_CHANNELS))
     {      
-        edit.channel = *n;          //set active channel
+        edit.channel = *n;          //set active chann
         c_0(tt,n,s);
         // c_2(tt,n,s);
         return 0;
     }
-    printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_DRIVEN);
+    printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_NUMBER_OF_CHANNELS-1);
     while(pop_cmd_q(tbuf));     //empty token stack
     c_3(tt,n,s);
     return 1;    // do not transition state
@@ -419,6 +436,8 @@ int c_19(int tt, int *n, char *s) //save - s1
 /* set active day and load schedule buffer*/
 int c_20(int tt, int *n, char *s) 
 {
+    int         i;
+
     if((*n < 1) || (*n > 7))
     {
         printf("invalid day number, ");
@@ -428,8 +447,12 @@ int c_20(int tt, int *n, char *s)
         return 0;
     }
     edit.day = *n;
-    // dspl_sch(bbb,edit.day,edit.channel);
-    c_0(tt,n,s);  
+    c_0(tt,n,s); 
+    // *edit.edit_buffer = 0;
+    for(i=0;i<_MAX_SCHEDULE_RECS;i++) edit.edit_buffer[i] = dio_cb.dio.sch_ptr[i];
+    dspl_sch(edit.edit_buffer,edit.day,edit.channel);
+    printf("\nenter a command or a time to edit an individual schedule record\n>>");
+
     return 0;
 }
 
@@ -491,8 +514,10 @@ int c_24(int tt, int *n, char *s)
 {
     // printf("set to on\n");
     // printf("add_sch_rec parameters before call: edit_schedule address <%x>, active channel <%i>, key <%i>, state <1>\n",edit_schedule,channel,key);
-    add_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key,1);
-    rtc_cb.rtc.update = 1;
+    add_sch_rec(get_schedule(edit.edit_buffer,edit.day,edit.channel),edit.key,1);
+    edit.hour = 0;
+    edit.minute = 0;
+    // rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;
 }
@@ -501,16 +526,16 @@ int c_24(int tt, int *n, char *s)
 int c_25(int tt, int *n, char *s) 
 {
     // printf("set to off\n");
-    add_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key,0);
-    rtc_cb.rtc.update = 1;
+    add_sch_rec(get_schedule(edit.edit_buffer,edit.day,edit.channel),edit.key,0);
+    // rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;}
 
 /* delete schedule record */
 int c_26(int tt, int *n, char *s) 
 {
-    del_sch_rec(get_schedule(bbb,edit.day,edit.channel),edit.key);
-     rtc_cb.rtc.update = 1;
+    del_sch_rec(get_schedule(edit.edit_buffer,edit.day,edit.channel),edit.key);
+     // rtc_cb.rtc.update = 1;
     c_0(tt,n,s); 
     return 0;
 }
@@ -578,6 +603,39 @@ int c_34(int tt, int *n, char *s)
 /* start rtc and dio cogs */ 
 int c_35(int tt, int *n, char *s) 
 {
+    c_0(tt,n,s);  
+    return 0;
+}
+/* copy scgedule (channel,day) into buffer */ 
+int c_36(int tt, int *n, char *s) 
+{
+    c_0(tt,n,s);  
+    return 0;
+}
+/* quit channel mode */ 
+int c_37(int tt, int *n, char *s) 
+{
+    edit.channel = 0;
+    c_0(tt,n,s);  
+    return 0;
+}
+/* quit schedule mode */ 
+int c_38(int tt, int *n, char *s) 
+{
+    edit.channel = 0;
+    edit.day = 0;
+    // edit.hour  = 0;
+    // edit.minute = 0;
+    c_0(tt,n,s);  
+    return 0;
+}
+/* quit schedule edit mode */ 
+int c_39(int tt, int *n, char *s) 
+{
+    // edit.channel = 0;
+    // edit.day = 0;
+    edit.hour  = 0;
+    edit.minute = 0;
     c_0(tt,n,s);  
     return 0;
 }
@@ -745,7 +803,7 @@ char *build_prompt(char *b,int tt)
             strcat(b, day_names_long[edit.day-1]);
             sprintf(temp," schedule for channel %i",edit.channel);
             strcat(b,temp);
-            strcat(b,"\nenter a command or a time to edit an individual schedule record");
+
             /*
             strcat(b,"editing ");
             strcat(b,day_names_long[edit.day-1]);
@@ -776,19 +834,40 @@ char *build_prompt(char *b,int tt)
             strcat(b,temp);
             strcat(b," ");
             sprintf(temp,"%i",edit.hour);
+            strcat(b,"\nenter minute");
+        /*
+            strcat(b,"editing ");
+            strcat(b,day_names_long[edit.day-1]);
+            strcat(b," schedule for channel ");
+            sprintf(temp,"%i",edit.channel);
+            strcat(b,temp);
+            strcat(b," ");
+            sprintf(temp,"%i",edit.hour);
             strcat(b,temp);
             strcat(b,":");
             sprintf(temp,"%i",edit.minute);
             strcat(b,temp);
             strcat(b," enter state <on>|<off>");
+        */
             break;
         case 12:
+            strcat(b,"editing ");
+            strcat(b,day_names_long[edit.day-1]);
+            strcat(b," schedule for channel ");
             sprintf(temp,"%i",edit.channel);
-            strcat(b,"editing schedule for channel ");
             strcat(b,temp);
-            sprintf(temp," all days %i:",edit.hour);
+
+            dspl_sch(edit.edit_buffer, edit.day, edit.channel);
+
+
+            strcat(b," ");
+            sprintf(temp,"%i",edit.hour);
             strcat(b,temp);
-            strcat(b," - enter minute");
+            strcat(b,":");
+            sprintf(temp,"%i",edit.minute);
+            strcat(b,temp);
+            strcat(b,"\nenter a command");
+
             break;
         case 13:
             sprintf(temp,"%i",edit.channel);
