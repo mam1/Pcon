@@ -185,7 +185,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 21  startup  */  {c_35,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -373,8 +373,8 @@ int c_13(int tt, int *n, char *s)
 /* save edit schedule buffer */
 int c_14(int tt, int *n, char *s) 
 {
-    write_sch(bbb);
-    printf("schedule buffer save to SD card\n");
+    write_sch(edit.edit_buffer);
+    printf("edit buffer saved to SD card\n");
     c_0(tt,n,s); 
     return 0;
 }
@@ -405,7 +405,7 @@ int c_16(int tt, int *n, char *s)
 int c_17(int tt, int *n, char *s) 
 {
     printf("request to display data for channel %i\n",edit.channel);
-    disp_channel_data(edit.channel);
+    // disp_channel_data(edit.channel);
     printf(">>"); 
     return 0;
 }
@@ -450,8 +450,8 @@ int c_20(int tt, int *n, char *s)
     c_0(tt,n,s); 
     // *edit.edit_buffer = 0;
     for(i=0;i<_MAX_SCHEDULE_RECS;i++) edit.edit_buffer[i] = dio_cb.dio.sch_ptr[i];
-    dspl_sch(edit.edit_buffer,edit.day,edit.channel);
-    printf("\nenter a command or a time to edit an individual schedule record\n>>");
+    // dspl_sch(edit.edit_buffer,edit.day,edit.channel);
+    // printf("\nenter a command or a time to edit an individual schedule record\n>>");
 
     return 0;
 }
@@ -761,8 +761,7 @@ char *build_prompt(char *b,int tt)
             break;
         case 9:
             strcat(b,"editing schedules for channel ");
-            sprintf(temp,"%i",edit.channel);
-            strcat(b,temp);
+                         strcat(b,temp);
             strcat(b,"\nenter day #, Sun=1 ...  Sat=7");
             break;
         case 7:
@@ -774,8 +773,8 @@ char *build_prompt(char *b,int tt)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dspl_sch(bbb,edit.day,edit.channel);
-            strcat(b,"\nenter time <HH:MM>");
+            // dspl_sch(edit.edit_buffer,edit.day,edit.channel);
+            // strcat(b,"\nenter time <HH:MM>");
             break;
        case 8:
             strcat(b,"enter <channel #> <day #>");
@@ -857,7 +856,7 @@ char *build_prompt(char *b,int tt)
             sprintf(temp,"%i",edit.channel);
             strcat(b,temp);
 
-            dspl_sch(edit.edit_buffer, edit.day, edit.channel);
+            dspl_sch(b,edit.edit_buffer, edit.day, edit.channel);
 
 
             strcat(b," ");

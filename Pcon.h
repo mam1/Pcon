@@ -81,7 +81,7 @@
 #define _TIME_STRING_BUFFER     40
 #define _TOKEN_BUFFER           128
 #define _VCMD_BUFFER            128
-#define _PROMPT_BUFFER          128
+#define _PROMPT_BUFFER          400
 #define _SCHEDULE_BUFFER        (_BYTES_PER_DAY * _DAYS_PER_WEEK)/4
 
 /* key codes */

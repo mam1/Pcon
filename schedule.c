@@ -174,15 +174,17 @@ void dump_sch(uint32_t *sbuf)
  }
 
 /* display all schedules records (schedule) for a (channel,day) */
-void dspl_sch(uint32_t *sbuf, int d, int c)
+/* concatinate a list of schedule records to the string pointed to by b */
+void dspl_sch(char *b, uint32_t *sbuf, int d, int c)
 {
     int                         i,rsize;
     volatile uint32_t           *r;
+    char                        temp[128];
 
     r = get_schedule(sbuf,d,c); 
     if(*r==0)
     {
-        printf("    no schedule records\n");
+        strcat(b,"no schedule records\n");
         return;   
     }
 
@@ -190,7 +192,8 @@ void dspl_sch(uint32_t *sbuf, int d, int c)
   
     for(i=0;i<rsize;i++)
     {
-        printf("    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_s(*r)]);
+        sprintf(temp,"    %02i:%02i - %s\n",get_key(*r)/60,get_key(*r)%60,onoff[get_s(*r)]);
+        strcat(b,temp);
         r++;
     }
         // printf("\n\n");    
