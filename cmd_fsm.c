@@ -32,7 +32,6 @@
     int                 key;
     uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];
     uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];
-
     } edit;
  uint8_t             editing;
 /***************** global code to text conversion ********************/
@@ -116,7 +115,7 @@ int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={
 int c_0(int,int *,char *); /* prompt if needed else do nothing */
 int c_1(int,int *,char *); /* display all valid commands for the current state */  
 int c_2(int,int *,char *); /* zero on time for channel */
-int c_3(int,int *,char *); /* prompt for channel number */
+int c_3(int,int *,char *); /* prompt if q empty */
 int c_4(int,int *,char *); /* set active channel */
 int c_5(int,int *,char *); /* display info for all channels */
 int c_6(int,int *,char *); /* save info for all channels */
@@ -185,7 +184,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 21  startup  */  {c_35,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0, c_14,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
+/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0, c_13,  c_0,  c_0, c_13, c_13, c_14,  c_0,  c_0,  c_0},
 /* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -194,7 +193,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 
 /***************start fsm support functions ********************/
 //char *valid_cmds(void);
-char *build_prompt(char *, int);
+char *build_prompt(char *, int, int);
 
 
 /**************** command fsm action routines ******************/
@@ -204,7 +203,7 @@ int c_0(int tt, int *n, char *s)
     if(test_cmd_q()== 0)
     {
         *prompt_buffer = '\0';
-        printf("%s\n>> ",build_prompt(prompt_buffer,tt));
+        printf("%s\n>> ",build_prompt(prompt_buffer,tt,0));
     }
     return 0;
 }
@@ -253,7 +252,7 @@ int c_2(int tt, int *n, char *s)
     c_0(tt,n,s);
     return 0;
 }
-/* prompt for channel number */
+/* prompt if q empty */
 int c_3(int tt, int *n, char *s)
 {
     // char    dump[_TOKEN_BUFFER];    
@@ -278,7 +277,11 @@ int c_4(int tt, int *n, char *s)
     }
     printf("%i is not a valid channel number it must be 0-%i\n\n",*n,_NUMBER_OF_CHANNELS-1);
     while(pop_cmd_q(tbuf));     //empty token stack
-    c_3(tt,n,s);
+    cmd_state = 8; // back out the state transition
+    *prompt_buffer = '\0';
+    printf("%s\n>> ",build_prompt(prompt_buffer,tt,1));
+
+    // c_9(tt,n,s);
     return 1;    // do not transition state
 
 }
@@ -365,7 +368,11 @@ int c_12(int tt, int *n, char *s)
 /* invalid input */
 int c_13(int tt, int *n, char *s) 
 {
+        char        tbuf[_TOKEN_BUFFER];
+
     printf("<%s> is not a valid command in state %i, enter ? for a list of valid commands\n\n",keyword[tt],cmd_state); 
+    while(pop_cmd_q(tbuf));     //empty token stack
+
     c_0(tt,n,s);  
     return 0;
 }
@@ -437,14 +444,19 @@ int c_19(int tt, int *n, char *s) //save - s1
 int c_20(int tt, int *n, char *s) 
 {
     int         i;
+    char        tbuf[_TOKEN_BUFFER];
+
 
     if((*n < 1) || (*n > 7))
     {
         printf("invalid day number, ");
         printf("%i is not a valid day number it must be 1-7\n\n",*n);
-        cmd_state = 1; // back out the state transition
-        c_3(tt,n,s);
-        return 0;
+        cmd_state = 9; // back out the state transition
+        while(pop_cmd_q(tbuf));     //empty token stack
+        *prompt_buffer = '\0';
+        printf("%s\n>> ",build_prompt(prompt_buffer,tt,1));
+        // c_9(tt,n,s);
+        return 1;
     }
     edit.day = *n;
     c_0(tt,n,s); 
@@ -723,13 +735,17 @@ void cmd_fsm(char *token,int *state)
     return;
 }
 /* build prompt */
-char *build_prompt(char *b,int tt)
+char *build_prompt(char *b,int tt,int error)
 {
     char    temp[_PROMPT_BUFFER], *hold_b;
     int     ns;
 
     hold_b = b;
-    ns = cmd_new_state[tt][cmd_state];  //set prompt for new state
+    if(error)
+        ns = cmd_state;                     //set prompt for current state
+    else
+        ns = cmd_new_state[tt][cmd_state];  //set prompt for new state
+
     switch(ns)
     {
         case 0:
@@ -759,7 +775,7 @@ char *build_prompt(char *b,int tt)
         case 5:
             strcat(b,"schedule mode: enter command ");
             break;
-        case 9:
+        case 6:
             strcat(b,"editing schedules for channel ");
                          strcat(b,temp);
             strcat(b,"\nenter day #, Sun=1 ...  Sat=7");
@@ -786,23 +802,20 @@ char *build_prompt(char *b,int tt)
             // dump_sch_recs(dio_cb.dio.sch, edit.channel, day);
             // strcat(b," - enter time HH:MM to edit schedule record");
             break;
-        case 6:
+        case 9:
             strcat(b,"editing ");
             strcat(b,day_names_long[edit.day-1]);
             strcat(b," schedule for channel ");
             sprintf(temp,"%i",edit.channel);
             strcat(b,temp);
-            strcat(b," hour ");
-            sprintf(temp,"%i",edit.hour);
-            strcat(b,temp);
-            strcat(b," enter minute");
+            strcat(b,"\nenter day #, Sun=1 ...  Sat=7");
             break;
         case 10:
             strcat(b,"editing ");
             strcat(b, day_names_long[edit.day-1]);
-            sprintf(temp," schedule for channel %i",edit.channel);
+            sprintf(temp," schedule for channel %i\n",edit.channel);
             strcat(b,temp);
-
+            dspl_sch(b, edit.edit_buffer, edit.day, edit.channel);
             /*
             strcat(b,"editing ");
             strcat(b,day_names_long[edit.day-1]);
@@ -880,11 +893,16 @@ char *build_prompt(char *b,int tt)
     }
     return b;
 }
-void reset_active(void)
+void reset_edit(void)
 {
-    edit.day = rtc_cb.rtc.td_buffer.dow;
-    edit.hour = 0;
-    edit.minute = 0;
+     /* clear out edit buffers */
+    edit.channel = 0; 
+    edit.day = 0; 
+    edit.hour = 0; 
+    edit.minute = 0; 
+    edit.key = 0;
+    *edit.edit_buffer = '\0';
+    *edit.clipboard_buffer = '\0'; 
     return;
 }
     

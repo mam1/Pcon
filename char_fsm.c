@@ -10,6 +10,16 @@
 /***************************** externals ************************/
 extern char         input_buffer[_INPUT_BUFFER], *input_buffer_ptr;  
 extern int          cmd_state,char_state;
+extern  struct {
+    int                 channel; 
+    int                 day; 
+    int                 hour; 
+    int                 minute; 
+    int                 key;
+    uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];
+    uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];
+
+    } edit;
 /**********************support fuctions ****************************/
 TQ *process_buffer(void)
 {
@@ -123,9 +133,10 @@ int char_esc(char *c)
 {
     char    dump[_TOKEN_BUFFER];
     cmd_state = 0;          //reset state
-    while(pop_cmd_q(dump)); //clear out the comand queue
+    while(pop_cmd_q(dump)); //clear out the comand queue 
+
     printf("\n\nfsm reset\n");
-    reset_active();
+    reset_edit();           // clean out edit buffers
     input_buffer_ptr = input_buffer;
     *input_buffer_ptr++ = '?';
     *input_buffer_ptr++ = ' ';
