@@ -80,13 +80,13 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
     if(sfp)
     {
-        rtn = fwrite(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+        rtn = fwrite(sbuf,_SCHEDULE_BUFFER*4,1,sfp);
         if(rtn!=1)
         {
             printf("*** error writting schedula data\n");
             return 1;
         }
-        printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)bbb);
+        printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)sbuf);
         fclose(sfp);   
     }
 
