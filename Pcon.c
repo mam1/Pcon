@@ -1,4 +1,4 @@
-/**
+ /**
  * This is the main pc program file.
  */
 #include <stdio.h>
@@ -19,8 +19,7 @@ _Driver *_driverlist[] = {
   NULL
 };
 /***************************** external ******************************/
-// extern char    *day_names[];
- extern uint32_t       bbb[_SCHEDULE_BUFFER];
+ extern uint32_t       working_schedules[_SCHEDULE_BUFFER];
  extern char           fn_channel[], fn_schedule[];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
@@ -103,13 +102,13 @@ int sd_setup(void)
         return 1;
     }
     
-    if(init_sch(bbb))   //create a schedule file if it is not present
+    if(init_sch(working_schedules))   //create a schedule file if it is not present
     {
         printf("**** init_sch aborted application ****\n");
         return 1;
     }
     
-    if(read_sch(bbb))    
+    if(read_sch(working_schedules))    
     {
         printf("**** read_sch aborted application ****\n");
         return 1;
@@ -176,7 +175,7 @@ void disp_sys(void)
     dio_cb.dio.update_ptr = &(rtc_cb.rtc.update);
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
-    dio_cb.dio.sch_ptr = bbb; 
+    dio_cb.dio.sch_ptr = working_schedules; 
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);
     if(cog == -1)

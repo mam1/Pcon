@@ -46,7 +46,7 @@
 /***************************** globals **********************************/
  uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);
- uint32_t       bbb[_SCHEDULE_BUFFER];
+ uint32_t       working_schedules[_SCHEDULE_BUFFER];
  char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
 int read_sch(uint32_t *sbuf)    // read data from SD card load buffer 
@@ -59,7 +59,7 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
 
     if(sfp)
     {
-        rtn = fread(bbb,_SCHEDULE_BUFFER*4,1,sfp);
+        rtn = fread(working_schedules,_SCHEDULE_BUFFER*4,1,sfp);
         // if(rtn!=1)
         // {
             // printf("*** error reading schedula data\n");
@@ -381,7 +381,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         mrcnt = 0;
         for(day=0;day<_DAYS_PER_WEEK;day++)
         {
-            rcnt[day] = (int)*get_schedule(bbb,day+1,channel);
+            rcnt[day] = (int)*get_schedule(working_schedules,day+1,channel);
             // printf("rcnt[%i] = %i\n",day,rcnt[day]);
             if(rcnt[day] > mrcnt)
                 mrcnt = rcnt[day];        //max number of records for the week
@@ -392,10 +392,10 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
             printf("         ");
             for(day=0;day<_DAYS_PER_WEEK;day++)
             {
-                rec_ptr = get_schedule(bbb,day+1,channel);
+                rec_ptr = get_schedule(working_schedules,day+1,channel);
                 rec_ptr += (i+1);
                 // printf("XXXXXX\n");
-                if(*get_schedule(bbb,day+1,channel) <= i)
+                if(*get_schedule(working_schedules,day+1,channel) <= i)
                     strcpy(time_state,"         ");
                 else
                     sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);

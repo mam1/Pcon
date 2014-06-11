@@ -1,4 +1,4 @@
- #include <propeller.h>
+#include <propeller.h>
 #include <stdio.h>
 #include <string.h>
 #include "simpletools.h"
@@ -11,7 +11,7 @@
  extern int          cmd_state,char_state;
  extern char         input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
  extern char         c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern uint32_t     bbb[];
+ extern uint32_t     working_schedules[];
  /* rtc control block */ 
  extern struct {
     unsigned stack[_STACK_SIZE_RTC];
@@ -422,7 +422,7 @@ int c_17(int tt, int *n, char *s)
 
 int c_18(int tt, int *n, char *s)
 {
-    disp_all_schedules(bbb);
+    disp_all_schedules(working_schedules);
 
     c_0(tt,n,s);
     return 0;
@@ -555,7 +555,7 @@ int c_26(int tt, int *n, char *s)
 /* load schedule buffer from SD card */
 int c_27(int tt, int *n, char *s) 
 {
-    read_sch(bbb);
+    read_sch(working_schedules);
     printf("schedule buffer loaded from the sd card\n");
     c_0(tt,n,s);
     return 0;
@@ -564,7 +564,7 @@ int c_27(int tt, int *n, char *s)
 /* save edit schedule buffer to SD card */
 int c_28(int tt, int *n, char *s) 
 {
-    write_sch(bbb);
+    write_sch(edit.edit_buffer);
     printf("schedule buffer save to SD card\n");
     c_0(tt,n,s); 
     return 0;
@@ -573,14 +573,14 @@ int c_28(int tt, int *n, char *s)
 /* save edit schedule buffer before load*/
 int c_29(int tt, int *n, char *s) 
 {
-    dump_schs(bbb);
+    dump_schs(working_schedules);
     c_0(tt,n,s); 
     return 0;
 }
 /* display the schedule for active day and channel */
 int c_30(int tt, int *n, char *s) 
 {
-    dump_sch(get_schedule(bbb,edit.day-1,edit.channel));
+    dump_sch(get_schedule(working_schedules,edit.day-1,edit.channel));
     c_0(tt,n,s); 
     return 0;
 }
@@ -825,7 +825,7 @@ char *build_prompt(char *b,int tt,int error)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dspl_sch(bbb,edit.day,edit.channel);
+            dspl_sch(working_schedules,edit.day,edit.channel);
             strcat(b,"enter action for ");
             sprintf(temp,"%i",edit.hour);
             strcat(b,temp);
