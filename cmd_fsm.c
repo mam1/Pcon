@@ -321,6 +321,7 @@ int c_8(int tt, int *n, char *s) //save - s1
 {
     set_channel_name(s);
     printf("channel name set\n\n"); 
+    edit.channel = 0;
     // disp_channel_data(edit.channel);
 //    printf("editing channel %i\n>>",channel);
     c_0(tt,n,s); 
@@ -337,6 +338,7 @@ int c_10(int tt, int *n, char *s) //save - s1
 {
     set_channel_control_mode(*n); 
     printf("channel control mode set\n\n");
+    edit.channel = 0;
     // disp_channel_data(edit.channel);
 //    printf("editing channel %i\n>>",channel);
     c_0(tt,n,s); 
@@ -350,6 +352,7 @@ int c_11(int tt, int *n, char *s) //save - s1
     set_channel_control_mode(0);
     rtc_cb.rtc.update = 1;
     printf("channel %i state set to on, control mode forced to manual\n",edit.channel);
+    edit.channel = 0;
     // printf("displaying data for channel %i\n",edit.channel);
     // disp_channel_data(edit.channel);
     c_0(tt,n,s);  
@@ -435,6 +438,7 @@ int c_19(int tt, int *n, char *s) //save - s1
     set_channel_control_mode(0);
     rtc_cb.rtc.update = 1;
     printf("channel %i state set to off, control mode forced to manual\n",edit.channel);
+    edit.channel = 0;
     // disp_channel_data(edit.channel);
     c_0(tt,n,s);  
     return 0;
@@ -587,7 +591,9 @@ int c_30(int tt, int *n, char *s)
 /* display system information */
 int c_31(int tt, int *n, char *s) 
 {
-    disp_sys();   
+    disp_sys();
+    printf("curent fsm state is %i\n",cmd_state);
+    printf("edit variable values: channel <%i> day <%i> hour <%i> minute <%i>\n",edit.channel,edit.day,edit.hour,edit.minute);   
     c_0(tt,n,s); 
     return 0;
 }
