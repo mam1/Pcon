@@ -591,7 +591,9 @@ int c_30(int tt, int *n, char *s)
 /* display system information */
 int c_31(int tt, int *n, char *s) 
 {
-    disp_sys();   
+    disp_sys();
+    printf("curent fsm state is %i\n",cmd_state);
+    printf("edit variable values: channel <%i> day <%i> hour <%i> minute <%i>\n",edit.channel,edit.day,edit.hour,edit.minute);   
     c_0(tt,n,s); 
     return 0;
 }
