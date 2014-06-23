@@ -4,8 +4,7 @@
 #define _major_version 1
 #define _minor_version 1
 
-<<<<<<< HEAD
-#define _FILE_SET_ID            "006"
+#define _FILE_SET_ID            "007"
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board

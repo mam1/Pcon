@@ -67,8 +67,10 @@ int read_sch(uint32_t *sbuf)    // read data from SD card load buffer
         // }
         printf("  schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
+        return 0;
     }
-    return 0;
+    printf("can't open schedulle file <%s>\n",fn_schedule);
+    return 1;
  }
 
 int write_sch(uint32_t *sbuf)   // write data from buffer to SD card 
