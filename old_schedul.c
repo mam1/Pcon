@@ -36,7 +36,7 @@ extern int     edit_channel,edit_day,edit_hour,edit_minute,edit_key;
 /***************************** globals **********************************/
  uint32_t   state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t   key_mask   = B32(01111111,11111111,11111111,11111111);
- uint32_t   bbb[_SCHEDULE_BUFFER];
+ uint32_t   working_schedules[_SCHEDULE_BUFFER];
  char        fn_schedule[_SCHEDULE_NAME_SIZE] = "_F_PREFIX ## _FILE_SET_ID ## _F_SCHEDULE_SUFIX";
  FILE        *fptr_schedule;
 /*******************************  fuctions *****************************/

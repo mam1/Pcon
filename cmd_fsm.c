@@ -1,4 +1,4 @@
- #include <propeller.h>
+#include <propeller.h>
 #include <stdio.h>
 #include <string.h>
 #include "simpletools.h"
@@ -11,7 +11,7 @@
  extern int          cmd_state,char_state;
  extern char         input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
  extern char         c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern uint32_t     bbb[];
+ extern uint32_t     working_schedules[];
  /* rtc control block */ 
  extern struct {
     unsigned stack[_STACK_SIZE_RTC];
@@ -30,7 +30,7 @@
     int                 hour; 
     int                 minute; 
     int                 key;
-    uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];
+    uint32_t            edit_buffer[_SCHEDULE_BUFFER];
     uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];
     } edit;
  uint8_t             editing;
@@ -139,8 +139,8 @@ int c_23(int,int *,char *); /* display time and date */
 int c_24(int,int *,char *); /* set schedule record state to on */
 int c_25(int,int *,char *); /* set schedule record state to off */
 int c_26(int,int *,char *); /* delete schedule record */
-int c_27(int,int *,char *); /* load schedule buffer from SD card */
-int c_28(int,int *,char *); /* save schedule buffer to SD card */
+int c_27(int,int *,char *); /* load working schedule buffer from SD card */
+int c_28(int,int *,char *); /* save working schedule buffer to SD card */
 int c_29(int,int *,char *); /* dump schedule buffer */
 int c_30(int,int *,char *); /* display edit buffer schedule for active day and channel */
 int c_31(int,int *,char *); /* display system configuration information */
@@ -152,10 +152,6 @@ int c_36(int,int *,char *); /* copy schedule for (channel,day) into hold buffer 
 int c_37(int,int *,char *); /* quit channel mode */
 int c_38(int,int *,char *); /* quit schedule mode */
 int c_39(int,int *,char *); /* quit schedule edit mode */
-
-
-
-
  
 /* cmd processor action table - initialized with fsm functions */
 
@@ -184,7 +180,7 @@ CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {
 /* 20  shutdown */  {c_34,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 21  startup  */  {c_35,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 22  reboot   */  {c_33,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
-/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0, c_13,  c_0,  c_0, c_13, c_13, c_14,  c_0,  c_0,  c_0},
+/* 23  save     */  {c_13,  c_6,  c_0,  c_0,  c_0, c_28,  c_28,c_28, c_27, c_27, c_14,  c_0,  c_0,  c_0},
 /* 24  schedule */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 25  channel  */  { c_9,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
 /* 26  load     */  {c_13,  c_7,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0,  c_0},
@@ -425,7 +421,7 @@ int c_17(int tt, int *n, char *s)
 
 int c_18(int tt, int *n, char *s)
 {
-    disp_all_schedules(bbb);
+    disp_all_schedules(working_schedules);
 
     c_0(tt,n,s);
     return 0;
@@ -556,19 +552,19 @@ int c_26(int tt, int *n, char *s)
     return 0;
 }
 
-/* load schedule buffer from SD card */
+/* load woring schedule buffer from SD card */
 int c_27(int tt, int *n, char *s) 
 {
-    read_sch(bbb);
+    read_sch(working_schedules);
     printf("schedule buffer loaded from the sd card\n");
     c_0(tt,n,s);
     return 0;
 }
 
-/* save edit schedule buffer to SD card */
+/* save working schedule buffer to SD card */
 int c_28(int tt, int *n, char *s) 
 {
-    write_sch(bbb);
+    write_sch(working_schedules);
     printf("schedule buffer save to SD card\n");
     c_0(tt,n,s); 
     return 0;
@@ -577,14 +573,14 @@ int c_28(int tt, int *n, char *s)
 /* save edit schedule buffer before load*/
 int c_29(int tt, int *n, char *s) 
 {
-    dump_schs(bbb);
+    dump_schs(working_schedules);
     c_0(tt,n,s); 
     return 0;
 }
 /* display the schedule for active day and channel */
 int c_30(int tt, int *n, char *s) 
 {
-    dump_sch(get_schedule(bbb,edit.day-1,edit.channel));
+    dump_sch(get_schedule(working_schedules,edit.day-1,edit.channel));
     c_0(tt,n,s); 
     return 0;
 }
@@ -831,7 +827,7 @@ char *build_prompt(char *b,int tt,int error)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dspl_sch(bbb,edit.day,edit.channel);
+            dspl_sch(working_schedules,edit.day,edit.channel);
             strcat(b,"enter action for ");
             sprintf(temp,"%i",edit.hour);
             strcat(b,temp);

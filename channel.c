@@ -113,7 +113,7 @@ char *channel_file_name(char *cfn)
 
 int init_channel_data(void)
 {
-    strcat(fn_channel,file_set_prefix);
+    strcat(fn_channel,(char *)file_set_prefix);
     strcat(fn_channel,_F_CHANNEL_SUFIX);
     // printf("channel file name <%s>\n",fn_channel);
     fptr_channel = fopen(fn_channel,"r");
