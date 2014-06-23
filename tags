@@ -1,0 +1,282 @@
+!_TAG_FILE_FORMAT	1	/original ctags format/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACK	/Users/mam1/git/Pcon/rtc.h	19
+ACTION_PTR	/Users/mam1/git/Pcon/char_fsm.c	/^typedef int (*ACTION_PTR)(char *); $/
+B16	/Users/mam1/git/Pcon/bitlit.h	17
+B32	/Users/mam1/git/Pcon/bitlit.h	18
+B8	/Users/mam1/git/Pcon/bitlit.h	16
+B8__	/Users/mam1/git/Pcon/bitlit.h	6
+BITLIT_H_	/Users/mam1/git/Pcon/bitlit.h	2
+CCR	/Users/mam1/git/Pcon/Pcon.h	/^}CCR;$/
+CHANNEL_H_	/Users/mam1/git/Pcon/channel.h	2
+CHAR_FSM_H_	/Users/mam1/git/Pcon/char_fsm.h	7
+CMD_ACTION_PTR	/Users/mam1/git/Pcon/Pcon.h	/^typedef int(*CMD_ACTION_PTR)(int, int *,char *); $/
+CMD_FSM_H_	/Users/mam1/git/Pcon/cmd_fsm.h	7
+DAY	/Users/mam1/git/Pcon/Pcon.h	/^ } DAY;$/
+DIO_CB	/Users/mam1/git/Pcon/Pcon.h	/^}DIO_CB;$/
+DS3231_Address	/Users/mam1/git/Pcon/rtc.h	16
+DS3231_Read_addr	/Users/mam1/git/Pcon/rtc.h	17
+DS3231_Write_addr	/Users/mam1/git/Pcon/rtc.h	18
+HEX__	/Users/mam1/git/Pcon/bitlit.h	5
+NACK	/Users/mam1/git/Pcon/rtc.h	20
+PCON_H_	/Users/mam1/git/Pcon/Pcon.h	2
+RTC_CB	/Users/mam1/git/Pcon/Pcon.h	/^}RTC_CB;$/
+SCH	/Users/mam1/git/Pcon/Pcon.h	/^ } SCH;$/
+SCHEDULE_H_	/Users/mam1/git/Pcon/schedule.h	2
+TD_BUF	/Users/mam1/git/Pcon/Pcon.h	/^}TD_BUF;$/
+TQ	/Users/mam1/git/Pcon/char_fsm.h	/^}TQ;$/
+_212GH	/Users/mam1/git/Pcon/Pcon.h	12
+_BS	/Users/mam1/git/Pcon/Pcon.h	93
+_BYTES_PER_CHANNEL	/Users/mam1/git/Pcon/Pcon.h	76
+_BYTES_PER_DAY	/Users/mam1/git/Pcon/Pcon.h	77
+_CHANNEL_FILE_NAME_SIZE	/Users/mam1/git/Pcon/Pcon.h	58
+_CHANNEL_NAME_BUFFER_SIZE	/Users/mam1/git/Pcon/Pcon.h	57
+_CHANNEL_NAME_SIZE	/Users/mam1/git/Pcon/Pcon.h	56
+_CHAR_STATES	/Users/mam1/git/Pcon/Pcon.h	44
+_CHAR_TOKENS	/Users/mam1/git/Pcon/Pcon.h	43
+_CMD_STATES	/Users/mam1/git/Pcon/Pcon.h	48
+_CMD_TOKENS	/Users/mam1/git/Pcon/Pcon.h	47
+_COLON	/Users/mam1/git/Pcon/Pcon.h	90
+_COMMA	/Users/mam1/git/Pcon/Pcon.h	92
+_CR	/Users/mam1/git/Pcon/Pcon.h	95
+_Clock	/Users/mam1/git/Pcon/Pcon.h	20
+_DAYS_PER_WEEK	/Users/mam1/git/Pcon/Pcon.h	71
+_DIOB	/Users/mam1/git/Pcon/Pcon.h	11
+_DIO_H_	/Users/mam1/git/Pcon/dio.h	6
+_DRIVEN	/Users/mam1/git/Pcon/Pcon.h	14
+_DataIO	/Users/mam1/git/Pcon/Pcon.h	19
+_ESC	/Users/mam1/git/Pcon/Pcon.h	88
+_FILE_SET_ID	/Users/mam1/git/Pcon/Pcon.h	7
+_F_CHANNEL_SUFIX	/Users/mam1/git/Pcon/Pcon.h	68
+_F_PREFIX	/Users/mam1/git/Pcon/Pcon.h	62
+_F_PREFIX	/Users/mam1/git/Pcon/Pcon.h	64
+_F_SCHEDULE_SUFIX	/Users/mam1/git/Pcon/Pcon.h	67
+_HC165	/Users/mam1/git/Pcon/Pcon.h	21
+_HC595	/Users/mam1/git/Pcon/Pcon.h	22
+_INPUT_BUFFER	/Users/mam1/git/Pcon/Pcon.h	80
+_KEY_MASK	/Users/mam1/git/Pcon/Pcon.h	75
+_MAX_SCHEDULE_RECS	/Users/mam1/git/Pcon/Pcon.h	72
+_NO_CHAR	/Users/mam1/git/Pcon/Pcon.h	96
+_NUMBER_OF_CHANNELS	/Users/mam1/git/Pcon/Pcon.h	52
+_NUMBER_OF_CHANNELS	/Users/mam1/git/Pcon/Pcon.h	54
+_PROMPT_BUFFER	/Users/mam1/git/Pcon/Pcon.h	84
+_QUOTE	/Users/mam1/git/Pcon/Pcon.h	94
+_RLY1	/Users/mam1/git/Pcon/Pcon.h	25
+_RLY2	/Users/mam1/git/Pcon/Pcon.h	26
+_RLY3	/Users/mam1/git/Pcon/Pcon.h	27
+_RLY4	/Users/mam1/git/Pcon/Pcon.h	28
+_RLY5	/Users/mam1/git/Pcon/Pcon.h	29
+_RTC_H_	/Users/mam1/git/Pcon/rtc.h	7
+_SCHEDULE_BUFFER	/Users/mam1/git/Pcon/Pcon.h	85
+_SCHEDULE_NAME_SIZE	/Users/mam1/git/Pcon/Pcon.h	73
+_SLASH	/Users/mam1/git/Pcon/Pcon.h	91
+_SPACE	/Users/mam1/git/Pcon/Pcon.h	89
+_STACK_SIZE_DIO	/Users/mam1/git/Pcon/Pcon.h	40
+_STACK_SIZE_RTC	/Users/mam1/git/Pcon/Pcon.h	39
+_STATE_MASK	/Users/mam1/git/Pcon/Pcon.h	74
+_TIME_STRING_BUFFER	/Users/mam1/git/Pcon/Pcon.h	81
+_TOKEN_BUFFER	/Users/mam1/git/Pcon/Pcon.h	82
+_VCMD_BUFFER	/Users/mam1/git/Pcon/Pcon.h	83
+_VGA_start	/Users/mam1/git/Pcon/Pcon.h	32
+_clk_pin	/Users/mam1/git/Pcon/Pcon.h	34
+_data_pin	/Users/mam1/git/Pcon/Pcon.h	33
+_driverlist	/Users/mam1/git/Pcon/Pcon.c	/^_Driver *_driverlist[] = {$/
+_major_version	/Users/mam1/git/Pcon/Pcon.h	4
+_minor_version	/Users/mam1/git/Pcon/Pcon.h	5
+_rtcClockPin	/Users/mam1/git/Pcon/Pcon.h	35
+_rtcDataPin	/Users/mam1/git/Pcon/Pcon.h	36
+_toggle_VGA	/Users/mam1/git/Pcon/Pcon.h	31
+abt	/Users/mam1/git/Pcon/Pcon.h	/^    int                 abt;        \/\/!= 0 cog requests a system abort,value = error code$/
+abt	/Users/mam1/git/Pcon/Pcon.h	/^    int        abt;         \/\/!= 0 cog requests a system abort,value = error code$/
+add_sch_rec	/Users/mam1/git/Pcon/schedule.c	/^int add_sch_rec(uint32_t *sch, int k, int s)  \/\/ add or change a schedule record *\/$/
+bbb	/Users/mam1/git/Pcon/schedule.c	/^ uint32_t       bbb[_SCHEDULE_BUFFER];$/
+build_prompt	/Users/mam1/git/Pcon/cmd_fsm.c	/^char *build_prompt(char *b,int tt,int error)$/
+c_0	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_0(int tt, int *n, char *s)$/
+c_1	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_1(int tt, int *n, char *s)$/
+c_10	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_10(int tt, int *n, char *s) \/\/save - s1$/
+c_11	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_11(int tt, int *n, char *s) \/\/save - s1$/
+c_12	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_12(int tt, int *n, char *s) $/
+c_13	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_13(int tt, int *n, char *s) $/
+c_14	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_14(int tt, int *n, char *s) $/
+c_15	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_15(int tt, int *n, char *s)$/
+c_16	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_16(int tt, int *n, char *s)$/
+c_17	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_17(int tt, int *n, char *s) $/
+c_18	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_18(int tt, int *n, char *s)$/
+c_19	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_19(int tt, int *n, char *s) \/\/save - s1$/
+c_2	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_2(int tt, int *n, char *s)$/
+c_20	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_20(int tt, int *n, char *s) $/
+c_21	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_21(int tt, int *n, char *s) $/
+c_22	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_22(int tt, int *n, char *s) $/
+c_23	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_23(int tt, int *n, char *s) $/
+c_24	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_24(int tt, int *n, char *s) $/
+c_25	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_25(int tt, int *n, char *s) $/
+c_26	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_26(int tt, int *n, char *s) $/
+c_27	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_27(int tt, int *n, char *s) $/
+c_28	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_28(int tt, int *n, char *s) $/
+c_29	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_29(int tt, int *n, char *s) $/
+c_3	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_3(int tt, int *n, char *s)$/
+c_30	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_30(int tt, int *n, char *s) $/
+c_31	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_31(int tt, int *n, char *s) $/
+c_32	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_32(int tt, int *n, char *s) $/
+c_33	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_33(int tt, int *n, char *s) $/
+c_34	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_34(int tt, int *n, char *s) $/
+c_35	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_35(int tt, int *n, char *s) $/
+c_36	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_36(int tt, int *n, char *s) $/
+c_37	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_37(int tt, int *n, char *s) $/
+c_38	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_38(int tt, int *n, char *s) $/
+c_39	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_39(int tt, int *n, char *s) $/
+c_4	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_4(int tt, int *n, char *s)$/
+c_5	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_5(int tt, int *n, char *s) $/
+c_6	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_6(int tt, int *n, char *s) \/\/save - s1$/
+c_7	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_7(int tt, int *n, char *s) \/\/load - s1$/
+c_8	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_8(int tt, int *n, char *s) \/\/save - s1$/
+c_9	/Users/mam1/git/Pcon/cmd_fsm.c	/^int c_9(int tt, int *n, char *s) \/\/save - s1$/
+c_mode	/Users/mam1/git/Pcon/Pcon.h	/^    int                 c_mode; \/\/Control mode: 0-manual, 1-time, 2-time & sensor$/
+cca	/Users/mam1/git/Pcon/Pcon.h	/^    CCR        cca[_NUMBER_OF_CHANNELS];                 \/\/channel control array$/
+cca_lock	/Users/mam1/git/Pcon/Pcon.h	/^    int        cca_lock;    \/\/lock ID for the channel control array$/
+channel	/Users/mam1/git/Pcon/channel.c	/^    int                 channel; $/
+channel	/Users/mam1/git/Pcon/char_fsm.c	/^    int                 channel; $/
+channel	/Users/mam1/git/Pcon/cmd_fsm.c	/^    int                 channel; $/
+channel_file_name	/Users/mam1/git/Pcon/channel.c	/^char *channel_file_name(char *cfn)$/
+char_action	/Users/mam1/git/Pcon/char_fsm.c	/^ACTION_PTR char_action[_CHAR_TOKENS][_CHAR_STATES] = {     $/
+char_add_char	/Users/mam1/git/Pcon/char_fsm.c	/^int char_add_char(char *c)$/
+char_add_dlim	/Users/mam1/git/Pcon/char_fsm.c	/^int char_add_dlim(char *c)$/
+char_add_process	/Users/mam1/git/Pcon/char_fsm.c	/^int char_add_process(char *c)$/
+char_add_quote_char_process	/Users/mam1/git/Pcon/char_fsm.c	/^int char_add_quote_char_process(char *c)$/
+char_delim_add	/Users/mam1/git/Pcon/char_fsm.c	/^int char_delim_add(char *c)$/
+char_eof_process	/Users/mam1/git/Pcon/char_fsm.c	/^int char_eof_process(char *c)$/
+char_esc	/Users/mam1/git/Pcon/char_fsm.c	/^int char_esc(char *c)$/
+char_fsm	/Users/mam1/git/Pcon/char_fsm.c	/^void char_fsm(int c_type,int *state,char *c)$/
+char_new_state	/Users/mam1/git/Pcon/char_fsm.c	/^int char_new_state[_CHAR_TOKENS][_CHAR_STATES] ={$/
+char_nop	/Users/mam1/git/Pcon/char_fsm.c	/^int char_nop(char *c)$/
+char_remove	/Users/mam1/git/Pcon/char_fsm.c	/^int char_remove(char *c)$/
+char_state	/Users/mam1/git/Pcon/Pcon.c	/^    int                 char_state, cmd_state; \/\/current state$/
+char_type	/Users/mam1/git/Pcon/char_fsm.c	/^int char_type(char c)$/
+ckeck_abort	/Users/mam1/git/Pcon/Pcon.c	/^int ckeck_abort(void)$/
+clear_sch	/Users/mam1/git/Pcon/schedule.c	/^void clear_sch(uint32_t *sbuf)  \/\/ fill schedule buffer with 0$/
+clipboard_buffer	/Users/mam1/git/Pcon/char_fsm.c	/^    uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];$/
+clipboard_buffer	/Users/mam1/git/Pcon/cmd_fsm.c	/^    uint32_t            clipboard_buffer[_MAX_SCHEDULE_RECS];$/
+cmd_action	/Users/mam1/git/Pcon/cmd_fsm.c	/^CMD_ACTION_PTR cmd_action[_CMD_TOKENS][_CMD_STATES] = {$/
+cmd_fsm	/Users/mam1/git/Pcon/cmd_fsm.c	/^void cmd_fsm(char *token,int *state)$/
+cmd_new_state	/Users/mam1/git/Pcon/cmd_fsm.c	/^int cmd_new_state[_CMD_TOKENS][_CMD_STATES] ={$/
+cmd_state	/Users/mam1/git/Pcon/Pcon.c	/^    int                 char_state, cmd_state; \/\/current state$/
+cmd_type	/Users/mam1/git/Pcon/cmd_fsm.c	/^int cmd_type(char *c)$/
+con_mode	/Users/mam1/git/Pcon/Pcon.c	/^char *con_mode[3] = {"manual","  time","time & sensor"};$/
+day	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     day;$/
+day	/Users/mam1/git/Pcon/channel.c	/^    int                 day; $/
+day	/Users/mam1/git/Pcon/char_fsm.c	/^    int                 day; $/
+day	/Users/mam1/git/Pcon/cmd_fsm.c	/^    int                 day; $/
+day_names_long	/Users/mam1/git/Pcon/Pcon.c	/^char *day_names_long[7] = {$/
+day_names_short	/Users/mam1/git/Pcon/Pcon.c	/^char *day_names_short[7] = {"Sun","Mon","Tue","Wed","Thu","Fri","Sat"};$/
+del_sch_rec	/Users/mam1/git/Pcon/schedule.c	/^int del_sch_rec(uint32_t *sch, int k)    \/\/ delete a schedule record with matching key $/
+dio	/Users/mam1/git/Pcon/Pcon.c	/^    volatile DIO_CB dio;$/
+dio	/Users/mam1/git/Pcon/channel.c	/^    volatile DIO_CB dio;$/
+dio	/Users/mam1/git/Pcon/cmd_fsm.c	/^    volatile DIO_CB dio;$/
+dio	/Users/mam1/git/Pcon/schedule.c	/^    volatile DIO_CB dio;$/
+dio_cb	/Users/mam1/git/Pcon/Pcon.c	/^} dio_cb;$/
+dir_in	/Users/mam1/git/Pcon/dio.h	8
+dir_out	/Users/mam1/git/Pcon/dio.h	9
+disp_all_schedules	/Users/mam1/git/Pcon/schedule.c	/^ void disp_all_schedules(uint32_t *buffer)$/
+disp_channel_data	/Users/mam1/git/Pcon/channel.c	/^void disp_channel_data(int cn)$/
+disp_sys	/Users/mam1/git/Pcon/Pcon.c	/^void disp_sys(void)$/
+dow	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     dow;$/
+dspl_sch	/Users/mam1/git/Pcon/schedule.c	/^void dspl_sch(char *b, uint32_t *sbuf, int d, int c)$/
+dump_sch	/Users/mam1/git/Pcon/schedule.c	/^void dump_sch(uint32_t *sbuf)$/
+dump_schs	/Users/mam1/git/Pcon/schedule.c	/^void dump_schs(uint32_t *sbuf)$/
+edit	/Users/mam1/git/Pcon/cmd_fsm.c	/^    } edit;$/
+edit_buffer	/Users/mam1/git/Pcon/char_fsm.c	/^    uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];$/
+edit_buffer	/Users/mam1/git/Pcon/cmd_fsm.c	/^    uint32_t            edit_buffer[_MAX_SCHEDULE_RECS];$/
+editing	/Users/mam1/git/Pcon/cmd_fsm.c	/^ uint8_t             editing;$/
+file_set_prefix	/Users/mam1/git/Pcon/Pcon.c	/^    char                file_set_prefix[_SCHEDULE_NAME_SIZE];$/
+find_schedule_record	/Users/mam1/git/Pcon/schedule.c	/^uint32_t *find_schedule_record(uint32_t *sch,int k)  \/\/ search schedule for record with key match, return pointer to record or NULL $/
+fn_channel	/Users/mam1/git/Pcon/channel.c	/^    char        fn_channel[_CHANNEL_FILE_NAME_SIZE];$/
+fn_schedule	/Users/mam1/git/Pcon/schedule.c	/^ char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;$/
+fptr_channel	/Users/mam1/git/Pcon/channel.c	/^    FILE        *fptr_channel;$/
+get_key	/Users/mam1/git/Pcon/schedule.c	/^int get_key(uint32_t b)    \/\/ extract key from a schedule record $/
+get_s	/Users/mam1/git/Pcon/schedule.c	/^int get_s(uint32_t b) \/\/ extract state from a schedule record $/
+get_schedule	/Users/mam1/git/Pcon/schedule.c	/^uint32_t *get_schedule(uint32_t *sbuf,int d,int c)  \/\/ return pointer to  a schedule$/
+head	/Users/mam1/git/Pcon/char_fsm.c	/^    TQ              *head, *tail;$/
+hour	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     hour;$/
+hour	/Users/mam1/git/Pcon/channel.c	/^    int                 hour; $/
+hour	/Users/mam1/git/Pcon/char_fsm.c	/^    int                 hour; $/
+hour	/Users/mam1/git/Pcon/cmd_fsm.c	/^    int                 hour; $/
+i2c_float_scl_high	/Users/mam1/git/Pcon/rtc.h	10
+i2c_float_sda_high	/Users/mam1/git/Pcon/rtc.h	12
+i2c_set_scl_low	/Users/mam1/git/Pcon/rtc.h	11
+i2c_set_sda_low	/Users/mam1/git/Pcon/rtc.h	13
+init_channel_data	/Users/mam1/git/Pcon/channel.c	/^int init_channel_data(void)$/
+init_sch	/Users/mam1/git/Pcon/schedule.c	/^ int init_sch(uint32_t *sbuf)$/
+input_buffer	/Users/mam1/git/Pcon/Pcon.c	/^    char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;$/
+input_buffer_ptr	/Users/mam1/git/Pcon/Pcon.c	/^    char                input_buffer[_INPUT_BUFFER], *input_buffer_ptr;$/
+is_valid_int	/Users/mam1/git/Pcon/cmd_fsm.c	/^int is_valid_int(const char *str)$/
+key	/Users/mam1/git/Pcon/channel.c	/^    int                 key;$/
+key	/Users/mam1/git/Pcon/char_fsm.c	/^    int                 key;$/
+key	/Users/mam1/git/Pcon/cmd_fsm.c	/^    int                 key;$/
+key_mask	/Users/mam1/git/Pcon/schedule.c	/^ uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);$/
+keyword	/Users/mam1/git/Pcon/cmd_fsm.c	/^char    *keyword[_CMD_TOKENS] = {$/
+ld_sch	/Users/mam1/git/Pcon/schedule.c	/^void ld_sch(uint32_t *sbuf)     \/\/ load schedule buffer with 0 - _SCHEDULE_BUFFER$/
+load_channel_data	/Users/mam1/git/Pcon/channel.c	/^int load_channel_data(void)$/
+main	/Users/mam1/git/Pcon/Pcon.c	/^ int main(void)$/
+min	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     min;$/
+minute	/Users/mam1/git/Pcon/channel.c	/^    int                 minute; $/
+minute	/Users/mam1/git/Pcon/char_fsm.c	/^    int                 minute; $/
+minute	/Users/mam1/git/Pcon/cmd_fsm.c	/^    int                 minute; $/
+month	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     month;$/
+name	/Users/mam1/git/Pcon/Pcon.h	/^    char                name[_CHANNEL_NAME_SIZE];$/
+next	/Users/mam1/git/Pcon/char_fsm.h	/^    struct node     *next;$/
+node	/Users/mam1/git/Pcon/char_fsm.h	/^typedef struct node$/
+onoff	/Users/mam1/git/Pcon/Pcon.c	/^char *onoff[2] = {"off"," on"};$/
+pin_high	/Users/mam1/git/Pcon/dio.h	11
+pin_low	/Users/mam1/git/Pcon/dio.h	10
+pop	/Users/mam1/git/Pcon/char_fsm.c	/^char *pop()$/
+pop_cmd_q	/Users/mam1/git/Pcon/char_fsm.c	/^int pop_cmd_q(char *buf)$/
+process_buffer	/Users/mam1/git/Pcon/char_fsm.c	/^TQ *process_buffer(void)$/
+prompt_buffer	/Users/mam1/git/Pcon/cmd_fsm.c	/^ char                prompt_buffer[_PROMPT_BUFFER];$/
+put_key	/Users/mam1/git/Pcon/schedule.c	/^void put_key(volatile uint32_t *value,int key)   \/\/ load key into a schedule record $/
+put_state	/Users/mam1/git/Pcon/schedule.c	/^void put_state(volatile uint32_t *b,int s)  \/\/ load state into a schedule record$/
+read_sch	/Users/mam1/git/Pcon/schedule.c	/^int read_sch(uint32_t *sbuf)    \/\/ read data from SD card load buffer $/
+reboot	/Users/mam1/git/Pcon/Pcon.h	99
+rec	/Users/mam1/git/Pcon/Pcon.h	/^    uint32_t            rec[_MAX_SCHEDULE_RECS+1];$/
+reset_edit	/Users/mam1/git/Pcon/cmd_fsm.c	/^void reset_edit(void)$/
+rtc	/Users/mam1/git/Pcon/Pcon.c	/^    volatile RTC_CB rtc;$/
+rtc	/Users/mam1/git/Pcon/cmd_fsm.c	/^    volatile RTC_CB rtc;$/
+rtc	/Users/mam1/git/Pcon/schedule.c	/^    volatile RTC_CB rtc;$/
+rtc_cb	/Users/mam1/git/Pcon/Pcon.c	/^} rtc_cb;$/
+save_cca	/Users/mam1/git/Pcon/Pcon.h	/^    int        save_cca;     \/\/!= 0 cog request a save of the channel data$/
+save_channel_data	/Users/mam1/git/Pcon/channel.c	/^int save_channel_data(void)$/
+sch	/Users/mam1/git/Pcon/Pcon.h	/^    SCH                 sch[_NUMBER_OF_CHANNELS];$/
+sch_lock	/Users/mam1/git/Pcon/Pcon.h	/^    int        sch_lock;    \/\/lock ID for schedule records$/
+sch_mode	/Users/mam1/git/Pcon/Pcon.c	/^char *sch_mode[2] = {"day","week"};$/
+sch_ptr	/Users/mam1/git/Pcon/Pcon.h	/^    uint32_t   *sch_ptr;    \/\/schedule buffer pointer$/
+sd_setup	/Users/mam1/git/Pcon/Pcon.c	/^int sd_setup(void)$/
+sec	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     sec;$/
+set_channel_control_mode	/Users/mam1/git/Pcon/channel.c	/^int set_channel_control_mode(int m)$/
+set_channel_name	/Users/mam1/git/Pcon/channel.c	/^int set_channel_name(char *n)$/
+set_channel_state	/Users/mam1/git/Pcon/channel.c	/^int set_channel_state(int s)$/
+stack	/Users/mam1/git/Pcon/Pcon.c	/^    unsigned stack[_STACK_SIZE_DIO];$/
+stack	/Users/mam1/git/Pcon/Pcon.c	/^    unsigned stack[_STACK_SIZE_RTC];$/
+stack	/Users/mam1/git/Pcon/channel.c	/^    unsigned stack[_STACK_SIZE_DIO];$/
+stack	/Users/mam1/git/Pcon/cmd_fsm.c	/^    unsigned stack[_STACK_SIZE_DIO];$/
+stack	/Users/mam1/git/Pcon/cmd_fsm.c	/^    unsigned stack[_STACK_SIZE_RTC];$/
+stack	/Users/mam1/git/Pcon/schedule.c	/^    unsigned stack[_STACK_SIZE_DIO];$/
+stack	/Users/mam1/git/Pcon/schedule.c	/^    unsigned stack[_STACK_SIZE_RTC];$/
+start_dio	/Users/mam1/git/Pcon/Pcon.c	/^int start_dio(volatile void *parptr)$/
+start_rtc	/Users/mam1/git/Pcon/Pcon.c	/^int start_rtc(volatile void *parptr)$/
+state	/Users/mam1/git/Pcon/Pcon.h	/^    int                 state;  \/\/Channel State: 0-off, 1-on$/
+state_mask	/Users/mam1/git/Pcon/schedule.c	/^ uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);$/
+tail	/Users/mam1/git/Pcon/char_fsm.c	/^    TQ              *head, *tail;$/
+td_buffer	/Users/mam1/git/Pcon/Pcon.h	/^    TD_BUF              td_buffer;  \/\/time, date & dow stored as uint8_t $/
+td_ptr	/Users/mam1/git/Pcon/Pcon.h	/^    TD_BUF     *td_ptr;     \/\/pointer to the time date buffer$/
+tdb_lock	/Users/mam1/git/Pcon/Pcon.h	/^    int                 tdb_lock;   \/\/lock ID for time date buffer$/
+tdb_lock	/Users/mam1/git/Pcon/Pcon.h	/^    int        tdb_lock;    \/\/lock ID for time date buffer$/
+test_cmd_q	/Users/mam1/git/Pcon/char_fsm.c	/^int test_cmd_q()$/
+time_on	/Users/mam1/git/Pcon/Pcon.h	/^    int                 time_on; \/\/ accumulated minutes of on time for channel$/
+tptr	/Users/mam1/git/Pcon/char_fsm.h	/^    char            *tptr;$/
+update	/Users/mam1/git/Pcon/Pcon.h	/^    int                 update;     \/\/trigger update flag, 1=wait, 0=update $/
+update_ptr	/Users/mam1/git/Pcon/Pcon.h	/^    int        *update_ptr; \/\/pointer to trigger update flag, 1=wait, 0=update $/
+write_sch	/Users/mam1/git/Pcon/schedule.c	/^int write_sch(uint32_t *sbuf)   \/\/ write data from buffer to SD card $/
+year	/Users/mam1/git/Pcon/Pcon.h	/^    uint8_t     year;$/
