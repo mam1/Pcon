@@ -15,7 +15,7 @@ dio.cogc
 dio.h
 >compiler=C
 >memtype=xmmc external flash code main ram data
->optimize=-O0
+>optimize=-Os
 >-m32bit-doubles
 >-Wall
 >-fno-exceptions
