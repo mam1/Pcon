@@ -1,5 +1,5 @@
 /************************************************************************/
-/*  schedule.c                                                          */
+/*  schedule.c  v2.0                                                        */
 /*      Functions which support loading and saving schedules from a sd   */
 /*      card.  Each (day of the week, channel)has a unique schedule.    */
 /*      A schedule is an array of unsigned int where the first int   d  */
@@ -46,30 +46,50 @@
 /***************************** globals **********************************/
  uint32_t       state_mask = B32(10000000,00000000,00000000,00000000);
  uint32_t       key_mask   = B32(01111111,11111111,11111111,11111111);
- uint32_t       working_schedules[_SCHEDULE_BUFFER];
- char fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
+ uint32_t       schedule_buffer[_SCHEDULE_BUFFER];
+ char           fn_schedule[_SCHEDULE_NAME_SIZE] = _F_PREFIX _FILE_SET_ID _F_SCHEDULE_SUFIX;
 /*******************************  functions ******************************/
+ int sch_sd2eeprom(char *fn)
+ {
+    int         i;
+    FILE        *f
+    uint32_t    buf[_BYTES_PER_DAY];
+    if(f = fopen(fn))
+    {
+        for(i=0;i<_NUMBER_OF_CHANNELS;i++)
+        {
+            if(fread(buf,sizeof(buf),1,f) != 1)
+            {
+                printf("bad read\n");
+                return 1;
+            }
+        }
+        return 0;
+    }
+    return 1;
+ }
+  int sch_eeprom2sd(void)
+ {
+    return 0;
+ }
 int read_sch(uint32_t *sbuf)    // read data from SD card load buffer 
  {
     FILE    *sfp;
     int     rtn;
-
-    sfp = fopen(fn_schedule,"r");
-    // printf("fopen returned <%x> trying to open %s reading\n",(uint32_t)sfp,fn_schedule);
-
-    if(sfp)
+    if(fopen(fn_schedule,"r"))
     {
-        rtn = fread(working_schedules,_SCHEDULE_BUFFER*4,1,sfp);
-        // if(rtn!=1)
-        // {
-            // printf("*** error reading schedula data\n");
-            // return 1;
-        // }
+        rtn = fread(schedule_buffer,4,_SCHEDULE_BUFFER,sfp);
+        printf("%i returned from fread\n",rtn);
+        if(rtn!=1)
+        {
+            printf("*** error reading schedule data, %i returned from fread\n",rtn);
+            return 1;
+        }
         printf("  schedule data loaded into buffer from SD card\n");;
         fclose(sfp);
         return 0;
     }
-    printf("can't open schedulle file <%s>\n",fn_schedule);
+    printf("can't open schedule file <%s>\n",fn_schedule);
     return 1;
  }
 
@@ -82,10 +102,12 @@ int write_sch(uint32_t *sbuf)   // write data from buffer to SD card
     printf("fopen returned <%x> trying to open %s for writing\n",(uint32_t)sfp,fn_schedule);
     if(sfp)
     {
-        rtn = fwrite(sbuf,_SCHEDULE_BUFFER*4,1,sfp);
+        rtn = fwrite(sbuf,4,_SCHEDULE_BUFFER,sfp);
+        printf("%i retunred from fwrite\n",rtn);
+
         if(rtn!=1)
         {
-            printf("*** error writting schedula data\n");
+            printf("*** error writting schedula data, %i retunred from fwrite\n",rtn);
             return 1;
         }
         printf("fwrite returned <%i> writing %i bytes from buffer at $%x\n",rtn,_SCHEDULE_BUFFER,(uint32_t)sbuf);
@@ -113,12 +135,15 @@ void ld_sch(uint32_t *sbuf)     // load schedule buffer with 0 - _SCHEDULE_BUFFE
  {
     FILE    *sfp;
 
-    // printf("schedule file name <%s>\n",fn_schedule);
+    printf("schedule file name <%s>\n",fn_schedule);
 
     sfp = fopen(fn_schedule,"r");
     if(sfp==0)
     {
         printf("  schedule file <%s> not found, it will be created\n",fn_schedule);
+        sfp = fopen(fn_schedule,"w");
+        printf("fwrite returned %i\n",fwrite(schedule_buffer,4,_SCHEDULE_BUFFER,sfp));
+        fclose(sfp);
         sfp = fopen(fn_schedule,"w");
         if(sfp)
         {
@@ -383,7 +408,7 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
         mrcnt = 0;
         for(day=0;day<_DAYS_PER_WEEK;day++)
         {
-            rcnt[day] = (int)*get_schedule(working_schedules,day+1,channel);
+            rcnt[day] = (int)*get_schedule(schedule_buffer,day+1,channel);
             // printf("rcnt[%i] = %i\n",day,rcnt[day]);
             if(rcnt[day] > mrcnt)
                 mrcnt = rcnt[day];        //max number of records for the week
@@ -394,10 +419,10 @@ uint32_t *find_schedule_record(uint32_t *sch,int k)  // search schedule for reco
             printf("         ");
             for(day=0;day<_DAYS_PER_WEEK;day++)
             {
-                rec_ptr = get_schedule(working_schedules,day+1,channel);
+                rec_ptr = get_schedule(schedule_buffer,day+1,channel);
                 rec_ptr += (i+1);
                 // printf("XXXXXX\n");
-                if(*get_schedule(working_schedules,day+1,channel) <= i)
+                if(*get_schedule(schedule_buffer,day+1,channel) <= i)
                     strcpy(time_state,"         ");
                 else
                     sprintf(time_state,"%02i:%02i %s",get_key((uint32_t)*rec_ptr)/60,get_key((uint32_t)*rec_ptr)%60,onoff[get_s((uint32_t)*rec_ptr)]);

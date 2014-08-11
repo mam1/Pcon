@@ -1,3 +1,8 @@
+/**
+* schedule.h - header file for schedule.c
+*
+*/
+
 #ifndef SCHEDULE_H_
 #define SCHEDULE_H_
 

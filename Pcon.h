@@ -4,7 +4,7 @@
 #define _major_version 1
 #define _minor_version 1
 
-#define _FILE_SET_ID            "007"
+#define _FILE_SET_ID            "834"
 
 /* configuration options */
 #define _DIOB       1       //configure to drive Parallax Digital IO Board
@@ -35,8 +35,8 @@
 #define _rtcDataPin     29              //i2c - DS3231 data
 
 /* cog parameters */
-#define _STACK_SIZE_RTC     64
-#define _STACK_SIZE_DIO     128
+#define _STACK_SIZE_RTC     428
+#define _STACK_SIZE_DIO     428
 
 /* character parser fsm */
 #define _CHAR_TOKENS     8

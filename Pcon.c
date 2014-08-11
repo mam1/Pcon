@@ -19,7 +19,7 @@ _Driver *_driverlist[] = {
   NULL
 };
 /***************************** external ******************************/
- extern uint32_t       working_schedules[_SCHEDULE_BUFFER];
+ extern uint32_t       schedule_buffer[_SCHEDULE_BUFFER];
  extern char           fn_channel[], fn_schedule[];
 /***************************** globals ******************************/
     int                 char_state, cmd_state; //current state
@@ -102,13 +102,13 @@ int sd_setup(void)
         return 1;
     }
     
-    if(init_sch(working_schedules))   //create a schedule file if it is not present
+    if(init_sch(schedule_buffer))   //create a schedule file if it is not present
     {
         printf("**** init_sch aborted application ****\n");
         return 1;
     }
     
-    if(read_sch(working_schedules))    
+    if(read_sch(schedule_buffer))    
     {
         printf("**** read_sch aborted application ****\n");
         return 1;
@@ -175,7 +175,7 @@ void disp_sys(void)
     dio_cb.dio.update_ptr = &(rtc_cb.rtc.update);
     dio_cb.dio.td_ptr = &(rtc_cb.rtc.td_buffer);
     *dio_cb.dio.update_ptr = 0;
-    dio_cb.dio.sch_ptr = working_schedules; 
+    dio_cb.dio.sch_ptr = schedule_buffer; 
 /* start the dio cog  */
     cog = start_dio(&dio_cb.dio);
     if(cog == -1)

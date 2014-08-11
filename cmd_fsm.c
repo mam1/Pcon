@@ -11,7 +11,7 @@
  extern int          cmd_state,char_state;
  extern char         input_buffer[_INPUT_BUFFER],*input_buffer_ptr;
  extern char         c_name[_CHANNEL_NAME_SIZE][_NUMBER_OF_CHANNELS];
- extern uint32_t     working_schedules[];
+ extern uint32_t     schedule_buffer[];
  /* rtc control block */ 
  extern struct {
     unsigned stack[_STACK_SIZE_RTC];
@@ -421,7 +421,7 @@ int c_17(int tt, int *n, char *s)
 
 int c_18(int tt, int *n, char *s)
 {
-    disp_all_schedules(working_schedules);
+    disp_all_schedules(schedule_buffer);
 
     c_0(tt,n,s);
     return 0;
@@ -555,7 +555,7 @@ int c_26(int tt, int *n, char *s)
 /* load woring schedule buffer from SD card */
 int c_27(int tt, int *n, char *s) 
 {
-    read_sch(working_schedules);
+    read_sch(schedule_buffer);
     printf("schedule buffer loaded from the sd card\n");
     c_0(tt,n,s);
     return 0;
@@ -564,7 +564,7 @@ int c_27(int tt, int *n, char *s)
 /* save working schedule buffer to SD card */
 int c_28(int tt, int *n, char *s) 
 {
-    write_sch(working_schedules);
+    write_sch(schedule_buffer);
     printf("schedule buffer save to SD card\n");
     c_0(tt,n,s); 
     return 0;
@@ -573,14 +573,14 @@ int c_28(int tt, int *n, char *s)
 /* save edit schedule buffer before load*/
 int c_29(int tt, int *n, char *s) 
 {
-    dump_schs(working_schedules);
+    dump_schs(schedule_buffer);
     c_0(tt,n,s); 
     return 0;
 }
 /* display the schedule for active day and channel */
 int c_30(int tt, int *n, char *s) 
 {
-    dump_sch(get_schedule(working_schedules,edit.day-1,edit.channel));
+    dump_sch(get_schedule(schedule_buffer,edit.day-1,edit.channel));
     c_0(tt,n,s); 
     return 0;
 }
@@ -827,7 +827,7 @@ char *build_prompt(char *b,int tt,int error)
             printf("%s\n",b);
             b = hold_b;
             *b = '\0';
-            dspl_sch(working_schedules,edit.day,edit.channel);
+            dspl_sch(schedule_buffer,edit.day,edit.channel);
             strcat(b,"enter action for ");
             sprintf(temp,"%i",edit.hour);
             strcat(b,temp);
