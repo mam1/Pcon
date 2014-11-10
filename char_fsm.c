@@ -21,6 +21,21 @@ extern  struct {
 
     } edit;
 /**********************support fuctions ****************************/
+void reset_char_fsm(void){
+    char    dump[_TOKEN_BUFFER];
+    cmd_state = 0;          //reset state
+//    while(pop_cmd_q(dump)); //clear out the comand queue
+    printf("\n\nfsm reset\n\r");
+//    reset_edit();           // clean out edit buffers
+    input_buffer_ptr = input_buffer;
+    *input_buffer_ptr++ = '?';
+    *input_buffer_ptr++ = ' ';
+    *input_buffer_ptr++ = '\0';
+
+ //   process_buffer();
+    return 0;
+}
+
 TQ *process_buffer(void)
 {
     char        tb[_INPUT_BUFFER],*t_ptr,*start_char;        //,*end_char;

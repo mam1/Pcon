@@ -2,8 +2,8 @@
  * This is the main pc program file.
  */
 #include <stdio.h>
-#include <propeller.h>
 #include <unistd.h>
+#include <stddef.h>
 #include "Pcon.h"
 #include "channel.h"
 #include "schedule.h"
