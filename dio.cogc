@@ -193,12 +193,12 @@ void main (volatile DIO_CB *m)
             lockclr(m->cca_lock);
 
         /* test for a change in channel control byte */
-            if(hccb == ccb);
-            else 
-            {
-                hccb = ccb;
+//            if(hccb == ccb);
+//            else 
+//            {
+//                hccb = ccb;
                 send_ccb(ccb);
-            }
+//            }
         }
     }       
 }
