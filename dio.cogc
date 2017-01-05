@@ -190,15 +190,9 @@ void main (volatile DIO_CB *m)
                         send_ccb(0);    //try to turn off all relays on the dio board 
                         m->abt = 1;     //abort application
                 }
+                
             lockclr(m->cca_lock);
-
-        /* test for a change in channel control byte */
-//            if(hccb == ccb);
-//            else 
-//            {
-//                hccb = ccb;
-                send_ccb(ccb);
-//            }
+            send_ccb(ccb);
         }
     }       
 }
